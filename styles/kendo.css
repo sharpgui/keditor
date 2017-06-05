@@ -1,0 +1,110 @@
+.k-editable-area {
+    font-size: 12px;
+    font-family: Verdana, Geneva, sans-serif;
+    margin-top: -1px;
+    padding: 1px .2em 0;
+    word-wrap: break-word;
+    -webkit-nbsp-mode: space;
+    -webkit-line-break: after-white-space;
+}
+
+    .k-editable-area h1 {
+        font-size: 2em;
+        margin: 0.67em 0;
+    }
+
+    .k-editable-area h2 {
+        font-size: 1.5em;
+    }
+
+    .k-editable-area h3 {
+        font-size: 1.16em;
+    }
+
+    .k-editable-area h4 {
+        font-size: 1em;
+    }
+
+    .k-editable-area h5 {
+        font-size: 0.83em;
+    }
+
+    .k-editable-area h6 {
+        font-size: 0.7em;
+    }
+
+    .k-editable-area p {
+        margin: 0 0 1em;
+    }
+
+    .k-editable-area .k-marker {
+        display: none;
+    }
+
+    .k-editable-area .k-paste-container,
+    .k-editable-area .Apple-style-span {
+        position: absolute;
+        left: -10000px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+    }
+
+    .k-editable-area ul,
+    .k-editable-area ol {
+        padding-left: 2.5em;
+    }
+
+    .k-editable-area li {
+        list-style: disc;
+        padding: 0;
+    }
+
+    .k-editable-area ol li {
+        list-style: inherit;
+    }
+
+    .k-editable-area span {
+        -ms-high-contrast-adjust: none;
+    }
+
+    .k-editable-area a {
+        color: #0000aa;
+    }
+
+    .k-editable-area code {
+        font-size: 1.23em;
+    }
+
+    .k-editable-area telerik\3Ascript {
+        display: none;
+    }
+
+    .k-editable-area .k-table,
+    .k-editable-area table {
+        table-layout: fixed;
+        width: 100%;
+        border-spacing: 0;
+        margin: 0 0 1em;
+    }
+
+        .k-editable-area .k-table td,
+        .k-editable-area table td {
+            min-width: 1px;
+            padding: .2em .3em;
+            height: 1.5em;
+        }
+
+        .k-editable-area .k-table,
+        .k-editable-area .k-table td,
+        .k-editable-area table,
+        .k-editable-area table td {
+            outline: 0;
+            border: 1px dotted #ccc;
+        }
+
+            .k-editable-area .k-table p,
+            .k-editable-area table p {
+                margin: 0;
+                padding: 0;
+            }
