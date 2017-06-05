@@ -9,7 +9,7 @@ extend kendo editor for edit &amp; review   math
 
 ## 设计图
 
-> 1
+> 1333
 
 ![](pic/CalculatorA.png)
 
