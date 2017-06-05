@@ -9,10 +9,18 @@ extend kendo editor for edit &amp; review   math
 
 ## 设计图
 
-> 1333
+> 1
 
-![](pic/CalculatorA.png)
+![](pic/MathML_01.png)
 
 > 2
 
-![](pic/CalculatorB.png)
+![](pic/MathML_02.png)
+
+> 3
+
+![](pic/MathML_03.png)
+
+> 4
+
+![](pic/MathML_04.png)
