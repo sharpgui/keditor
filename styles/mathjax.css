@@ -61,8 +61,8 @@
 }
 @font-face {
   font-family: MJXc-TeX-ams-Rw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_AMS-Regular.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_AMS-Regular.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_AMS-Regular.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_AMS-Regular.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_AMS-Regular.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_AMS-Regular.otf') format('opentype');
 }
 @font-face {
   font-family: MJXc-TeX-cal-B;
@@ -75,8 +75,8 @@
 }
 @font-face {
   font-family: MJXc-TeX-cal-Bw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_Caligraphic-Bold.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_Caligraphic-Bold.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_Caligraphic-Bold.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Caligraphic-Bold.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Caligraphic-Bold.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Caligraphic-Bold.otf') format('opentype');
 }
 @font-face {
   font-family: MJXc-TeX-frak-R;
@@ -84,8 +84,8 @@
 }
 @font-face {
   font-family: MJXc-TeX-frak-Rw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_Fraktur-Regular.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_Fraktur-Regular.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_Fraktur-Regular.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Fraktur-Regular.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Fraktur-Regular.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Fraktur-Regular.otf') format('opentype');
 }
 @font-face {
   font-family: MJXc-TeX-frak-B;
@@ -98,8 +98,8 @@
 }
 @font-face {
   font-family: MJXc-TeX-frak-Bw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_Fraktur-Bold.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_Fraktur-Bold.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_Fraktur-Bold.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Fraktur-Bold.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Fraktur-Bold.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Fraktur-Bold.otf') format('opentype');
 }
 @font-face {
   font-family: MJXc-TeX-math-BI;
@@ -113,8 +113,8 @@
 }
 @font-face {
   font-family: MJXc-TeX-math-BIw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_Math-BoldItalic.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_Math-BoldItalic.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_Math-BoldItalic.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Math-BoldItalic.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Math-BoldItalic.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Math-BoldItalic.otf') format('opentype');
 }
 @font-face {
   font-family: MJXc-TeX-sans-R;
@@ -122,8 +122,8 @@
 }
 @font-face {
   font-family: MJXc-TeX-sans-Rw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_SansSerif-Regular.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_SansSerif-Regular.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_SansSerif-Regular.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_SansSerif-Regular.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_SansSerif-Regular.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_SansSerif-Regular.otf') format('opentype');
 }
 @font-face {
   font-family: MJXc-TeX-sans-B;
@@ -136,8 +136,8 @@
 }
 @font-face {
   font-family: MJXc-TeX-sans-Bw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_SansSerif-Bold.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_SansSerif-Bold.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_SansSerif-Bold.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_SansSerif-Bold.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_SansSerif-Bold.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_SansSerif-Bold.otf') format('opentype');
 }
 @font-face {
   font-family: MJXc-TeX-sans-I;
@@ -150,8 +150,8 @@
 }
 @font-face {
   font-family: MJXc-TeX-sans-Iw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_SansSerif-Italic.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_SansSerif-Italic.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_SansSerif-Italic.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_SansSerif-Italic.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_SansSerif-Italic.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_SansSerif-Italic.otf') format('opentype');
 }
 @font-face {
   font-family: MJXc-TeX-script-R;
@@ -159,8 +159,8 @@
 }
 @font-face {
   font-family: MJXc-TeX-script-Rw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_Script-Regular.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_Script-Regular.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_Script-Regular.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Script-Regular.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Script-Regular.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Script-Regular.otf') format('opentype');
 }
 @font-face {
   font-family: MJXc-TeX-type-R;
@@ -168,8 +168,8 @@
 }
 @font-face {
   font-family: MJXc-TeX-type-Rw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_Typewriter-Regular.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_Typewriter-Regular.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_Typewriter-Regular.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Typewriter-Regular.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Typewriter-Regular.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Typewriter-Regular.otf') format('opentype');
 }
 @font-face {
   font-family: MJXc-TeX-cal-R;
@@ -177,8 +177,8 @@
 }
 @font-face {
   font-family: MJXc-TeX-cal-Rw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_Caligraphic-Regular.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_Caligraphic-Regular.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_Caligraphic-Regular.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Caligraphic-Regular.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Caligraphic-Regular.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Caligraphic-Regular.otf') format('opentype');
 }
 @font-face {
   font-family: MJXc-TeX-main-B;
@@ -191,8 +191,8 @@
 }
 @font-face {
   font-family: MJXc-TeX-main-Bw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_Main-Bold.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_Main-Bold.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_Main-Bold.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Main-Bold.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Bold.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Bold.otf') format('opentype');
 }
 @font-face {
   font-family: MJXc-TeX-main-I;
@@ -205,8 +205,8 @@
 }
 @font-face {
   font-family: MJXc-TeX-main-Iw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_Main-Italic.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_Main-Italic.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_Main-Italic.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Main-Italic.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Italic.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Italic.otf') format('opentype');
 }
 @font-face {
   font-family: MJXc-TeX-main-R;
@@ -214,8 +214,8 @@
 }
 @font-face {
   font-family: MJXc-TeX-main-Rw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_Main-Regular.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_Main-Regular.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_Main-Regular.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Main-Regular.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Regular.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Regular.otf') format('opentype');
 }
 @font-face {
   font-family: MJXc-TeX-math-I;
@@ -228,8 +228,8 @@
 }
 @font-face {
   font-family: MJXc-TeX-math-Iw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_Math-Italic.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_Math-Italic.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_Math-Italic.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Math-Italic.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Math-Italic.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Math-Italic.otf') format('opentype');
 }
 @font-face {
   font-family: MJXc-TeX-size1-R;
@@ -237,8 +237,8 @@
 }
 @font-face {
   font-family: MJXc-TeX-size1-Rw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_Size1-Regular.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_Size1-Regular.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_Size1-Regular.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size1-Regular.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size1-Regular.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size1-Regular.otf') format('opentype');
 }
 @font-face {
   font-family: MJXc-TeX-size2-R;
@@ -246,8 +246,8 @@
 }
 @font-face {
   font-family: MJXc-TeX-size2-Rw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_Size2-Regular.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_Size2-Regular.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_Size2-Regular.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size2-Regular.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size2-Regular.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size2-Regular.otf') format('opentype');
 }
 @font-face {
   font-family: MJXc-TeX-size3-R;
@@ -255,8 +255,8 @@
 }
 @font-face {
   font-family: MJXc-TeX-size3-Rw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_Size3-Regular.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_Size3-Regular.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_Size3-Regular.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size3-Regular.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size3-Regular.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size3-Regular.otf') format('opentype');
 }
 @font-face {
   font-family: MJXc-TeX-size4-R;
@@ -264,6 +264,6 @@
 }
 @font-face {
   font-family: MJXc-TeX-size4-Rw;
-  src: url('../mathjax/fonts/HTML-CSS/TeX/eot/MathJax_Size4-Regular.eot');
-  src: url('../mathjax/fonts/HTML-CSS/TeX/woff/MathJax_Size4-Regular.woff') format('woff'), url('../mathjax/fonts/HTML-CSS/TeX/otf/MathJax_Size4-Regular.otf') format('opentype');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size4-Regular.eot');
+  src: url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size4-Regular.woff') format('woff'), url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size4-Regular.otf') format('opentype');
 }
