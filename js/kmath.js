@@ -43,7 +43,7 @@
 
                     //  head_editor.insertAdjacentHTML('beforeend', '<script src=\"http://localhost:8000/examples/test.js\"><\/script>');
                     //  head_editor.insertAdjacentHTML('beforeend', '<script src=\"./js/test.js\"><\/script>');
-                    head_editor.insertAdjacentHTML('beforeend', '<link href="./styles/mathjax.css" rel="stylesheet">');
+                  //  head_editor.insertAdjacentHTML('beforeend', '<link href="./styles/mathjax.css" rel="stylesheet">');
                     createWindow();
                     initWindow();
                     flag = false;
