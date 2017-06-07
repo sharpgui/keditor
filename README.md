@@ -6,6 +6,7 @@ extend kendo editor for edit &amp; review   math
 - [kendo-api](http://docs.telerik.com/kendo-ui/api/javascript/ui/editor#events-execute)
 - [mathjax](http://docs.mathjax.org/en/latest/start.html)
 - [latex editor](https://arachnoid.com/latex/)
+- [mathquill](http://mathquill.com/)
 ## demo
 
 - [第一版](https://sharpgui.github.io/keditor/keditor.html)
