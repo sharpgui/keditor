@@ -1,0 +1,30 @@
+{
+  "name": "keditor",
+  "version": "1.0.0",
+  "description": "math editor",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sharpgui/keditor.git"
+  },
+  "keywords": [
+    "mathjax",
+    "mathquil",
+    "kendo"
+  ],
+  "author": "liz quyue",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sharpgui/keditor/issues"
+  },
+  "homepage": "https://github.com/sharpgui/keditor#readme",
+  "dependencies": {
+    "mathquill": "^0.10.1-a"
+  }
+}
