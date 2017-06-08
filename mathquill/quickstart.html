@@ -7,37 +7,50 @@
 </head>
 
 <body>
-  <p>Static math span: <span id="static-math">x = \frac{ -b \pm \sqrt{b^2-4ac} }{ 2a }</span>
-    <p>Editable math field: <span id="math-field">x^2</span></p>
-    <p>LaTeX of what you typed: <code id="latex">x^2</code></p>
-    <p><a href="http://docs.mathquill.com/en/latest/Getting_Started/">MathQuill&rsquo;s Getting
+  <p>Static math span: <span id="static-math">x = \frac{ -b \pm \sqrt{b^2-4ac} }{ 2a }</span></p>
+  
+  <p> \nthroot :<span id="sqrt">  \nthroot </span></p>
+  <p>Editable math field: <span id="math-field">x^2</span></p>
+  <button id="sqrtbtn">type sqrt</button>
+
+  <p>LaTeX of what you typed: <code id="latex">x^2</code></p>
+
+  <p><a href="http://docs.mathquill.com/en/latest/Getting_Started/">MathQuill&rsquo;s Getting
       Started Guide</a></p>
 
-    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
-    <script src="../build/mathquill.js"></script>
-    <script>
-      var staticMathSpan = document.getElementById('static-math');
-      var mathFieldSpan = document.getElementById('math-field');
-      var latexSpan = document.getElementById('latex');
+  <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
+  <script src="../build/mathquill.js"></script>
+  <script>
+    var staticMathSpan = document.getElementById('static-math');
+    var sqrt = document.getElementById('sqrt');
+    var mathFieldSpan = document.getElementById('math-field');
+    var latexSpan = document.getElementById('latex');
 
-      var MQ = MathQuill.getInterface(2); // keeps the API stable
+    var MQ = MathQuill.getInterface(2); // keeps the API stable
 
-      // easily create static or editable math from a DOM element by calling the
-      // appropriate constructor: http://docs.mathquill.com/en/latest/Api_Methods/
-      MQ.StaticMath(staticMathSpan);
+ 
+    // easily create static or editable math from a DOM element by calling the
+    // appropriate constructor: http://docs.mathquill.com/en/latest/Api_Methods/
+    MQ.StaticMath(staticMathSpan);
+    MQ.StaticMath(sqrt);
 
-      // you may pass in an options object:
-      var mathField = MQ.MathField(mathFieldSpan, {
-        spaceBehavesLikeTab: true, // an example config option, for more see:
-        //   http://docs.mathquill.com/en/latest/Config/
-        handlers: {
-          edit: function () {
-            // retrieve, in LaTeX format, the math that was typed:
-            latexSpan.textContent = mathField.latex();
-          }
+    $("#sqrtbtn").click(function(){
+  
+    mathField.write('\sqrt[]{}');
+      
+    })
+    // you may pass in an options object:
+    var mathField = MQ.MathField(mathFieldSpan, {
+      spaceBehavesLikeTab: false, // an example config option, for more see:
+      //   http://docs.mathquill.com/en/latest/Config/
+      handlers: {
+        edit: function () {
+          // retrieve, in LaTeX format, the math that was typed:
+          latexSpan.textContent = mathField.latex();
         }
-      });
-    </script>
+      }
+    });
+  </script>
 </body>
 
 </html>
