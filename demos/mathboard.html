@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="../styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="../styles/kendo.default.min.css" rel="stylesheet" />
+
+</head>
+<body>
+    <!--<textarea id="editor" rows="10" cols="30" style="width: 60%;height:400px" >
+    </textarea>-->
+    <div id="kmath">
+
+    </div>
+
+    <style>
+        *{ font-family: 'Segoe UI'}
+        ul{ list-style: none; }
+#kmath{ max-width: 700px; margin: 0 auto; padding: 8px; border: 1px solid #f1f1f1; }
+
+#math-category>li{ display: inline-block; margin: 0 3px 0 0; padding: 0 5px; line-height: 30px; border: 1px solid #ccc; cursor: pointer;}
+.selected-category{ background: #e0e0e0 }
+
+#math-symbol>li{ display: inline-block; padding: 3px 5px; background: #e0e0e0; cursor: pointer;}
+
+#advance-editarea{ display: block; width: 100%; margin: 0 auto; height: 130px;}
+#advance-view{ margin: 0 auto; height: 130px; }
+
+#basic-editarea{ display: block; width: 100%; margin: 0 auto; height: 250px;}
+
+.blue-link{ margin: 5px 0; float: right; border: none; background: none; color: #3a9be5; cursor: pointer;}
+.blue-link:hover{ text-decoration: underline;}
+
+    </style>
+
+    <script src="https://cdn.bootcss.com/jquery/1.12.2/jquery.js"></script>
+    <script src="../js/kendo.all.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../js/mathboard.js"></script>
+    
+</body>
+</html>
