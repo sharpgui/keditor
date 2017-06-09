@@ -11,7 +11,7 @@ extend kendo editor for edit &amp; review   math
 
 - [第一版](https://sharpgui.github.io/keditor/keditor.html)
 
-## 设计图
+## Canvas
 
 > 1
 
@@ -28,3 +28,12 @@ extend kendo editor for edit &amp; review   math
 > 4
 
 ![](pic/MathML_04.png)
+
+## RP
+> 1
+
+![](pic/CalculatorA.png)
+
+> 2
+
+![](pic/CalculatorB.png)
