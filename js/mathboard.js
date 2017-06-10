@@ -49,11 +49,23 @@
 
             $advance_editarea.on({'keyup': typesetView, 'change': typesetView});
             function typesetView(){
-                $advance_view.html('$$' + $advance_editarea.val() + '$$');
+                $advance_view.html(checkBreaks($advance_editarea.val()));
+                // $advance_view.html('$$' + $advance_editarea.val() + '$$');
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub, $advance_view[0]]);
             }
 
-        
+            $("#math-symbol").on('click', 'li', function(e){
+                var textarea, start, end, value;
+                textarea = isBasic? $("#basic-editarea")[0] : $("#advance-editarea")[0];
+                start = textarea.selectionStart;
+                end = textarea.selectionEnd;
+                value = textarea.value;
+
+                textarea.value = value.substr(0, start) + $(this).attr('title') + value.substr(end, value.length);
+
+                $(textarea).trigger("change");
+                textarea.focus();
+            });
 
         }
 
@@ -61,11 +73,22 @@
 
     }
 
+    function checkBreaks (text){
+        var arr = text.split('\n');
+        var result = '';
+        $.each(arr, function(index, row){
+            if(row.trim().length > 0){
+                result += '$$' + row + '$$';
+            }
+        });
+        return result;
+    }
+
     function initialView(){
         var $view = $('<div>'+
             '<button class="blue-link" id="tobasic">switch view to basic</button>' + 
             '<button class="blue-link" id="toadvance">switch view to Advance</button>' + 
-            '<textarea id="advance-editarea">\\sum ee6\\sqrt[3][6]</textarea>'+
+            '<textarea id="advance-editarea">S_N = \\displaystyle\\sqrt{ \\frac{1}{N} \\sum\^N_{i=1}{(x_i - \\bar{x})\^2} }</textarea>'+
             '<div id="advance-view"></div>'+
             '<textarea id="basic-editarea"></textarea>'+
             '</div>');
@@ -87,22 +110,22 @@
 
         this.Basic = [
             new Symbol('\\subscript', '_{sub}', 'group0', '<sub style="font-size: 0.6em; line-height: 3.5;">sub</sub>'),
-            new Symbol('\\supscript', '^{sup}', 'group0', '<sup style="font-size: 0.6em">sup</sup>'),
-            new Symbol('\\sqrt', '\sqrt{x}', 'group2', '<span class="block"><span class="sqrt-prefix">√</span><span class="sqrt-stem">&nbsp;</span></span>'),
-            new Symbol('\\nthroot', '\sqrt[n]{x}', 'group2', '<span style="font-size: 0.7em"><sup class="nthroot"><var>n</var></sup><span class="block"><span class="sqrt-prefix">√</span><span class="sqrt-stem">&nbsp;</span></span></span>'),
+            new Symbol('\\supscript', '\^{sup}', 'group0', '<sup style="font-size: 0.6em">sup</sup>'),
+            new Symbol('\\sqrt', '\\sqrt{x}', 'group2', '<span class="block"><span class="sqrt-prefix">√</span><span class="sqrt-stem">&nbsp;</span></span>'),
+            new Symbol('\\nthroot', '\\sqrt[n]{x}', 'group2', '<span style="font-size: 0.7em"><sup class="nthroot"><var>n</var></sup><span class="block"><span class="sqrt-prefix">√</span><span class="sqrt-stem">&nbsp;</span></span></span>'),
             new Symbol('+', '+', 'group1', '<span style="line-height: 1.5em"><span>+</span></span>'),
             new Symbol('-', '-', 'group1', '<span style="line-height: 1.5em"><span>−</span></span>'),
-            new Symbol('\\pm', '\pm', 'group1', '<span style="line-height: 1.5em"><span>±</span></span>'),
-            new Symbol('\\mp', '\mp', 'group1', '<span style="line-height: 1.5em"><span>∓</span></span>'),
+            new Symbol('\\pm', '\\pm', 'group1', '<span style="line-height: 1.5em"><span>±</span></span>'),
+            new Symbol('\\mp', '\\mp', 'group1', '<span style="line-height: 1.5em"><span>∓</span></span>'),
             new Symbol('=', '=', 'group1', '<span style="line-height: 1.5em"><span class="binary-operator">=</span></span>'),
         ];
 
         this.Greek = [
-            new Symbol('\\sum', '^{sup}', 'group3', '<span style="line-height: 1.5em"><big>∑</big></span>'),
-            new Symbol('\\int', '^{sup}', 'group3', '<span style="line-height: 1.5em"><big>∫</big></span>'),
-            new Symbol('\\N', '^{sup}', 'group0', '<span style="line-height: 1.5em"><span>ℕ</span></span>'),
-            new Symbol('\\P', '^{sup}', 'group0', '<span style="line-height: 1.5em"><span>ℙ</span></span>'),
-            new Symbol('\\P', '^{sup}', 'group0', '<span style="line-height: 1.5em"><span>ℙ</span></span>'),
+            new Symbol('\\sum', '\\sum{n}', 'group3', '<span style="line-height: 1.5em"><big>∑</big></span>'),
+            new Symbol('\\int', '\\int{x}', 'group3', '<span style="line-height: 1.5em"><big>∫</big></span>'),
+            new Symbol('\\N', '\\mathbb{N}', 'group0', '<span style="line-height: 1.5em"><span>ℕ</span></span>'),
+            new Symbol('\\P', '\\mathbb{P}', 'group0', '<span style="line-height: 1.5em"><span>ℙ</span></span>'),
+            new Symbol('\\Q', '\\mathbb{Q}', 'group0', '<span style="line-height: 1.5em"><span>ℚ</span></span>'),
 
         ];
 
@@ -131,25 +154,10 @@
                 }
 
                 $(this).siblings('li').removeClass('selected-category').end().addClass('selected-category');
-
                 self.switchSymbols($(this).text().trim());
             });
 
             this.switchSymbols();
-
-            $("#math-symbol").on('click', 'li', function(e){
-                var textarea, start, end, value;
-                textarea = isBasic? $("#basic-editarea")[0] : $("#advance-editarea")[0];
-                start = textarea.selectionStart;
-                end = textarea.selectionEnd;
-                value = textarea.value;
-
-                textarea.value = value.substr(0, start) + $(this).attr('title') + value.substr(end, value.length);
-
-                $(textarea).trigger("change");
-                textarea.focus();
-
-            });
 
         }
 
@@ -209,7 +217,7 @@
         this.group = group;
 
         this.createTemplate = function() {
-            var tit = isBasic? this.advance : this.latex ;
+            var tit = isBasic? this.latex : this.advance;
             var result = '<li class="'+ this.group +'" title="'+ tit +'">' + this.text + '</li>';
             return result;
         }
