@@ -1,197 +1,227 @@
+(function(){
 
+    var isBasic = false;
 
-new KMath();
+    function KMath(){
+        var $advance_editarea, $advance_view, $basic_editarea, $tobasic_btn, $toadvance_btn, 
+            controlBox = new ControlBox();
+        this._init = function(){
+            $("#kmath").html($('<ul id="math-category"></ul>' + 
+                '<ul id="math-symbol">123</ul>' +
+                '<div id="math-editor">456</div>'));
 
-function KMath(){
+            controlBox.init();
+            initialView();
 
-    this._init=function(){
-        $("#kmath").html($('<ul id="math-category"></ul>' + 
-            '<ul id="math-symbol">123</ul>' +
-            '<div id="math-editor">456</div>'));
+            $advance_editarea = $("#advance-editarea");
+            $advance_view = $("#advance-view");
+            $basic_editarea = $("#basic-editarea");
+            $tobasic_btn = $("#tobasic");
+            $toadvance_btn = $("#toadvance");
 
-        new ControlBox().init();
-        new AdvanceView().createView();
+            $("#kmath").on("click", '#tobasic', function(){
+                $basic_editarea.show(0);
+                $toadvance_btn.show(0);
 
-    }
+                $advance_editarea.hide(0);
+                $advance_view.hide(0);
+                $tobasic_btn.hide(0);
 
-    return this._init();
+                isBasic = true;
+                controlBox.switchSymbols($('.selected-category').text().trim());
+            });
 
-}
+            $("#kmath").on("click", '#toadvance', function(){
+                $basic_editarea.hide(0);
+                $toadvance_btn.hide(0);
 
+                $advance_editarea.show(0);
+                $advance_view.show(0);
+                $tobasic_btn.show(0);
 
-function ControlBox(){
+                typesetView();
 
-    var symbolCaches = [], category ;
+                isBasic = false;
+                controlBox.switchSymbols($('.selected-category').text().trim());              
+            });
 
-    this.isBasic = true;
+            $("#toadvance").trigger("click");
 
-    category = [
-        {title: 'Basic', icon: '+'},
-        {title: 'Greek', icon: '**'}
-    ];
-
-    this.Basic = [
-        {text: 'sub', latex: '\subscript', advance: '_{sub}', group: 'group0'},
-        {text: 'sup', latex: '\sum22', advance: '^{sup}', group: 'group0'},
-        {text: 'n/m', latex: '\//', advance: '_{sub}', group: 'group0'},
-        {text: '+', latex: '\sum', advance: '_{sub}', group: 'group1'},
-        {text: '-', latex: '\sum', advance: '_{sub}', group: 'group1'}
-    ];
-
-    this.Greek = [
-        {text: '-', latex: '\sum', advance: '_{sub}', group: 'group1'},
-        {text: '-', latex: '\sum', advance: '_{sub}', group: 'group1'},
-        {text: '-', latex: '\sum', advance: '_{sub}', group: 'group1'},
-        {text: '^', latex: '\sum', advance: '_{sub}', group: 'group2'},
-        {text: '22', latex: '\sum', advance: '_{sub}', group: 'group2'},
-        {text: '-', latex: '\sum', advance: '_{sub}', group: 'group3'}
-    ];
-
-    // render category
-    this.init = function(){
-
-        var str = '',
-            $category = $('#math-category');
-            self = this;
-            
-        $.map(category, function(c, index){
-            index === 0 ? str += '<li class="selected-category" >' + c.title + '</li>' : 
-                str += '<li>' + c.title + '</li>'
-        });
-
-        $category.html(str);
-
-        $category.find('li').click(function(e){
-            if($(this).hasClass('selected-category')){
-                return;
+            $advance_editarea.on({'keyup': typesetView, 'change': typesetView});
+            function typesetView(){
+                $advance_view.html('$$' + $advance_editarea.val() + '$$');
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub, $advance_view[0]]);
             }
 
-            $(this).siblings('li').removeClass('selected-category').end().addClass('selected-category');
+        
 
-            self.switchSymbols($(this).text().trim());
-        });
-
-        this.switchSymbols();
-
-        $("#math-symbol").on('click', 'li', function(e){
-            var textarea, start, end, value;
-            textarea = $("#math-editor textarea")[0];
-            start = textarea.selectionStart;
-            end = textarea.selectionEnd;
-            value = textarea.value;
-
-            textarea.value = value.substr(0, start) + $(this).attr('title') + value.substr(end, value.length);
-        });
-
-    }
-
-    // render symbols
-    this.switchSymbols = function(title){
-
-        // Basic in default
-        title ? '' : title = category[0].title;
-
-        var ele = '',
-            groups = {},    // current symbols group name store
-            $symbol = $("#math-symbol"),
-            symbolCache;
-
-        // if(symbolCaches[title]){
-        //     return $symbol.html(symbolCaches[title]);
-        // }
-
-        symbolCache = $.grep(symbolCaches, function(cache){
-            if(cache.title == title && cache.isBasic == this.isBasic){
-                return cache;
-            }
-        });
-
-        if(symbolCache.length){
-            return $symbol.html(symbolCache);
         }
 
-        $.map(this[title], function(s){
-            // ele += '<li class="'+ s.group +'" title="'+ s.latex +'" advance="'+ s.advance +'">' + s.text + '</li>';
-            ele += new Symbol(s).createTemplate(this.isBasic);
-            groups[s.group] = 1;
-        });
+        return this._init();
 
-        ele = $(ele);
-
-        // set styles for the last one in each group 
-        for(key in groups){
-            ele.filter('.' + key).last().css('margin-right', '5px');
-        }
-
-        $symbol.html(ele);
-
-        symbolCaches.push({
-            ele: ele,
-            title: title,
-            isBasic: this.isBasic
-        }); 
     }
 
-}
-
-function Symbol(s){
-    this.text = s.text;
-    this.latex = s.latex;
-    this.advance = s.advance;
-    this.group = s.group;
-
-    this.createTemplate = function(isBasic) {
-        var tit = isBasic? this.latext : this.advance;
-        var result = '<li class="'+ this.group +'" title="'+ this.latex +'" advance="'+ this.advance +'">' + this.text + '</li>';
-        return result;
-    }
-}
-// Symbol.prototype.createTemplate = function(isBasic) {
-//       var tit = isBasic? this.latext : this.advance;
-//       var result = '<li class="'+ this.group +'" title="'+ this.latex +'" advance="'+ this.advance +'">' + this.text + '</li>';
-//       return result;
-// }
-
-
-function AdvanceView(){
-    this.createView = function(){
-        var str = '<div>'+
-            '<button class="blue-link">switch view to basic</button>' + 
+    function initialView(){
+        var $view = $('<div>'+
+            '<button class="blue-link" id="tobasic">switch view to basic</button>' + 
+            '<button class="blue-link" id="toadvance">switch view to Advance</button>' + 
             '<textarea id="advance-editarea">\\sum ee6\\sqrt[3][6]</textarea>'+
             '<div id="advance-view"></div>'+
-            '</div>';
-        $("#math-editor").html(str);
-
-        $("#math-editor").find("button").click(function(){
-            new BasicView().createView();
-        });
-
-        $("#advance-editarea").bind('change', function(e){
-            $("#advance-view").html('$$' + this.value + '$$');
-            MathJax.Hub.Queue(["Typeset", MathJax.Hub, $("#advance-view")[0]]);
-        });
-
-        $("#advance-editarea").trigger('change');
-    }
-    
-    var typesetView = function(){
-        $("#advance-view").html(' $$' + this.value + '$$ ');
-        MathJax.Hub.Queue(["Typeset", MathJax.Hub, $("#advance-view")[0]]);
-    };
-
-}
-
-function BasicView(){
-    this.createView = function(){
-        var str = '<div>'+
-            '<button class="blue-link">switch view to Advance</button>' + 
             '<textarea id="basic-editarea"></textarea>'+
-            '</div>';
-        $("#math-editor").html(str);
+            '</div>');
 
-        $("#math-editor").find("button").click(function(){
-            new AdvanceView().createView();
-        });
+        $("#math-editor").html($view);
+        
     }
 
-}
+    function ControlBox(){
+
+        var symbolCaches = [], category ;
+
+        // this.isBasic = false;
+
+        category = [
+            {title: 'Basic', icon: '+'},
+            {title: 'Greek', icon: '**'}
+        ];
+
+        this.Basic = [
+            new Symbol('\\subscript', '_{sub}', 'group0', '<sub style="font-size: 0.6em; line-height: 3.5;">sub</sub>'),
+            new Symbol('\\supscript', '^{sup}', 'group0', '<sup style="font-size: 0.6em">sup</sup>'),
+            new Symbol('\\sqrt', '\sqrt{x}', 'group2', '<span class="block"><span class="sqrt-prefix">√</span><span class="sqrt-stem">&nbsp;</span></span>'),
+            new Symbol('\\nthroot', '\sqrt[n]{x}', 'group2', '<span style="font-size: 0.7em"><sup class="nthroot"><var>n</var></sup><span class="block"><span class="sqrt-prefix">√</span><span class="sqrt-stem">&nbsp;</span></span></span>'),
+            new Symbol('+', '+', 'group1', '<span style="line-height: 1.5em"><span>+</span></span>'),
+            new Symbol('-', '-', 'group1', '<span style="line-height: 1.5em"><span>−</span></span>'),
+            new Symbol('\\pm', '\pm', 'group1', '<span style="line-height: 1.5em"><span>±</span></span>'),
+            new Symbol('\\mp', '\mp', 'group1', '<span style="line-height: 1.5em"><span>∓</span></span>'),
+            new Symbol('=', '=', 'group1', '<span style="line-height: 1.5em"><span class="binary-operator">=</span></span>'),
+        ];
+
+        this.Greek = [
+            new Symbol('\\sum', '^{sup}', 'group3', '<span style="line-height: 1.5em"><big>∑</big></span>'),
+            new Symbol('\\int', '^{sup}', 'group3', '<span style="line-height: 1.5em"><big>∫</big></span>'),
+            new Symbol('\\N', '^{sup}', 'group0', '<span style="line-height: 1.5em"><span>ℕ</span></span>'),
+            new Symbol('\\P', '^{sup}', 'group0', '<span style="line-height: 1.5em"><span>ℙ</span></span>'),
+            new Symbol('\\P', '^{sup}', 'group0', '<span style="line-height: 1.5em"><span>ℙ</span></span>'),
+
+        ];
+
+        // this.setIsBasic = function(isBasic){
+        //     this.isBasic = isBasic;
+        //     this.switchSymbols($('.selected-category').text().trim());   // current title
+        // }
+
+        // render category
+        this.init = function(){
+
+            var str = '',
+                $category = $('#math-category');
+                self = this;
+                
+            $.map(category, function(c, index){
+                index === 0 ? str += '<li class="selected-category" >' + c.title + '</li>' : 
+                    str += '<li>' + c.title + '</li>'
+            });
+
+            $category.html(str);
+
+            $category.find('li').click(function(e){
+                if($(this).hasClass('selected-category')){
+                    return;
+                }
+
+                $(this).siblings('li').removeClass('selected-category').end().addClass('selected-category');
+
+                self.switchSymbols($(this).text().trim());
+            });
+
+            this.switchSymbols();
+
+            $("#math-symbol").on('click', 'li', function(e){
+                var textarea, start, end, value;
+                textarea = isBasic? $("#basic-editarea")[0] : $("#advance-editarea")[0];
+                start = textarea.selectionStart;
+                end = textarea.selectionEnd;
+                value = textarea.value;
+
+                textarea.value = value.substr(0, start) + $(this).attr('title') + value.substr(end, value.length);
+
+                $(textarea).trigger("change");
+                textarea.focus();
+
+            });
+
+        }
+
+        // render symbols
+        this.switchSymbols = function(title){
+
+            // 'Basic' in default
+            title ? '' : title = category[0].title;
+
+            var ele = '',
+                groups = {},    // current symbols group name store
+                $symbol = $("#math-symbol"),
+                symbolCache;
+
+            // if(symbolCaches[title]){
+            //     return $symbol.html(symbolCaches[title]);
+            // }
+
+            symbolCache = $.grep(symbolCaches, function(cache){
+                if(cache.title == title && cache.isBasic == isBasic){
+                    return cache;
+                }
+            });
+
+            if(symbolCache.length){
+                return $symbol.html(symbolCache[0].ele);
+            }
+
+            $.map(this[title], function(s){
+                // ele += '<li class="'+ s.group +'" title="'+ s.latex +'" advance="'+ s.advance +'">' + s.text + '</li>';
+                ele += s.createTemplate();
+                groups[s.group] = 1;
+            });
+
+            ele = $(ele);
+
+            // set styles for the last one in each group 
+            for(key in groups){
+                ele.filter('.' + key).last().css('margin-right', '5px');
+            }
+
+            $symbol.html(ele);
+
+            symbolCaches.push({
+                ele: ele,
+                title: title,
+                isBasic: isBasic
+            }); 
+        }
+
+    }
+
+    function Symbol(latex, advance, group, text){
+        this.text = text;
+        this.latex = latex;
+        this.advance = advance;
+        this.group = group;
+
+        this.createTemplate = function() {
+            var tit = isBasic? this.advance : this.latex ;
+            var result = '<li class="'+ this.group +'" title="'+ tit +'">' + this.text + '</li>';
+            return result;
+        }
+    }
+
+    new KMath();
+    // Symbol.prototype.createTemplate = function(isBasic) {
+    //       var tit = isBasic? this.latex : this.advance;
+    //       var result = '<li class="'+ this.group +'" title="'+ this.latex +'" advance="'+ this.advance +'">' + this.text + '</li>';
+    //       return result;
+    // }
+
+
+
+})();
