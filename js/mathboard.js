@@ -4,7 +4,8 @@
 
     function KMath(){
         var $advance_editarea, $advance_view, $basic_editarea, $tobasic_btn, $toadvance_btn, 
-            controlBox = new ControlBox();
+            controlBox = new ControlBox(),
+            MQ, mathField;
         this._init = function(){
             $("#kmath").html($('<ul id="math-category"></ul>' + 
                 '<ul id="math-symbol">123</ul>' +
@@ -19,6 +20,7 @@
             $tobasic_btn = $("#tobasic");
             $toadvance_btn = $("#toadvance");
 
+            // Switch basic \ advance view 
             $("#kmath").on("click", '#tobasic', function(){
                 $basic_editarea.show(0);
                 $toadvance_btn.show(0);
@@ -30,7 +32,6 @@
                 isBasic = true;
                 controlBox.switchSymbols($('.selected-category').text().trim());
             });
-
             $("#kmath").on("click", '#toadvance', function(){
                 $basic_editarea.hide(0);
                 $toadvance_btn.hide(0);
@@ -44,9 +45,10 @@
                 isBasic = false;
                 controlBox.switchSymbols($('.selected-category').text().trim());              
             });
-
+            // set default view
             $("#toadvance").trigger("click");
 
+            // Advance view listener
             $advance_editarea.on({'keyup': typesetView, 'change': typesetView});
             function typesetView(){
                 $advance_view.html(checkBreaks($advance_editarea.val()));
@@ -54,23 +56,39 @@
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub, $advance_view[0]]);
             }
 
+            // Basic view
+            MQ = MathQuill.getInterface(2);
+            mathField = MQ.MathField($basic_editarea[0], {
+                spaceBehavesLikeTab: false, 
+                handlers:{
+                    edit: function(){
+                        console.log(mathField.latex());
+                    }
+                }
+            });
+
             $("#math-symbol").on('click', 'li', function(e){
-                var textarea, start, end, value;
-                textarea = isBasic? $("#basic-editarea")[0] : $("#advance-editarea")[0];
-                start = textarea.selectionStart;
-                end = textarea.selectionEnd;
-                value = textarea.value;
 
-                textarea.value = value.substr(0, start) + $(this).attr('title') + value.substr(end, value.length);
+                if(isBasic){
+                    mathField.write(this.title);
+                }else{
+                    var textarea, start, end, value;
+                 // textarea = isBasic? $("#basic-editarea")[0] : $("#advance-editarea")[0];
+                    textarea = $("#advance-editarea")[0];
+                    value = textarea.value;
+                    start = textarea.selectionStart;
+                    end = textarea.selectionEnd;
 
-                $(textarea).trigger("change");
-                textarea.focus();
+                    textarea.value = value.substr(0, start) + this.title + value.substr(end, value.length);
+                    $(textarea).trigger("change");
+                    textarea.focus();
+                }
+                
             });
 
         }
 
         return this._init();
-
     }
 
     function checkBreaks (text){
@@ -90,7 +108,8 @@
             '<button class="blue-link" id="toadvance">switch view to Advance</button>' + 
             '<textarea id="advance-editarea">S_N = \\displaystyle\\sqrt{ \\frac{1}{N} \\sum\^N_{i=1}{(x_i - \\bar{x})\^2} }</textarea>'+
             '<div id="advance-view"></div>'+
-            '<textarea id="basic-editarea"></textarea>'+
+            // '<textarea id="basic-editarea"></textarea>'+
+            '<span id="basic-editarea"></span>'+
             '</div>');
 
         $("#math-editor").html($view);
@@ -111,7 +130,7 @@
         this.Basic = [
             new Symbol('\\subscript', '_{sub}', 'group0', '<sub style="font-size: 0.6em; line-height: 3.5;">sub</sub>'),
             new Symbol('\\supscript', '\^{sup}', 'group0', '<sup style="font-size: 0.6em">sup</sup>'),
-            new Symbol('\\sqrt', '\\sqrt{x}', 'group2', '<span class="block"><span class="sqrt-prefix">√</span><span class="sqrt-stem">&nbsp;</span></span>'),
+            new Symbol('\\sqrt[]{}', '\\sqrt{x}', 'group2', '<span class="block"><span class="sqrt-prefix">√</span><span class="sqrt-stem">&nbsp;</span></span>'),
             new Symbol('\\nthroot', '\\sqrt[n]{x}', 'group2', '<span style="font-size: 0.7em"><sup class="nthroot"><var>n</var></sup><span class="block"><span class="sqrt-prefix">√</span><span class="sqrt-stem">&nbsp;</span></span></span>'),
             new Symbol('+', '+', 'group1', '<span style="line-height: 1.5em"><span>+</span></span>'),
             new Symbol('-', '-', 'group1', '<span style="line-height: 1.5em"><span>−</span></span>'),
@@ -136,7 +155,6 @@
 
         // render category
         this.init = function(){
-
             var str = '',
                 $category = $('#math-category');
                 self = this;
@@ -145,25 +163,21 @@
                 index === 0 ? str += '<li class="selected-category" >' + c.title + '</li>' : 
                     str += '<li>' + c.title + '</li>'
             });
-
             $category.html(str);
 
             $category.find('li').click(function(e){
                 if($(this).hasClass('selected-category')){
                     return;
                 }
-
                 $(this).siblings('li').removeClass('selected-category').end().addClass('selected-category');
                 self.switchSymbols($(this).text().trim());
             });
 
             this.switchSymbols();
-
         }
 
         // render symbols
         this.switchSymbols = function(title){
-
             // 'Basic' in default
             title ? '' : title = category[0].title;
 
@@ -175,13 +189,11 @@
             // if(symbolCaches[title]){
             //     return $symbol.html(symbolCaches[title]);
             // }
-
             symbolCache = $.grep(symbolCaches, function(cache){
                 if(cache.title == title && cache.isBasic == isBasic){
                     return cache;
                 }
             });
-
             if(symbolCache.length){
                 return $symbol.html(symbolCache[0].ele);
             }
@@ -191,14 +203,11 @@
                 ele += s.createTemplate();
                 groups[s.group] = 1;
             });
-
             ele = $(ele);
-
             // set styles for the last one in each group 
             for(key in groups){
                 ele.filter('.' + key).last().css('margin-right', '5px');
             }
-
             $symbol.html(ele);
 
             symbolCaches.push({
@@ -218,6 +227,7 @@
 
         this.createTemplate = function() {
             var tit = isBasic? this.latex : this.advance;
+            // var tit = this.advance;
             var result = '<li class="'+ this.group +'" title="'+ tit +'">' + this.text + '</li>';
             return result;
         }
