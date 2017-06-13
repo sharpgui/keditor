@@ -10,7 +10,7 @@ extend kendo editor for edit &amp; review   math
 ## demo
 
 - [第一版](https://sharpgui.github.io/keditor/keditor.html)
-
+- [new DEMO](https://sharpgui.github.io/keditor/demos/mathboard.html)
 ## Canvas
 
 > 1
@@ -32,8 +32,8 @@ extend kendo editor for edit &amp; review   math
 ## RP
 > 1
 
-![](pic/CalculatorA.png)
+![](pic/Calculator_new.png)
 
 > 2
 
-![](pic/CalculatorB.png)
+![](pic/Calculator_new2.png)
