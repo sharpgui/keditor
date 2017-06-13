@@ -1,11 +1,12 @@
 (function(){
 
-    var isBasic = false;
+    var isBasic = false,
+        MQ = MathQuill.getInterface(2);
 
     function KMath(){
         var $advance_editarea, $advance_view, $basic_editarea, $tobasic_btn, $toadvance_btn, 
             controlBox = new ControlBox(),
-            MQ, mathField;
+            mathField;
         this._init = function(){
             $("#kmath").html($('<ul id="math-category"></ul>' + 
                 '<ul id="math-symbol">123</ul>' +
@@ -57,7 +58,6 @@
             }
 
             // Basic view
-            MQ = MathQuill.getInterface(2);
             mathField = MQ.MathField($basic_editarea[0], {
                 spaceBehavesLikeTab: false, 
                 handlers:{
@@ -70,7 +70,7 @@
             $("#math-symbol").on('click', 'li', function(e){
 
                 if(isBasic){
-                    mathField.write(this.title);
+                    mathField.cmd(this.title);
                 }else{
                     var textarea, start, end, value;
                  // textarea = isBasic? $("#basic-editarea")[0] : $("#advance-editarea")[0];
@@ -79,7 +79,7 @@
                     start = textarea.selectionStart;
                     end = textarea.selectionEnd;
 
-                    textarea.value = value.substr(0, start) + this.title + value.substr(end, value.length);
+                    textarea.value = value.substr(0, start) + ' ' + this.title + ' ' + value.substr(end, value.length);
                     $(textarea).trigger("change");
                     textarea.focus();
                 }
@@ -124,30 +124,171 @@
 
         category = [
             {title: 'Basic', icon: '+'},
-            {title: 'Greek', icon: '**'}
+            {title: 'Greek', icon: '**'},
+            {title: 'Operators', icon: '**'},
+            {title: 'Relationships', icon: '<'},
+            {title: 'Arrows', icon: '?'},
+            {title: 'Delimiters', icon: '{'},
+            {title: 'Misc', icon: '&'}
         ];
 
         this.Basic = [
-            new Symbol('\\subscript', '_{sub}', 'group0', '<sub style="font-size: 0.6em; line-height: 3.5;">sub</sub>'),
-            new Symbol('\\supscript', '\^{sup}', 'group0', '<sup style="font-size: 0.6em">sup</sup>'),
-            new Symbol('\\sqrt[]{}', '\\sqrt{x}', 'group2', '<span class="block"><span class="sqrt-prefix">√</span><span class="sqrt-stem">&nbsp;</span></span>'),
-            new Symbol('\\nthroot', '\\sqrt[n]{x}', 'group2', '<span style="font-size: 0.7em"><sup class="nthroot"><var>n</var></sup><span class="block"><span class="sqrt-prefix">√</span><span class="sqrt-stem">&nbsp;</span></span></span>'),
-            new Symbol('+', '+', 'group1', '<span style="line-height: 1.5em"><span>+</span></span>'),
-            new Symbol('-', '-', 'group1', '<span style="line-height: 1.5em"><span>−</span></span>'),
-            new Symbol('\\pm', '\\pm', 'group1', '<span style="line-height: 1.5em"><span>±</span></span>'),
-            new Symbol('\\mp', '\\mp', 'group1', '<span style="line-height: 1.5em"><span>∓</span></span>'),
-            new Symbol('=', '=', 'group1', '<span style="line-height: 1.5em"><span class="binary-operator">=</span></span>'),
+            new Symbol('\\subscript', '_{sub}', 'group0', '_{sub}'),
+            new Symbol('\\supscript', '\^{sup}', 'group0', '\^{sup}'),
+            new Symbol('\\frac', '\\frac{n}{m}', 'group0', '\\frac{n}{m}'),
+            new Symbol('\\sqrt', '\\sqrt{x}', 'group0', '\\sqrt{x}'),
+            new Symbol('\\nthroot', '\\sqrt[n]{x}', 'group0', '\\sqrt[n]{x}'),
+            // new Symbol('+', '\\langle \\rangle', 'group0', '<span style="line-height: 1.5em"><span class="block"><span class="paren">⟨</span><span class="block"></span><span class="paren">⟩</span></span></span>'),
+            new Symbol('\\binomial', '\\binom{n}{m}', 'group0', '\\binom{n}{m}'),
+            // new Symbol('+', '\\begin{matrix} 1 \\\ 2 \\\ 3 \\end{matrix}', 'group0', '<span style="line-height: 1.5em"><span>+</span></span>'),
+            new Symbol('\\f', 'f', 'group0', 'f'),
+            new Symbol('\\prime', '\\prime', 'group0', '\\prime'),
+
+            new Symbol('+', '+', 'group1', '+'),
+            new Symbol('-', '-', 'group1', '-'),
+            new Symbol('\\pm', '\\pm', 'group1', '\\pm'),
+            new Symbol('\\mp', '\\mp', 'group1', '\\mp'),
+            new Symbol('\\cdot', '\\cdot', 'group1', '\\cdot'),
+            new Symbol('=', '=', 'group1', '='),
+            new Symbol('\\times', '\\times', 'group1', '\\times'),
+            new Symbol('\\div', '\\div', 'group1', '\\div'),
+            new Symbol('\\ast', '\\ast', 'group1', '\\ast'),
+
+            new Symbol('\\therefore', '\\therefore', 'group4', '\\therefore'),
+            new Symbol('\\because', '\\because', 'group4', '\\because'),
+
+            new Symbol('\\sum', '\\sum{n}', 'group2', '\\sum'),
+            new Symbol('\\prod', '\\prod{n}', 'group2', '\\prod'),
+            new Symbol('\\coprod', '\\coprod{n}', 'group2', '\\coprod'),
+            new Symbol('\\int', '\\int{x}', 'group2', '\\int'),
+
+            new Symbol('\\N', '\\mathbb{N}', 'group3', '\\N'),
+            new Symbol('\\P', '\\mathbb{P}', 'group3', '\\P'),
+            new Symbol('\\Q', '\\mathbb{Q}', 'group3', '\\Q'),
+            new Symbol('\\R', '\\mathbb{R}', 'group3', '\\R'),
+            new Symbol('\\C', '\\mathbb{C}', 'group3', '\\C'),
+            new Symbol('\\H', '\\mathbb{H}', 'group3', '\\H')
         ];
 
         this.Greek = [
-            new Symbol('\\sum', '\\sum{n}', 'group3', '<span style="line-height: 1.5em"><big>∑</big></span>'),
-            new Symbol('\\int', '\\int{x}', 'group3', '<span style="line-height: 1.5em"><big>∫</big></span>'),
-            new Symbol('\\N', '\\mathbb{N}', 'group0', '<span style="line-height: 1.5em"><span>ℕ</span></span>'),
-            new Symbol('\\P', '\\mathbb{P}', 'group0', '<span style="line-height: 1.5em"><span>ℙ</span></span>'),
-            new Symbol('\\Q', '\\mathbb{Q}', 'group0', '<span style="line-height: 1.5em"><span>ℚ</span></span>'),
+            new Symbol('\\alpha', '\\alpha', 'group3', '\\alpha'),
+            new Symbol('\\beta', '\\beta', 'group3', '\\beta'),
+            new Symbol('\\gamma', '\\gamma', 'group3', '\\gamma'),
+            new Symbol('\\delta', '\\delta', 'group3', '\\delta'),
+            new Symbol('\\epsilon', '\\epsilon', 'group3', '\\epsilon'),
+            new Symbol('\\zeta', '\\zeta', 'group3', '\\zeta'),
+            new Symbol('\\eta', '\\eta', 'group3', '\\eta'),
+            new Symbol('\\theta', '\\theta', 'group3', '\\theta'),
+            new Symbol('\\iota', '\\iota', 'group3', '\\iota'),
+            new Symbol('\\kappa', '\\kappa', 'group3', '\\kappa'),
+            new Symbol('\\lambda', '\\lambda', 'group3', '\\lambda'),
+            new Symbol('\\mu', '\\mu', 'group3', '\\mu'),
+            new Symbol('\\nu', '\\nu', 'group3', '\\nu'),
+            new Symbol('\\xi', '\\xi', 'group3', '\\xi'),
+            new Symbol('\\pi', '\\pi', 'group3', '\\pi'),
+            new Symbol('\\rho', '\\rho', 'group3', '\\rho'),
+            new Symbol('\\sigma', '\\sigma', 'group3', '\\sigma'),
+            new Symbol('\\tau', '\\tau', 'group3', '\\tau'),
+            new Symbol('\\upsilon', '\\upsilon', 'group3', '\\upsilon'),
+            new Symbol('\\phi', '\\phi', 'group3', '\\phi'),
+            new Symbol('\\chi', '\\chi', 'group3', '\\chi'),
+            new Symbol('\\psi', '\\psi', 'group3', '\\psi'),
+            new Symbol('\\omega', '\\omega', 'group3', '\\omega'),
 
+            new Symbol('\\digamma', '\\digamma', 'group4', '\\digamma'),
+            new Symbol('\\varepsilon', '\\varepsilon', 'group4', '\\varepsilon'),
+            new Symbol('\\vartheta', '\\vartheta', 'group4', '\\vartheta'),
+            new Symbol('\\varkappa', '\\varkappa', 'group4', '\\varkappa'),
+            new Symbol('\\varpi', '\\varpi', 'group4', '\\varpi'),
+            new Symbol('\\varrho', '\\varrho', 'group4', '\\varrho'),
+            new Symbol('\\varsigma', '\\varsigma', 'group4', '\\varsigma'),
+            new Symbol('\\varphi', '\\varphi', 'group4', '\\varphi'),
+
+            new Symbol('\\Gamma', '\\Gamma', 'group5', '\\Gamma'),
+            new Symbol('\\Delta', '\\Delta', 'group5', '\\Delta'),
+            new Symbol('\\Theta', '\\Theta', 'group5', '\\Theta'),
+            new Symbol('\\Lambda', '\\Lambda', 'group5', '\\Lambda'),
+            new Symbol('\\Xi', '\\Xi', 'group5', '\\Xi'),
+            new Symbol('\\Pi', '\\Pi', 'group5', '\\Pi'),
+            new Symbol('\\Sigma', '\\Sigma', 'group5', '\\Sigma'),
+            new Symbol('\\Upsilon', '\\Upsilon', 'group5', '\\Upsilon'),
+            new Symbol('\\Phi', '\\Phi', 'group5', '\\Phi'),
+            new Symbol('\\Psi', '\\Psi', 'group5', '\\Psi'),
+            new Symbol('\\Omega', '\\Omega', 'group5', '\\Omega')
         ];
 
+        this.Operators = [
+            new Symbol('\\wedge', '\\wedge', 'group1', '\\wedge'),
+            new Symbol('\\vee', '\\vee', 'group1', '\\vee'),
+            new Symbol('\\cup', '\\cup', 'group1', '\\cup'),
+            new Symbol('\\cap', '\\cap', 'group1', '\\cap'),
+            new Symbol('\\diamond', '\\diamond', 'group1', '\\diamond'),
+            new Symbol('\\bigtriangleup', '\\bigtriangleup', 'group1', '\\bigtriangleup'),
+            new Symbol('\\ominus', '\\ominus', 'group1', '\\ominus'),
+            new Symbol('\\uplus', '\\uplus', 'group1', '\\uplus'),
+            new Symbol('\\otimes', '\\otimes', 'group1', '\\otimes'),
+            new Symbol('\\oplus', '\\oplus', 'group1', '\\oplus'),
+            new Symbol('\\bigtriangledown', '\\bigtriangledown', 'group1', '\\bigtriangledown'),
+            new Symbol('\\sqcap', '\\sqcap', 'group1', '\\sqcap'),
+            new Symbol('\\triangleleft', '\\triangleleft', 'group1', '\\triangleleft'),
+            new Symbol('\\sqcup', '\\sqcup', 'group1', '\\sqcup'),
+            new Symbol('\\triangleright', '\\triangleright', 'group1', '\\triangleright'),
+            new Symbol('\\odot', '\\odot', 'group1', '\\odot'),
+            new Symbol('\\bigcirc', '\\bigcirc', 'group1', '\\bigcirc'),
+            new Symbol('\\dagger', '\\dagger', 'group1', '\\dagger'),
+            new Symbol('\\ddagger', '\\ddagger', 'group1', '\\ddagger'),
+            new Symbol('\\wr', '\\wr', 'group1', '\\wr'),
+            new Symbol('\\amalg', '\\amalg', 'group1', '\\amalg')
+        ];
+
+        this.Relationships = [
+            new Symbol('<', '<', 'group1', '<'),
+            new Symbol('>', '>', 'group1', '>'),
+            new Symbol('\\equiv', '\\equiv', 'group1', '\\equiv'),
+            new Symbol('\\cong', '\\cong', 'group1', '\\cong'),
+            new Symbol('\\sim', '\\sim', 'group1', '\\sim'),
+            new Symbol('\\not\in', '\\not\in', 'group1', '\\not\in'),
+            new Symbol('\\ne', '\\ne', 'group1', '\\ne'),
+            new Symbol('\\propto', '\\propto', 'group1', '\\propto'),
+            new Symbol('\\approx', '\\approx', 'group1', '\\approx'),
+            new Symbol('\\le', '\\le', 'group1', '\\le'),
+            new Symbol('\\ge', '\\ge', 'group1', '\\ge'),
+            new Symbol('\\in', '\\in', 'group1', '\\in'),
+            new Symbol('\\ni', '\\ni', 'group1', '\\ni'),
+            new Symbol('\\notni', '\\not\\ni', 'group1', '\\notni'),   
+            new Symbol('\\subset', '\\subset', 'group1', '\\subset'),
+            new Symbol('\\supset', '\\supset', 'group1', '\\supset'),
+            new Symbol('\\not\subset', '\\not\\subset', 'group1', '\\not\subset'),
+            new Symbol('\\not\supset', '\\not\\supset', 'group1', '\\not\supset'),
+            new Symbol('\\subseteq', '\\subseteq', 'group1', '\\subseteq'),
+            new Symbol('\\supseteq', '\\supseteq', 'group1', '\\supseteq'),
+            new Symbol('\\not\subseteq', '\\not\\subseteq', 'group1', '\\not\subseteq'),
+            new Symbol('\\not\supseteq', '\\not\\supseteq', 'group1', '\\not\supseteq'),
+            new Symbol('\\models', '\\models', 'group1', '\\models'),
+            new Symbol('\\prec', '\\prec', 'group1', '\\prec'),
+            new Symbol('\\succ', '\\succ', 'group1', '\\succ'),
+            new Symbol('\\preceq', '\\preceq', 'group1', '\\preceq'),
+            new Symbol('\\succeq', '\\succeq', 'group1', '\\succeq'),
+            new Symbol('\\simeq', '\\simeq', 'group1', '\\simeq'),
+            new Symbol('\\mid', '\\mid', 'group1', '\\mid'),
+            new Symbol('\\ll', '\\ll', 'group1', '\\ll'),
+            new Symbol('\\gg', '\\gg', 'group1', '\\gg'),
+            new Symbol('\\parallel', '\\parallel', 'group1', '\\parallel'),
+            new Symbol('\\bowtie', '\\bowtie', 'group1', '\\bowtie'),
+            new Symbol('\\sqsubset', '\\sqsubset', 'group1', '\\sqsubset'),
+            new Symbol('\\sqsupset', '\\sqsupset', 'group1', '\\sqsupset'),
+            new Symbol('\\smile', '\\smile', 'group1', '\\smile'),
+            new Symbol('\\sqsubseteq', '\\sqsubseteq', 'group1', '\\sqsubseteq'),
+            new Symbol('\\sqsupseteq', '\\sqsupseteq', 'group1', '\\sqsupseteq'),
+            new Symbol('\\doteq', '\\doteq', 'group1', '\\doteq'),
+            new Symbol('\\frown', '\\frown', 'group1', '\\frown'),
+            new Symbol('\\vdash', '\\vdash', 'group1', '\\vdash'),
+            new Symbol('\\dashv', '\\dashv', 'group1', '\\dashv'),
+            new Symbol('\\exists', '\\exists', 'group1', '\\exists'),
+            new Symbol('\\varnothing', '\\varnothing', 'group1', '\\varnothing')
+        ];
+
+        this.Arrows = [];
         // this.setIsBasic = function(isBasic){
         //     this.isBasic = isBasic;
         //     this.switchSymbols($('.selected-category').text().trim());   // current title
@@ -195,7 +336,12 @@
                 }
             });
             if(symbolCache.length){
-                return $symbol.html(symbolCache[0].ele);
+                $symbol.html(symbolCache[0].ele);
+                $symbol.find('li').each(function(){
+                    MQ.StaticMath(this);
+                });
+
+                return;               
             }
 
             $.map(this[title], function(s){
@@ -206,9 +352,13 @@
             ele = $(ele);
             // set styles for the last one in each group 
             for(key in groups){
-                ele.filter('.' + key).last().css('margin-right', '5px');
+                ele.filter('.' + key).last().css('margin-right', '20px');
             }
             $symbol.html(ele);
+
+            $symbol.find('li').each(function(){
+                MQ.StaticMath(this);
+            });
 
             symbolCaches.push({
                 ele: ele,
@@ -227,8 +377,8 @@
 
         this.createTemplate = function() {
             var tit = isBasic? this.latex : this.advance;
-            // var tit = this.advance;
             var result = '<li class="'+ this.group +'" title="'+ tit +'">' + this.text + '</li>';
+            // var result = '<li class="'+ this.group +'" title="'+ tit +'">' + this.advance + '</li>';
             return result;
         }
     }
