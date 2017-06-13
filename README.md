@@ -32,8 +32,8 @@ extend kendo editor for edit &amp; review   math
 ## RP
 > 1
 
-![](pic/CalculatorA.png)
+![](pic/Calculator_new.png)
 
 > 2
 
-![](pic/CalculatorB.png)
+![](pic/Calculator_new2.png)
