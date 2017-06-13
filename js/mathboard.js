@@ -288,7 +288,87 @@
             new Symbol('\\varnothing', '\\varnothing', 'group1', '\\varnothing')
         ];
 
-        this.Arrows = [];
+        this.Arrows = [
+            new Symbol('\\longleftarrow', '\\longleftarrow', 'group1', '\\longleftarrow'),
+            new Symbol('\\longrightarrow', '\\longrightarrow', 'group1', '\\longrightarrow'),
+            new Symbol('\\Longleftarrow', '\\Longleftarrow', 'group1', '\\Longleftarrow'),
+            new Symbol('\\Longrightarrow', '\\Longrightarrow', 'group1', '\\Longrightarrow'),
+            new Symbol('\\longleftrightarrow', '\\longleftrightarrow', 'group1', '\\longleftrightarrow'),
+            new Symbol('\\updownarrow', '\\updownarrow', 'group1', '\\updownarrow'),
+            new Symbol('\\Longleftrightarrow', '\\Longleftrightarrow', 'group1', '\\Longleftrightarrow'),
+            new Symbol('\\Updownarrow', '\\Updownarrow', 'group1', '\\Updownarrow'),
+            new Symbol('\\mapsto', '\\mapsto', 'group1', '\\mapsto'),
+            new Symbol('\\nearrow', '\\nearrow', 'group1', '\\nearrow'),
+            new Symbol('\\hookleftarrow', '\\hookleftarrow', 'group1', '\\hookleftarrow'),
+            new Symbol('\\hookrightarrow', '\\hookrightarrow', 'group1', '\\hookrightarrow'),
+            new Symbol('\\searrow', '\\searrow', 'group1', '\\searrow'),
+            new Symbol('\\leftharpoonup', '\\leftharpoonup', 'group1', '\\leftharpoonup'),
+            new Symbol('\\rightharpoonup', '\\rightharpoonup', 'group1', '\\rightharpoonup'),
+            new Symbol('\\swarrow', '\\swarrow', 'group1', '\\swarrow'),
+            new Symbol('\\leftharpoondown', '\\leftharpoondown', 'group1', '\\leftharpoondown'),
+            new Symbol('\\rightharpoondown', '\\rightharpoondown', 'group1', '\\rightharpoondown'),
+            new Symbol('\\nwarrow', '\\nwarrow', 'group1', '\\nwarrow'),
+            new Symbol('\\downarrow', '\\downarrow', 'group1', '\\downarrow'),
+            new Symbol('\\Downarrow', '\\Downarrow', 'group1', '\\Downarrow'),
+            new Symbol('\\uparrow', '\\uparrow', 'group1', '\\uparrow'),
+            new Symbol('\\Uparrow', '\\Uparrow', 'group1', '\\Uparrow'),
+            new Symbol('\\rightarrow', '\\rightarrow', 'group1', '\\rightarrow'),
+            new Symbol('\\Rightarrow', '\\Rightarrow', 'group1', '\\Rightarrow'),
+            new Symbol('\\leftarrow', '\\leftarrow', 'group1', '\\leftarrow'),
+            new Symbol('\\Leftarrow', '\\Leftarrow', 'group1', '\\Leftarrow'),
+            new Symbol('\\leftrightarrow', '\\leftrightarrow', 'group1', '\\leftrightarrow'),
+            new Symbol('\\Leftrightarrow', '\\Leftrightarrow', 'group1', '\\Leftrightarrow')
+        ];
+
+        this.Delimiters = [
+            new Symbol('\\lfloor', '\\lfloor', 'group1', '\\lfloor'),
+            new Symbol('\\rfloor', '\\rfloor', 'group1', '\\rfloor'),
+            new Symbol('\\lceil', '\\lceil', 'group1', '\\lceil'),
+            new Symbol('\\rceil', '\\rceil', 'group1', '\\rceil'),
+            new Symbol('\\slash', '\\slash', 'group1', '\\slash'),
+            new Symbol('\\lbrace', '\\lbrace', 'group1', '\\lbrace'),
+            new Symbol('\\rbrace', '\\rbrace', 'group1', '\\rbrace')
+        ];
+
+        this.Misc = [
+            new Symbol('\\forall', '\\forall', 'group1', '\\forall'),
+            new Symbol('\\ldots', '\\ldots', 'group1', '\\ldots'),
+            new Symbol('\\cdots', '\\cdots', 'group1', '\\cdots'),
+            new Symbol('\\vdots', '\\vdots', 'group1', '\\vdots'),
+            // new Symbol('\\ddots', '\\unicode{8944}', 'group1', '\\ddots'),      //???
+            new Symbol('\\surd', '\\surd', 'group1', '\\surd'),
+            new Symbol('\\triangle', '\\triangle', 'group1', '\\triangle'),
+            new Symbol('\\ell', '\\ell', 'group1', '\\ell'),
+            new Symbol('\\top', '\\top', 'group1', '\\top'),
+            new Symbol('\\flat', '\\flat', 'group1', '\\flat'),
+            new Symbol('\\natural', '\\natural', 'group1', '\\natural'),
+            new Symbol('\\sharp', '\\sharp', 'group1', '\\sharp'),
+            new Symbol('\\wp', '\\wp', 'group1', '\\wp'),
+            new Symbol('\\bot', '\\bot', 'group1', '\\bot'),
+            new Symbol('\\clubsuit', '\\clubsuit', 'group1', '\\clubsuit'),
+            new Symbol('\\diamondsuit', '\\diamondsuit', 'group1', '\\diamondsuit'),
+            new Symbol('\\heartsuit', '\\heartsuit', 'group1', '\\heartsuit'),
+            new Symbol('\\spadesuit', '\\spadesuit', 'group1', '\\spadesuit'),
+            new Symbol('\\caret', '\\caret', 'group1', '\\caret'),
+            new Symbol('\\backslash', '\\backslash', 'group1', '\\backslash'),
+            new Symbol('\\vert', '\\vert', 'group1', '\\vert'),
+            new Symbol('\\perp', '\\perp', 'group1', '\\perp'),
+            new Symbol('\\nabla', '\\nabla', 'group1', '\\nabla'),
+            new Symbol('\\hbar', '\\hbar', 'group1', '\\hbar'),
+            new Symbol('\\AA', '\\AA', 'group1', '\\AA'),
+            new Symbol('\\circ', '\\circ', 'group1', '\\circ'),
+            new Symbol('\\bullet', '\\bullet', 'group1', '\\bullet'),
+            new Symbol('\\setminus', '\\setminus', 'group1', '\\setminus'),
+            new Symbol('\\neg', '\\neg', 'group1', '\\neg'),
+            new Symbol('\\dots', '\\dots', 'group1', '\\dots'),
+            new Symbol('\\Re', '\\Re', 'group1', '\\Re'),
+            new Symbol('\\Im', '\\Im', 'group1', '\\Im'),
+            new Symbol('\\partial', '\\partial', 'group1', '\\partial'),
+            new Symbol('\\infty', '\\infty', 'group1', '\\infty'),
+            new Symbol('\\aleph', '\\aleph', 'group1', '\\aleph'),
+            new Symbol('\\deg', '\\deg', 'group1', '\\deg'),
+            new Symbol('\\angle', '\\angle', 'group1', '\\angle')
+        ];
         // this.setIsBasic = function(isBasic){
         //     this.isBasic = isBasic;
         //     this.switchSymbols($('.selected-category').text().trim());   // current title
