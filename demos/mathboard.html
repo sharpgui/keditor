@@ -19,23 +19,35 @@
 
     <style>
         /**{ font-family: Symbola, "Times New Roman", serif;}*/
-        ul{ list-style: none; }
-#kmath{ max-width: 700px; margin: 0 auto; padding: 8px; border: 1px solid #f1f1f1; }
+        ul{ list-style: none; margin: 0; padding: 0;}
+#kmath{ max-width: 700px; margin: 100px auto 0; padding: 8px; border: 1px solid #f1f1f1; }
 
+/* Category */
 #math-category>li{ display: inline-block; margin: 0 3px 0 0; padding: 0 5px; line-height: 30px; border: 1px solid #ccc; cursor: pointer;}
+#math-category>li>span{ padding-left: 6px;}
 .selected-category{ background: #e0e0e0 }
 
-#math-symbol>li{ display: inline-block; padding: 3px 5px;/*  background: #e0e0e0; */ cursor: pointer;}
+ /* Symbol */
+#math-symbol{ display: flex; flex-wrap: wrap; }
+#math-symbol>li{ 
+    float: left; display: flex; 
+    margin-left: -1px; margin-top: 5px; height: 40px; width: 40px; 
+    line-height: 35px; text-align: center; 
+    color: #008ee6; 
+    border:1px solid #dbdbdb; cursor: pointer; box-sizing: border-box;
+}
 
-#advance-editarea{ display: block; width: 100%; margin: 0 auto; height: 130px;}
+/* Edit Area */
+#advance-editarea{ display: block; overflow: auto; width: 100%; margin: 0 auto; height: 130px; }
 #advance-view{ margin: 0 auto; height: 130px; }
-
 #basic-editarea{ clear: both; display: block; width: 100%; margin: 0 auto; height: 250px;}
 
 .blue-link{ margin: 5px 0; float: right; border: none; background: none; color: #3a9be5; cursor: pointer;}
 .blue-link:hover{ text-decoration: underline;}
 
-#math-symbol .mq-empty{ display: none!important; background: none!important; height: 0px!important; width: 0px!important;}
+/* rewrite Math Symbols styles */
+#math-symbol .mq-empty{ display: none!important;}
+#math-symbol big{ font-size: 1.3em;}
 
     </style>
 

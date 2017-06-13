@@ -31,7 +31,7 @@
                 $tobasic_btn.hide(0);
 
                 isBasic = true;
-                controlBox.switchSymbols($('.selected-category').text().trim());
+                controlBox.switchSymbols($('.selected-category').find('span').text().trim());
             });
             $("#kmath").on("click", '#toadvance', function(){
                 $basic_editarea.hide(0);
@@ -44,7 +44,7 @@
                 typesetView();
 
                 isBasic = false;
-                controlBox.switchSymbols($('.selected-category').text().trim());              
+                controlBox.switchSymbols($('.selected-category').find('span').text().trim());              
             });
             // set default view
             $("#toadvance").trigger("click");
@@ -124,22 +124,22 @@
 
         category = [
             {title: 'Basic', icon: '+'},
-            {title: 'Greek', icon: '**'},
-            {title: 'Operators', icon: '**'},
-            {title: 'Relationships', icon: '<'},
-            {title: 'Arrows', icon: '?'},
+            {title: 'Greek', icon: 'π'},
+            {title: 'Operators', icon: '⊕'},
+            {title: 'Relationships', icon: '≤'},
+            {title: 'Arrows', icon: '⇔'},
             {title: 'Delimiters', icon: '{'},
-            {title: 'Misc', icon: '&'}
+            {title: 'Misc', icon: '∞'}
         ];
 
         this.Basic = [
-            new Symbol('\\subscript', '_{sub}', 'group0', '_{sub}'),
-            new Symbol('\\supscript', '\^{sup}', 'group0', '\^{sup}'),
-            new Symbol('\\frac', '\\frac{n}{m}', 'group0', '\\frac{n}{m}'),
-            new Symbol('\\sqrt', '\\sqrt{x}', 'group0', '\\sqrt{x}'),
-            new Symbol('\\nthroot', '\\sqrt[n]{x}', 'group0', '\\sqrt[n]{x}'),
+            new Symbol('\\subscript', '_{sub}', 'group0', '_{sub}', 'font-size: 0.9em;'),
+            new Symbol('\\supscript', '\^{sup}', 'group0', '\^{sup}', 'font-size: 0.9em;'),
+            new Symbol('\\frac', '\\frac{n}{m}', 'group0', '\\frac{n}{m}', 'line-height: normal; '),
+            new Symbol('\\sqrt', '\\sqrt{x}', 'group0', '\\sqrt{x}', 'line-height: normal; padding-top: 5px;'),
+            new Symbol('\\nthroot', '\\sqrt[n]{x}', 'group0', '\\sqrt[n]{x}', 'line-height: normal; text-align: left'),
             // new Symbol('+', '\\langle \\rangle', 'group0', '<span style="line-height: 1.5em"><span class="block"><span class="paren">⟨</span><span class="block"></span><span class="paren">⟩</span></span></span>'),
-            new Symbol('\\binomial', '\\binom{n}{m}', 'group0', '\\binom{n}{m}'),
+            new Symbol('\\binomial', '\\binom{n}{m}', 'group0', '\\binom{n}{m}', 'line-height: normal; text-align: left'),
             // new Symbol('+', '\\begin{matrix} 1 \\\ 2 \\\ 3 \\end{matrix}', 'group0', '<span style="line-height: 1.5em"><span>+</span></span>'),
             new Symbol('\\f', 'f', 'group0', 'f'),
             new Symbol('\\prime', '\\prime', 'group0', '\\prime'),
@@ -349,7 +349,7 @@
             new Symbol('\\diamondsuit', '\\diamondsuit', 'group1', '\\diamondsuit'),
             new Symbol('\\heartsuit', '\\heartsuit', 'group1', '\\heartsuit'),
             new Symbol('\\spadesuit', '\\spadesuit', 'group1', '\\spadesuit'),
-            new Symbol('\\caret', '\\caret', 'group1', '\\caret'),
+            // new Symbol('\\caret', '\\caret', 'group1', '\\caret'),
             new Symbol('\\backslash', '\\backslash', 'group1', '\\backslash'),
             new Symbol('\\vert', '\\vert', 'group1', '\\vert'),
             new Symbol('\\perp', '\\perp', 'group1', '\\perp'),
@@ -381,8 +381,8 @@
                 self = this;
                 
             $.map(category, function(c, index){
-                index === 0 ? str += '<li class="selected-category" >' + c.title + '</li>' : 
-                    str += '<li>' + c.title + '</li>'
+                index === 0 ? str += '<li class="selected-category" >' + c.icon + '<span>' + c.title + '</span></li>' : 
+                    str += '<li>' + c.icon + '<span>' + c.title + '</span></li>'
             });
             $category.html(str);
 
@@ -391,7 +391,7 @@
                     return;
                 }
                 $(this).siblings('li').removeClass('selected-category').end().addClass('selected-category');
-                self.switchSymbols($(this).text().trim());
+                self.switchSymbols($(this).find('span').text().trim());
             });
 
             this.switchSymbols();
@@ -432,7 +432,7 @@
             ele = $(ele);
             // set styles for the last one in each group 
             for(key in groups){
-                ele.filter('.' + key).last().css('margin-right', '20px');
+                ele.filter('.' + key).last().css('margin-right', '5px');
             }
             $symbol.html(ele);
 
@@ -449,15 +449,16 @@
 
     }
 
-    function Symbol(latex, advance, group, text){
+    function Symbol(latex, advance, group, text, style){
         this.text = text;
         this.latex = latex;
         this.advance = advance;
         this.group = group;
-
+        this.style = style;
         this.createTemplate = function() {
             var tit = isBasic? this.latex : this.advance;
-            var result = '<li class="'+ this.group +'" title="'+ tit +'">' + this.text + '</li>';
+            var result = this.style ? '<li class="'+ this.group +'" title="'+ tit +'" style="'+ this.style +'">' + this.text + '</li>' : 
+             '<li class="'+ this.group +'" title="'+ tit +'">' + this.text + '</li>';
             // var result = '<li class="'+ this.group +'" title="'+ tit +'">' + this.advance + '</li>';
             return result;
         }
