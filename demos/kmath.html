@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../build/mathquill.css">
+    <link href="../styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="../styles/kendo.default.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../styles/kmath.css">
+</head>
+<body>
+    <textarea id="editor" rows="10" cols="30" style="width:70%;height:400px"></textarea>
+
+    <script src="https://cdn.bootcss.com/jquery/1.12.2/jquery.js"></script>
+    <script src="../js/kendo.all.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="../build/mathquill.js"></script>
+    <script src="../js/kmathtool.js"></script>
+    <script>
+    $("#editor").kendoEditor({
+        tools: [
+            "bold",
+            "italic",
+            "underline",
+            "strikethrough",
+            "justifyLeft",
+            "justifyCenter",
+            "justifyRight",
+            "justifyFull",
+            "insertUnorderedList",
+            "insertOrderedList",
+            "indent",
+            "outdent",
+            "createLink",
+            "unlink",
+            "insertImage",
+            "insertFile",
+            "subscript",
+            "superscript",
+            "createTable",
+            "addRowAbove",
+            "addRowBelow",
+            "addColumnLeft",
+            "addColumnRight",
+            "deleteRow",
+            "deleteColumn",
+            "viewHtml",
+            "formatting",
+            "cleanFormatting",
+            "fontName",
+            "fontSize",
+            "foreColor",
+            "backColor",
+            "kmath"
+        ],
+        stylesheets: [
+            "../styles/mathjax.css"
+        ],
+    });
+
+
+    </script>
+    
+</body>
+</html>
