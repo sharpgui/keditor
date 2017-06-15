@@ -36,13 +36,13 @@
 
     function createWindow(){
         $(document.body).append($('<div id="kmath-wrapper"><div id="kmath"></div>'+
-        '<button class="math-insert">Insert</button>'+
-        '<button class="math-cancel">Cancel</button>'+
+        '<button class="math-cancel button">Cancel</button>'+
+        '<button class="math-insert button button-theme">Insert</button>'+
         '</div>'));
         $kmath_window = $("#kmath-wrapper");
         $kmath_window.kendoWindow({
-            width: '900px',
-            height: '630px',
+            width: '875px',
+            height: '590px',
             visible: false,
             actions: ['close'],
             title: 'Use the toolbars here, or Switch View to Advanced to type/paste in LaTex',
@@ -195,7 +195,7 @@
     // }
 
     function initialView(){
-        var $view = $('<div>'+
+        var $view = $('<div style="min-height: 307px;">'+
             '<button class="blue-link" id="tobasic">switch view to basic</button>' + 
             '<button class="blue-link" id="toadvance">switch view to Advance</button>' + 
             '<textarea id="advance-editarea">S_N = \\displaystyle\\sqrt{ \\frac{1}{N} \\sum\^N_{i=1}{(x_i - \\bar{x})\^2} }</textarea>'+
@@ -486,7 +486,7 @@
                 self.switchSymbols($(this).find('span').text().trim());
             });
 
-            this.switchSymbols();
+            //this.switchSymbols();
         }
 
         // render symbols
@@ -528,8 +528,10 @@
             }
             $symbol.html(ele);
 
-            $symbol.find('li').each(function(){
-                MQ.StaticMath(this);
+            setTimeout(function(){
+                $symbol.find('li').each(function(){
+                    MQ.StaticMath(this);
+                });
             });
 
             symbolCaches.push({

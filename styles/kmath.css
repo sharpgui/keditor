@@ -1,28 +1,33 @@
-  /**{ font-family: Symbola, "Times New Roman", serif;}*/
-        ul{ list-style: none; margin: 0; padding: 0;}
-/*#kmath{ max-width: 700px; margin: 0 auto 0; padding: 8px; border: 1px solid #f1f1f1; }*/
-#kmath{ padding: 10px; max-width: 900px;}
+
+.math-insert.button, .math-cancel.button{ float: right; margin-top: 20px; margin-left: 15px; box-sizing: border-box;}
+#kmath{ padding: 0 5px 6px; max-width: 900px; min-width: 720px; font-family: "Times New Roman", serif; border: 1px solid #ccc;}
 /* Category */
-#math-category>li{ display: inline-block; margin: 0 3px 0 0; padding: 0 5px; line-height: 30px; border: 1px solid #ccc; cursor: pointer;}
+#math-category{ padding: 0; margin: 0;}
+#math-category>li{ display: inline-block; padding: 0 15px; line-height: 44px;
+ cursor: pointer; box-sizing: border-box;}
 #math-category>li>span{ padding-left: 6px;}
-.selected-category{ background: #e0e0e0 }
+#math-category>li.selected-category{ border-bottom: 2px solid #5FB554; }
 
  /* Symbol */
-#math-symbol{ display: flex; flex-wrap: wrap; }
+#math-symbol{ 
+    display: flex; flex-wrap: wrap; align-items: flex-start; 
+    /* height: 142px; */ 
+    padding: 5px 5px 0; margin: 0; 
+    border: 1px solid #dbdbdb; border-top-color: #5FB554; box-sizing: border-box;}
 #math-symbol>li{ 
-    float: left; display: flex; 
-    margin-left: -1px; margin-top: 5px; height: 40px; width: 40px; 
+    padding: 0; overflow: hidden;
+    margin-left: -1px; margin-bottom: 5px; height: 40px; width: 40px; 
     line-height: 35px; text-align: center; 
     color: #008ee6; 
     border:1px solid #dbdbdb; cursor: pointer; box-sizing: border-box;
 }
 
 /* Edit Area */
-#advance-editarea{ display: block; overflow: auto; width: 99%; margin: 0 auto; height: 130px; }
+#advance-editarea{ display: block; overflow: auto; width: 99%; margin: 0 auto; height: 120px; }
 #advance-view{ margin: 0 auto; height: 130px; }
-#basic-editarea{ clear: both; display: block; width: 99%; margin: 0 auto; height: 250px;}
+#basic-editarea{ clear: both; display: block; width: 99%; margin: 0 auto; height: 266px;}
 
-.blue-link{ margin: 5px 0; float: right; border: none; background: none; color: #3a9be5; cursor: pointer;}
+.blue-link{ margin: 10px 0; float: right; border: none; background: none; color: #3a9be5; cursor: pointer;}
 .blue-link:hover{ text-decoration: underline;}
 
 /* rewrite Math Symbols styles */
