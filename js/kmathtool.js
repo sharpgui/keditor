@@ -1,5 +1,5 @@
 (function(){
-
+    
     var isBasic = false,
         MQ = MathQuill.getInterface(2),
         flag = true, editor, range, 
@@ -53,8 +53,11 @@
             $kmath_window.data("kendoWindow").close();
         });
         $kmath_window.find('.math-insert').click(function(){
+            range.deleteContents();
             range.insertNode(kMath.getForum());
+            range.insertNode($("<span>&nbsp;</span>")[0]);
             $kmath_window.data("kendoWindow").close();
+            // editor.focus();
         });
 
         kMath._init();
@@ -110,7 +113,8 @@
             // Advance view listener
             $advance_editarea.on({'keyup': typesetView, 'change': typesetView});
             function typesetView(){
-                $advance_view.html(checkBreaks($advance_editarea.val()));
+                // $advance_view.html(checkBreaks($advance_editarea.val()));
+                $advance_view.html("$$" +$advance_editarea.val() + "$$");
                 // $advance_view.html('$$' + $advance_editarea.val() + '$$');
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub, $advance_view[0]]);
             }
@@ -160,7 +164,7 @@
 
         this.getForum = function(){
             if(isBasic){
-                $basic_editarea.clone()[0];
+                // $basic_editarea.clone()[0];
             }else{
                 var latex, dom;
                 dom = $advance_view;
@@ -179,16 +183,16 @@
         // return this._init();
     }
 
-    function checkBreaks (text){
-        var arr = text.split('\n');
-        var result = '';
-        $.each(arr, function(index, row){
-            if(row.trim().length > 0){
-                result += '$$' + row + '$$';
-            }
-        });
-        return result;
-    }
+    // function checkBreaks (text){
+    //     var arr = text.split('\n');
+    //     var result = '';
+    //     $.each(arr, function(index, row){
+    //         if(row.trim().length > 0){
+    //             result += '$$' + row + '$$';
+    //         }
+    //     });
+    //     return result;
+    // }
 
     function initialView(){
         var $view = $('<div>'+
@@ -552,7 +556,6 @@
         }
     }
 
-    new KMath();
     // Symbol.prototype.createTemplate = function(isBasic) {
     //       var tit = isBasic? this.latex : this.advance;
     //       var result = '<li class="'+ this.group +'" title="'+ this.latex +'" advance="'+ this.advance +'">' + this.text + '</li>';
