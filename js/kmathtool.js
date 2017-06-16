@@ -10,7 +10,7 @@
         options: {
             name: "custom",
             tooltip: "function",
-            template: '<a href="" role="button" class="k-tool" unselectable="on" title="perview" aria-pressed="false"><span unselectable="on" >π</span></a>',
+            template: '<a href="" role="button" class="k-tool" unselectable="on" title="perview" aria-pressed="false"><span unselectable="on" style="font-family: serif">π</span></a>',
             exec: execFun
         }
     };
@@ -165,6 +165,7 @@
         this.getForum = function(){
             if(isBasic){
                 // $basic_editarea.clone()[0];
+                return $('<span>&nbsp;</span>')[0];
             }else{
                 var latex, dom;
                 dom = $advance_view;
@@ -198,7 +199,7 @@
         var $view = $('<div style="min-height: 307px;">'+
             '<button class="blue-link" id="tobasic">switch view to basic</button>' + 
             '<button class="blue-link" id="toadvance">switch view to Advance</button>' + 
-            '<textarea id="advance-editarea">S_N = \\displaystyle\\sqrt{ \\frac{1}{N} \\sum\^N_{i=1}{(x_i - \\bar{x})\^2} }</textarea>'+
+            '<textarea id="advance-editarea"></textarea>'+          // S_N = \\displaystyle\\sqrt{ \\frac{1}{N} \\sum\^N_{i=1}{(x_i - \\bar{x})\^2} }
             '<div id="advance-view"></div>'+
             // '<textarea id="basic-editarea"></textarea>'+
             '<span id="basic-editarea"></span>'+
