@@ -6,9 +6,9 @@
         kMath = new KMath(),
         $kmath_window;
     kendo.ui.Editor.defaultTools['kmath'] = {
-        name: "custom",
+        name: "kmath",
         options: {
-            name: "custom",
+            name: "kmath",
             tooltip: "function",
             template: '<a href="" role="button" class="k-tool" unselectable="on" title="perview" aria-pressed="false"><span unselectable="on" style="font-family: serif">π</span></a>',
             exec: execFun
@@ -22,14 +22,19 @@
         if(flag){
             createWindow();
             flag = false;
+
+            $(editor.body).on('dblclick', '.MathJax_CHTML', function(){
+                kMath.setForum($(this).attr("data-mathml"));
+                $kmath_window.data("kendoWindow").center().open();
+            });
         }
 
-        equation_dom = $(range.cloneContents()).find(".MathJax_CHTML");
-        if (equation_dom.length) {
-            kMath.setForum(equation_dom.attr("data-mathml"));
-        } else {
-            kMath.setForum(range.toString());
-        }
+        // equation_dom = $(range.cloneContents()).find(".MathJax_CHTML");
+        // if (equation_dom.length) {
+        //     kMath.setForum(equation_dom.attr("data-mathml"));
+        // } else {
+        //     kMath.setForum(range.toString());
+        // }
 
         $kmath_window.data("kendoWindow").center().open();
     }
@@ -167,16 +172,20 @@
                 // $basic_editarea.clone()[0];
                 return $('<span>&nbsp;</span>')[0];
             }else{
-                var latex, dom;
+                var latex, dom, styles;
                 dom = $advance_view;
                 latex = dom.find("script").text();
                 dom = dom.clone();
                 latex = "$$" + latex + "$$";
                 dom = dom.find(".MathJax_CHTML");
+                styles = dom.prop('style');
+                dom.prop('style', styles + '-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; ');
                 dom.attr("data-mathml", latex);
                 dom.attr("contenteditable", false);
                 dom.find(".MJX_Assistive_MathML").remove();
                 
+                
+
                 return dom[0];
             }
         }
