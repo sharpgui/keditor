@@ -14,8 +14,9 @@
             exec: execFun
         }
     };
-
+ 
     function execFun(e) {
+        var equation_dom;
         editor = $(this).data('kendoEditor');
         range = editor.getRange();
 
@@ -23,18 +24,37 @@
             createWindow();
             flag = false;
 
+            // 双击 .MathJax_CHTML 进入公式编辑
+            // 通过 .MathJax_CHTML_focused 标记选中的公式
             $(editor.body).on('dblclick', '.MathJax_CHTML', function(){
-                kMath.setForum($(this).attr("data-mathml"));
+                kMath.setFormula($(this).attr("data-latex"));
                 $kmath_window.data("kendoWindow").center().open();
+            });
+            $(editor.body).on('click', '.MathJax_CHTML', function(e){
+                $('.MathJax_CHTML',editor.body).removeClass('MathJax_CHTML_focused');                
+                $(this).addClass('MathJax_CHTML_focused');
+                e.stopPropagation();
+            });
+            $(editor.body).on('click', function(){
+                $('.MathJax_CHTML',editor.body).removeClass('MathJax_CHTML_focused');  
+                e.stopPropagation();
             });
         }
 
         // equation_dom = $(range.cloneContents()).find(".MathJax_CHTML");
         // if (equation_dom.length) {
-        //     kMath.setForum(equation_dom.attr("data-mathml"));
+        //     kMath.setFormula(equation_dom.attr("data-latex"));
         // } else {
-        //     kMath.setForum(range.toString());
+        //     kMath.setFormula(range.toString());
         // }
+
+        // kendoWindow 打开前 检查 .MathJax_CHTML_focused
+        equation_dom = $('.MathJax_CHTML_focused', editor.body);
+        if(equation_dom.length){
+            kMath.setFormula(equation_dom.attr("data-latex"));
+        }else{
+            kMath.setFormula('');
+        }
 
         $kmath_window.data("kendoWindow").center().open();
     }
@@ -59,7 +79,7 @@
         });
         $kmath_window.find('.math-insert').click(function(){
             range.deleteContents();
-            range.insertNode(kMath.getForum());
+            range.insertNode(kMath.getFormula());
             $kmath_window.data("kendoWindow").close();        
             // editor.focus();
         });
@@ -118,8 +138,7 @@
             $advance_editarea.on({'keyup': typesetView, 'change': typesetView});
             function typesetView(){
                 // $advance_view.html(checkBreaks($advance_editarea.val()));
-                $advance_view.html("$$" +$advance_editarea.val() + "$$");
-                // $advance_view.html('$$' + $advance_editarea.val() + '$$');
+                $advance_view.html("$$" + $advance_editarea.val() + "$$");
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub, $advance_view[0]]);
             }
 
@@ -153,20 +172,21 @@
 
         };
 
-        this.setForum = function(value){
+        this.setFormula = function(value){
             if(isBasic){
 
             }else{
                 value = value.trim();
-                if(value.startsWith('$$') && value.endsWith('$$')){
-                    value = value.substr(2, value.length-4);
-                }
+                // 由于IE不支持 startsWith / endsWith 方法、并且新逻辑下value一定是数学公式。所以此处不做判断，直接去掉首尾$$
+                // if(value.startsWith('$$') && value.endsWith('$$')){
+                value = value.substr(2, value.length-4);
+                // }
                 $advance_editarea.val(value);
                 $advance_editarea.trigger('change');
             }
         };
 
-        this.getForum = function(){
+        this.getFormula = function(){
             if(isBasic){
                 // $basic_editarea.clone()[0];
                 return $('<span>&nbsp;</span>')[0];
@@ -178,11 +198,14 @@
                 latex = "$$" + latex + "$$";
                 dom = dom.find(".MathJax_CHTML");
                 styles = dom.prop('style');
+                // 阻止选中
                 dom.prop('style', styles + '-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; ');
-                dom.attr("data-mathml", latex);
+                // dom.attr("data-mathml", latex);      保留MathML
+                dom.attr('data-latex', latex);
                 dom.attr("contenteditable", false);
                 dom.find(".MJX_Assistive_MathML").remove();
-                dom = $('<span></span>').append(dom).append('<span>&nbsp;</span>');
+                // 添加空格。会使光标明显，但在重负编辑的情况下，会出现多个空格。故注掉。
+                // dom = $('<span></span>').append(dom).append('<span>&nbsp;</span>');
                 return dom[0];
             }
         }
