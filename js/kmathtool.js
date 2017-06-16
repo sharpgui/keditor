@@ -60,8 +60,7 @@
         $kmath_window.find('.math-insert').click(function(){
             range.deleteContents();
             range.insertNode(kMath.getForum());
-            range.insertNode($("<span>&nbsp;</span>")[0]);
-            $kmath_window.data("kendoWindow").close();
+            $kmath_window.data("kendoWindow").close();        
             // editor.focus();
         });
 
@@ -183,9 +182,7 @@
                 dom.attr("data-mathml", latex);
                 dom.attr("contenteditable", false);
                 dom.find(".MJX_Assistive_MathML").remove();
-                
-                
-
+                dom = $('<span></span>').append(dom).append('<span>&nbsp;</span>');
                 return dom[0];
             }
         }
