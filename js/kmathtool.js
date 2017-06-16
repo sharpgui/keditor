@@ -79,7 +79,12 @@
         });
         $kmath_window.find('.math-insert').click(function(){
             range.deleteContents();
-            range.insertNode(kMath.getFormula());
+            // range.insertNode(kMath.getFormula());
+            // editor.paste(kMath.getFormula().outerHTML);
+            $('.MathJax_CHTML_focused', editor.body).remove();
+            var fragement = editor.document.createDocumentFragment();
+            fragement.appendChild(kMath.getFormula());
+            range.insertNode(fragement);
             $kmath_window.data("kendoWindow").close();        
             // editor.focus();
         });
@@ -197,15 +202,17 @@
                 dom = dom.clone();
                 latex = "$$" + latex + "$$";
                 dom = dom.find(".MathJax_CHTML");
-                styles = dom.prop('style');
+                styles = dom.attr('style');
                 // 阻止选中
-                dom.prop('style', styles + '-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; ');
+                dom.attr('style', styles + '-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; ');
                 // dom.attr("data-mathml", latex);      保留MathML
                 dom.attr('data-latex', latex);
                 dom.attr("contenteditable", false);
                 dom.find(".MJX_Assistive_MathML").remove();
-                // 添加空格。会使光标明显，但在重负编辑的情况下，会出现多个空格。故注掉。
+                // 添加空格。会使光标明显，但在重复编辑的情况下，会出现多个空格。故注掉。
                 // dom = $('<span></span>').append(dom).append('<span>&nbsp;</span>');
+
+                
                 return dom[0];
             }
         }
@@ -213,6 +220,7 @@
         // return this._init();
     }
 
+    // 检测换行符。将textarea中的换行转换到LaTeX可识别的换行（$$）
     // function checkBreaks (text){
     //     var arr = text.split('\n');
     //     var result = '';
@@ -558,6 +566,8 @@
             }
             $symbol.html(ele);
 
+            // 首次执行可能由于页面渲染未完成导致数学符号的缩放计算不正确，故setTimeout。
+            // MQ.StaticMath 会忽略所有标签，故在li级别循环执行。
             setTimeout(function(){
                 $symbol.find('li').each(function(){
                     MQ.StaticMath(this);
