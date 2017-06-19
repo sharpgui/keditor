@@ -60,6 +60,7 @@
     }
 
     function createWindow(){
+        addStyleNode('.math-insert.button,.math-cancel.button{float:right;margin-top:20px;margin-left:15px;box-sizing:border-box}#kmath{padding:0 5px 6px;max-width:900px;min-width:720px;font-family:"Times New Roman",serif;border:1px solid #ccc}#math-category{padding:0;margin:0}#math-category>li{display:inline-block;padding:0 15px;line-height:44px;cursor:pointer;box-sizing:border-box}#math-category>li>span{padding-left:6px}#math-category>li.selected-category{border-bottom:2px solid #5FB554}#math-symbol{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;height:142px;padding:5px 5px 0;margin:0;border:1px solid #dbdbdb;border-top-color:#5FB554;box-sizing:border-box}#math-symbol>li{padding:0;overflow:hidden;margin-left:-1px;margin-bottom:5px;height:40px;width:40px;line-height:35px;text-align:center;color:#008ee6;border:1px solid #dbdbdb;cursor:pointer;box-sizing:border-box}#advance-editarea{display:block;overflow:auto;width:98%;margin:0 auto;height:120px}#advance-view{margin:0 auto;height:130px}#basic-editarea{clear:both;display:block;width:99%;margin:0 auto;height:266px}.blue-link{margin:10px 0;float:right;border:none;background:none;color:#3a9be5;cursor:pointer}.blue-link:hover{text-decoration:underline}#math-symbol .mq-empty{display:none!important}#math-symbol big{font-size:1.3em}'); 
         $(document.body).append($('<div id="kmath-wrapper"><div id="kmath"></div>'+
         '<button class="math-cancel button">Cancel</button>'+
         '<button class="math-insert button button-theme">Insert</button>'+
@@ -92,6 +93,18 @@
         kMath._init();
 
     }
+
+    function addStyleNode(str){  
+        var styleNode = document.createElement("style");  
+        styleNode.type = "text/css";  
+        if(styleNode.styleSheet){
+            styleNode.styleSheet.cssText = str;       //ie下要通过 styleSheet.cssText写入.   
+        }else{
+            styleNode.innerHTML=str;       //在ff中， innerHTML是可读写的，但在ie中，它是只读的.   
+        }
+        document.getElementsByTagName("head")[0].appendChild(styleNode);  
+    }
+      
 
     function KMath(){
         var $advance_editarea, $advance_view, $basic_editarea, $tobasic_btn, $toadvance_btn, 
