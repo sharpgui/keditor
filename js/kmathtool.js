@@ -1,4 +1,5 @@
 (function(){
+    'use strict';
     
     var isBasic = false,
         MQ = MathQuill.getInterface(2),
@@ -588,7 +589,7 @@
             });
             ele = $(ele);
             // set styles for the last one in each group 
-            for(key in groups){
+            for(var key in groups){
                 ele.filter('.' + key).last().css('margin-right', '5px');
             }
             $symbol.html(ele);
