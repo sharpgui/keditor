@@ -152,25 +152,49 @@
                 "fontSize",
                 "foreColor",
                 "backColor",
-                "custom"
+                // "custom"
             ],
             stylesheets: [
                 "styles/mathjax.css"
             ],
 
-        
-            change: function () {
-               console.log(this.value());
-            }
-            // ,
-            // pasteCleanup: {
-            //     // none:true
-            // },
-            // paste: function (ev) {
-            //     // window.kendohtml = ev.html;
-            //       console.log(ev.html);
 
-            // }
+            change: function () {
+                console.log(this.value());
+            },
+            paste: function (ev) {
+                var imgreg = /<img[^>]*>/;
+
+                console.log(ev.html);
+
+            }
+        });
+
+        var editor = $('#editor').data("kendoEditor");
+        $(editor.body).on("paste", function (e) {
+            var clipboard = e.originalEvent.clipboardData;
+            clipboard.dropEffect='copy';
+            var   data = clipboard.getData('Text');
+            if (clipboard && clipboard.items) {
+                var screenshot = clipboard.items[0];
+
+                // if (screenshot.kind == "file") {
+                //     var blob = screenshot.getAsFile();
+
+                //     var reader = new FileReader();
+
+                //     reader.onload = function (event) {
+                //         var html = kendo.format('<img src="{0}"/>', event.target.result);
+
+                //         editor.paste(html);
+                //     };
+                //     reader.readAsDataURL(blob);
+                // }
+                screenshot.getAsString(function (s) {
+                    debugger;
+                    // ev.target.appendChild(document.getElementById(s)); 
+                });
+            }
         });
     </script>
     <!--<script type="text/javascript" async src="mathjax/MathJax.js?config=TeX-MML-AM_CHTML"></script>-->
