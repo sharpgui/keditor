@@ -236,7 +236,7 @@
                 styles = dom.attr('style');
                 // 阻止选中
                 dom.attr('style', styles + '-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; ');
-                // dom.attr("data-mathml", latex);      保留MathML
+                dom.attr("data-mathml", escape(dom.attr("data-mathml")));     // 保留MathML
                 dom.attr('data-latex', latex);
                 dom.attr("contenteditable", false);
                 dom.find(".MJX_Assistive_MathML").remove();
