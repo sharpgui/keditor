@@ -96,11 +96,14 @@
             range.deleteContents();
             // range.insertNode(kMath.getFormula());
             // editor.paste(kMath.getFormula().outerHTML);
-            $('.MathJax_CHTML_focused', editor.body).remove();
-            var fragement = editor.document.createDocumentFragment();
-            fragement.appendChild(kMath.getFormula());
-            range.insertNode(fragement);
-            $kmath_window.data("kendoWindow").close();        
+            MathJax.Hub.Queue(function () {
+                $('.MathJax_CHTML_focused', editor.body).remove();
+                var fragement = editor.document.createDocumentFragment();
+                fragement.appendChild(kMath.getFormula());
+                range.insertNode(fragement);
+                $kmath_window.find('.math-insert').attr('disabled', false);
+                $kmath_window.data("kendoWindow").close();
+            });
             // editor.focus();
         });
 
