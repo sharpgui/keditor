@@ -1,17 +1,36 @@
 (function(){
     'use strict';
-    
+
+    /**
+     * @var {MathQuill} MQ 
+     * @var {Boolean} isBasic 
+     * @var {KendoEditor} editor 
+     * @var {Boolean} flag 
+     * @var {Range} range
+     * @var {KMath} kMath 
+     * @var {MQ.MathField} mathField 
+     * @var {JQuery} $kmath_window  window of kendoWindow
+     * 
+     */
+
+
+    try {
+        var MQ = MathQuill.getInterface(2);
+    } catch (e) {
+        return;
+    }
     var isBasic = false,
-        MQ = MathQuill.getInterface(2),
         flag = true, editor, range, 
         kMath = new KMath(),
+        mathField,
         $kmath_window;
+
     kendo.ui.Editor.defaultTools['kmath'] = {
         name: "kmath",
         options: {
             name: "kmath",
             tooltip: "function",
-            template: '<a href="" role="button" class="k-tool" unselectable="on" title="perview" aria-pressed="false"><span unselectable="on" style="font-family: serif">π</span></a>',
+            template: '<a href="" role="button" class="k-tool" unselectable="on" title="Formulas" aria-pressed="false"><span unselectable="on" style="font-family: serif">π</span></a>',
             exec: execFun
         }
     };
@@ -65,14 +84,18 @@
         // kendoWindow 打开前 检查 .MathJax_CHTML_focused
         equation_dom = $('.MathJax_CHTML_focused', editor.body);
         if(equation_dom.length){
-            kMath.setFormula(equation_dom.attr("data-latex"));
+            kMath.setFormula(equation_dom.attr("data-latex"), true);
         }else{
-            kMath.setFormula('');
+            kMath.setFormula('', true);
         }
 
         $kmath_window.data("kendoWindow").center().open();
     }
 
+    /**
+     * Init KendoWindow
+     * @method createWindow
+     */
     function createWindow(){
         addStyleNode('.math-insert.button,.math-cancel.button{float:right;margin-top:20px;margin-left:15px;box-sizing:border-box}#kmath{padding:0 5px 6px;max-width:900px;min-width:720px;font-family:"Times New Roman",serif;border:1px solid #ccc}#math-category{padding:0;margin:0}#math-category>li{display:inline-block;padding:0 15px;line-height:44px;cursor:pointer;box-sizing:border-box}#math-category>li>span{padding-left:6px}#math-category>li.selected-category{border-bottom:2px solid #5FB554}#math-symbol{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;height:142px;padding:5px 5px 0;margin:0;border:1px solid #dbdbdb;border-top-color:#5FB554;box-sizing:border-box}#math-symbol>li{padding:0;overflow:hidden;margin-left:-1px;margin-bottom:5px;height:40px;width:40px;line-height:35px;text-align:center;color:#008ee6;border:1px solid #dbdbdb;cursor:pointer;box-sizing:border-box}#advance-editarea{display:block;overflow:auto;width:98%;margin:0 auto;height:120px}#advance-view{margin:0 auto;height:130px}#basic-editarea{clear:both;display:block;width:99%;margin:0 auto;height:266px}.blue-link{margin:10px 0;float:right;border:none;background:none;color:#3a9be5;cursor:pointer}.blue-link:hover{text-decoration:underline}#math-symbol .mq-empty{display:none!important}#math-symbol big{font-size:1.3em}'); 
         $(document.body).append($('<div id="kmath-wrapper"><div id="kmath"></div>'+
@@ -85,7 +108,7 @@
             height: '590px',
             visible: false,
             actions: ['close'],
-            title: 'Use the toolbars here, or Switch View to Advanced to type/paste in LaTex',
+            title: 'Formulas',
             close: function(){}
         });
 
@@ -96,6 +119,11 @@
             range.deleteContents();
             // range.insertNode(kMath.getFormula());
             // editor.paste(kMath.getFormula().outerHTML);
+            MathJax.Hub.Queue(function () {
+                if(isBasic && mathField){
+                    kMath.setFormula('$$' + mathField.latex() + '$$');
+                }
+            });
             MathJax.Hub.Queue(function () {
                 $('.MathJax_CHTML_focused', editor.body).remove();
                 var fragement = editor.document.createDocumentFragment();
@@ -111,6 +139,11 @@
 
     }
 
+    /**
+     * Add style node to specified document
+     * @param {String} str inner css 
+     * @param {document} doc default in window.document
+     */
     function addStyleNode(str, doc){
         doc = doc ? doc : document;
         var styleNode = doc.createElement("style");  
@@ -126,9 +159,12 @@
 
     function KMath(){
         var $advance_editarea, $advance_view, $basic_editarea, $tobasic_btn, $toadvance_btn, 
-            controlBox = new ControlBox(),
-            mathField;
+            mathbbReg = /\\mathbb{([A-Z])}/g ,
+            notinsetReg = /not\\(in|ni|subset|supset|subseteq|supseteq)/g ,
+            controlBox = new ControlBox();
+            
         this._init = function(){
+            var self = this;
             $("#kmath").html($('<ul id="math-category"></ul>' + 
                 '<ul id="math-symbol">123</ul>' +
                 '<div id="math-editor">456</div>'));
@@ -153,6 +189,14 @@
 
                 isBasic = true;
                 controlBox.switchSymbols($('.selected-category').find('span').text().trim());
+
+                if(mathField){
+                    var str = $advance_view.find("script").text();
+                    str = str.replace(mathbbReg, "\\$1");
+                    str = str.replace(notinsetReg, 'not$1');
+                    mathField.select();
+                    mathField.write(str);    
+                }
             });
             $("#kmath").on("click", '#toadvance', function(){
                 $basic_editarea.hide(0);
@@ -165,7 +209,10 @@
                 typesetView();
 
                 isBasic = false;
-                controlBox.switchSymbols($('.selected-category').find('span').text().trim());              
+                controlBox.switchSymbols($('.selected-category').find('span').text().trim()); 
+                if(mathField){
+                    self.setFormula('$$' + mathField.latex() + '$$');
+                }
             });
             // set default view
             $("#toadvance").trigger("click");
@@ -184,6 +231,7 @@
                 handlers:{
                     edit: function(){
                         console.log(mathField.latex());
+                        // self.setFormula('$$' + mathField.latex() + '$$');
                     }
                 }
             });
@@ -199,7 +247,7 @@
                     start = textarea.selectionStart;
                     end = textarea.selectionEnd;
 
-                    textarea.value = value.substr(0, start) + ' ' + this.title + ' ' + value.substr(end, value.length);
+                    textarea.value = value.substr(0, start) + this.title + ' ' + value.substr(end, value.length);
                     $(textarea).trigger("change");
                     textarea.focus();
                 }
@@ -208,9 +256,10 @@
 
         };
 
-        this.setFormula = function(value){
-            if(isBasic){
-
+        this.setFormula = function(value, isOpening){
+            if(isBasic && isOpening){
+                mathField.select();
+                mathField.write(value);        
             }else{
                 value = value.trim();
                 // 由于IE不支持 startsWith / endsWith 方法、并且新逻辑下value一定是数学公式。所以此处不做判断，直接去掉首尾$$
@@ -223,10 +272,10 @@
         };
 
         this.getFormula = function(){
-            if(isBasic){
-                // $basic_editarea.clone()[0];
-                return $('<span>&nbsp;</span>')[0];
-            }else{
+            // if(isBasic){
+            //     // $basic_editarea.clone()[0];
+            //     return $('<span>&nbsp;</span>')[0];
+            // }else{
                 var latex, dom, styles;
                 dom = $advance_view;
                 latex = dom.find("script").text();
@@ -245,11 +294,8 @@
 
                 
                 return dom[0];
-            }
+            // }
         }
-
-        // return this._init();
-    }
 
     // 检测换行符。将textarea中的换行转换到LaTeX可识别的换行（$$）
     // function checkBreaks (text){
@@ -262,7 +308,7 @@
     //     });
     //     return result;
     // }
-
+    }
     function initialView(){
         var $view = $('<div style="min-height: 307px;">'+
             '<button class="blue-link" id="tobasic">switch view to basic</button>' + 
@@ -408,7 +454,7 @@
             new Symbol('\\equiv', '\\equiv', 'group1', '\\equiv'),
             new Symbol('\\cong', '\\cong', 'group1', '\\cong'),
             new Symbol('\\sim', '\\sim', 'group1', '\\sim'),
-            new Symbol('\\not\in', '\\not\in', 'group1', '\\not\in'),
+            new Symbol('\\notin', '\\not\in', 'group1', '\\not\in'),
             new Symbol('\\ne', '\\ne', 'group1', '\\ne'),
             new Symbol('\\propto', '\\propto', 'group1', '\\propto'),
             new Symbol('\\approx', '\\approx', 'group1', '\\approx'),
@@ -419,12 +465,12 @@
             new Symbol('\\notni', '\\not\\ni', 'group1', '\\notni'),   
             new Symbol('\\subset', '\\subset', 'group1', '\\subset'),
             new Symbol('\\supset', '\\supset', 'group1', '\\supset'),
-            new Symbol('\\not\subset', '\\not\\subset', 'group1', '\\not\subset'),
-            new Symbol('\\not\supset', '\\not\\supset', 'group1', '\\not\supset'),
+            new Symbol('\\notsubset', '\\not\\subset', 'group1', '\\not\subset'),
+            new Symbol('\\notsupset', '\\not\\supset', 'group1', '\\not\supset'),
             new Symbol('\\subseteq', '\\subseteq', 'group1', '\\subseteq'),
             new Symbol('\\supseteq', '\\supseteq', 'group1', '\\supseteq'),
-            new Symbol('\\not\subseteq', '\\not\\subseteq', 'group1', '\\not\subseteq'),
-            new Symbol('\\not\supseteq', '\\not\\supseteq', 'group1', '\\not\supseteq'),
+            new Symbol('\\notsubseteq', '\\not\\subseteq', 'group1', '\\not\subseteq'),
+            new Symbol('\\notsupseteq', '\\not\\supseteq', 'group1', '\\not\supseteq'),
             new Symbol('\\models', '\\models', 'group1', '\\models'),
             new Symbol('\\prec', '\\prec', 'group1', '\\prec'),
             new Symbol('\\succ', '\\succ', 'group1', '\\succ'),
@@ -538,7 +584,7 @@
         // render category
         this.init = function(){
             var str = '',
-                $category = $('#math-category');
+                $category = $('#math-category'),
                 self = this;
                 
             $.map(category, function(c, index){
