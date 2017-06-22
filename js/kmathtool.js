@@ -13,7 +13,6 @@
      * 
      */
 
-
     try {
         var MQ = MathQuill.getInterface(2);
     } catch (e) {
@@ -34,7 +33,7 @@
             exec: execFun
         }
     };
- 
+ //kendo editor math extend
     function execFun(e) {
         var equation_dom;
         editor = $(this).data('kendoEditor');
@@ -72,6 +71,10 @@
                 $('.MathJax_CHTML',editor.body).removeClass('MathJax_CHTML_focused');  
                 e.stopPropagation();
             });
+
+            MathJax.Hub.Config({
+                menuSettings: { context: "Browser" }    // hide right-clicking menu
+            });
         }
 
         // equation_dom = $(range.cloneContents()).find(".MathJax_CHTML");
@@ -96,8 +99,8 @@
      * Init KendoWindow
      * @method createWindow
      */
-    function createWindow(){
-        addStyleNode('.math-insert.button,.math-cancel.button{float:right;margin-top:20px;margin-left:15px;box-sizing:border-box}#kmath{padding:0 5px 6px;max-width:900px;min-width:720px;font-family:"Times New Roman",serif;border:1px solid #ccc}#math-category{padding:0;margin:0}#math-category>li{display:inline-block;padding:0 15px;line-height:44px;cursor:pointer;box-sizing:border-box}#math-category>li>span{padding-left:6px}#math-category>li.selected-category{border-bottom:2px solid #5FB554}#math-symbol{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;height:142px;padding:5px 5px 0;margin:0;border:1px solid #dbdbdb;border-top-color:#5FB554;box-sizing:border-box}#math-symbol>li{padding:0;overflow:hidden;margin-left:-1px;margin-bottom:5px;height:40px;width:40px;line-height:35px;text-align:center;color:#008ee6;border:1px solid #dbdbdb;cursor:pointer;box-sizing:border-box}#advance-editarea{display:block;overflow:auto;width:98%;margin:0 auto;height:120px}#advance-view{margin:0 auto;height:130px}#basic-editarea{clear:both;display:block;width:99%;margin:0 auto;height:266px}.blue-link{margin:10px 0;float:right;border:none;background:none;color:#3a9be5;cursor:pointer}.blue-link:hover{text-decoration:underline}#math-symbol .mq-empty{display:none!important}#math-symbol big{font-size:1.3em}'); 
+    function createWindow() {
+        addStyleNode('.math-insert.button,.math-cancel.button{float:right;margin-top:20px;margin-left:15px;box-sizing:border-box}#kmath{padding:0 5px 6px;max-width:900px;min-width:720px;font-family:"Times New Roman",serif!important;border:1px solid #ccc}#math-category{padding:0;margin:0}#math-category>li{display:inline-block;padding:0 15px;line-height:44px;cursor:pointer;box-sizing:border-box}#math-category>li>span{padding-left:6px}#math-category>li.selected-category{border-bottom:2px solid #5FB554}#math-symbol{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;height:142px;padding:5px 5px 0;margin:0;border:1px solid #dbdbdb;border-top-color:#5FB554;box-sizing:border-box}#math-symbol>li{padding:0;overflow:hidden;margin-left:-1px;margin-bottom:5px;height:40px;width:40px;line-height:35px;text-align:center;color:#008ee6;border:1px solid #dbdbdb;cursor:pointer;box-sizing:border-box}#advance-editarea{display:block;overflow:auto;width:98%;margin:0 auto;height:120px}#advance-view{overflow:auto;margin:0 auto;height:143px}#basic-editarea{clear:both;display:block;width:99%;margin:0 auto;height:266px}.blue-link{margin:10px 0;float:right;border:none;background:none;color:#3a9be5;cursor:pointer}.blue-link:hover{text-decoration:underline}#math-symbol .mq-empty{display:none!important}#math-symbol big{font-size:1.3em}');
         $(document.body).append($('<div id="kmath-wrapper"><div id="kmath"></div>'+
         '<button class="math-cancel button">Cancel</button>'+
         '<button class="math-insert button button-theme">Insert</button>'+
@@ -119,6 +122,7 @@
             range.deleteContents();
             // range.insertNode(kMath.getFormula());
             // editor.paste(kMath.getFormula().outerHTML);
+            $(this).attr('disabled', true);
             MathJax.Hub.Queue(function () {
                 if(isBasic && mathField){
                     kMath.setFormula('$$' + mathField.latex() + '$$');
@@ -156,13 +160,12 @@
         doc.getElementsByTagName("head")[0].appendChild(styleNode);  
     }
       
-
     function KMath(){
         var $advance_editarea, $advance_view, $basic_editarea, $tobasic_btn, $toadvance_btn, 
             mathbbReg = /\\mathbb{([A-Z])}/g ,
             notinsetReg = /not\\(in|ni|subset|supset|subseteq|supseteq)/g ,
             controlBox = new ControlBox();
-            
+    
         this._init = function(){
             var self = this;
             $("#kmath").html($('<ul id="math-category"></ul>' + 
@@ -195,7 +198,7 @@
                     str = str.replace(mathbbReg, "\\$1");
                     str = str.replace(notinsetReg, 'not$1');
                     mathField.select();
-                    mathField.write(str);    
+                    mathField.write(str);
                 }
             });
             $("#kmath").on("click", '#toadvance', function(){
@@ -230,7 +233,7 @@
                 spaceBehavesLikeTab: false, 
                 handlers:{
                     edit: function(){
-                        console.log(mathField.latex());
+                        // console.log(mathField.latex());
                         // self.setFormula('$$' + mathField.latex() + '$$');
                     }
                 }
@@ -259,7 +262,7 @@
         this.setFormula = function(value, isOpening){
             if(isBasic && isOpening){
                 mathField.select();
-                mathField.write(value);        
+                mathField.write(value.substr(2, value.length-4));        
             }else{
                 value = value.trim();
                 // 由于IE不支持 startsWith / endsWith 方法、并且新逻辑下value一定是数学公式。所以此处不做判断，直接去掉首尾$$
@@ -296,7 +299,7 @@
                 return dom[0];
             // }
         }
-
+    }
     // 检测换行符。将textarea中的换行转换到LaTeX可识别的换行（$$）
     // function checkBreaks (text){
     //     var arr = text.split('\n');
@@ -308,7 +311,7 @@
     //     });
     //     return result;
     // }
-    }
+
     function initialView(){
         var $view = $('<div style="min-height: 307px;">'+
             '<button class="blue-link" id="tobasic">switch view to basic</button>' + 
@@ -532,7 +535,7 @@
             new Symbol('\\rfloor', '\\rfloor', 'group1', '\\rfloor'),
             new Symbol('\\lceil', '\\lceil', 'group1', '\\lceil'),
             new Symbol('\\rceil', '\\rceil', 'group1', '\\rceil'),
-            new Symbol('\\slash', '\\slash', 'group1', '\\slash'),
+            new Symbol('\\slash', '\/', 'group1', '\\slash'),
             new Symbol('\\lbrace', '\\lbrace', 'group1', '\\lbrace'),
             new Symbol('\\rbrace', '\\rbrace', 'group1', '\\rbrace')
         ];
@@ -562,7 +565,7 @@
             new Symbol('\\perp', '\\perp', 'group1', '\\perp'),
             new Symbol('\\nabla', '\\nabla', 'group1', '\\nabla'),
             new Symbol('\\hbar', '\\hbar', 'group1', '\\hbar'),
-            new Symbol('\\AA', '\\AA', 'group1', '\\AA'),
+            // new Symbol('\\AA', '\\AA', 'group1', '\\AA'),
             new Symbol('\\circ', '\\circ', 'group1', '\\circ'),
             new Symbol('\\bullet', '\\bullet', 'group1', '\\bullet'),
             new Symbol('\\setminus', '\\setminus', 'group1', '\\setminus'),
