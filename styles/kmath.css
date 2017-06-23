@@ -21,10 +21,13 @@
     color: #008ee6; 
     border:1px solid #dbdbdb; cursor: pointer; box-sizing: border-box;
 }
+#math-symbol>li * {
+    font-family: Symbola, "Times New Roman", serif!important;
+}
 
 /* Edit Area */
 #advance-editarea{ display: block; overflow: auto; width: 98%; margin: 0 auto; height: 120px; }
-#advance-view{ margin: 0 auto; height: 130px; }
+#advance-view{ overflow: auto; margin: 0 auto; height: 143px; }
 #basic-editarea{ clear: both; display: block; width: 99%; margin: 0 auto; height: 266px;}
 
 .blue-link{ margin: 10px 0; float: right; border: none; background: none; color: #3a9be5; cursor: pointer;}
