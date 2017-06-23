@@ -250,8 +250,11 @@
                     start = textarea.selectionStart;
                     end = textarea.selectionEnd;
 
-                    textarea.value = value.substr(0, start) + this.title + ' ' + value.substr(end, value.length);
+                    textarea.value = value.substr(0, start) + this.title + value.substr(end, value.length);
                     $(textarea).trigger("change");
+
+                    textarea.selectionStart = this.title.length + start;
+                    textarea.selectionEnd = textarea.selectionStart;
                     textarea.focus();
                 }
                 
