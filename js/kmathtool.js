@@ -135,6 +135,7 @@
                 range.insertNode(fragement);
                 $kmath_window.find('.math-insert').attr('disabled', false);
                 $kmath_window.data("kendoWindow").close();
+                editor.focus();
             });
             // editor.focus();
         });
