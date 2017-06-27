@@ -135,7 +135,7 @@
                 range.insertNode(fragement);
                 $kmath_window.find('.math-insert').attr('disabled', false);
                 $kmath_window.data("kendoWindow").close();
-                editor.focus();
+                editor.update();
             });
             // editor.focus();
         });
@@ -214,7 +214,7 @@
 
                 isBasic = false;
                 controlBox.switchSymbols($('.selected-category').find('span').text().trim()); 
-                if(mathField){
+                if(mathField && mathField.latex()){
                     self.setFormula('$$' + mathField.latex() + '$$');
                 }
             });
@@ -251,7 +251,8 @@
                     start = textarea.selectionStart;
                     end = textarea.selectionEnd;
 
-                    textarea.value = value.substr(0, start) + this.title + value.substr(end, value.length);
+                    //新插入的LaTeX可能会与其后内容一起编译，所以加空格断开。Like \diva. 
+                    textarea.value = value.substr(0, start) + this.title + ' ' + value.substr(end, value.length);
                     $(textarea).trigger("change");
 
                     textarea.selectionStart = this.title.length + start;
