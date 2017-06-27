@@ -28,8 +28,29 @@
 /* Edit Area */
 #advance-editarea{ display: block; overflow: auto; width: 98%; margin: 0 auto; height: 120px; }
 #advance-view{ overflow: auto; margin: 0 auto; height: 143px; }
+#advance-editarea::-webkit-scrollbar{
+    -webkit-appearance:none;
+	width:10px;
+	height:10px
+}
+#advance-editarea::-webkit-scrollbar-thumb {
+	border-radius:8px;
+	border:2px solid #fff;
+	background-color:rgba(0,0,0,.3)
+}
+#advance-view::-webkit-scrollbar{
+    -webkit-appearance:none;
+	width:10px;
+	height:10px
+}
+#advance-view::-webkit-scrollbar-thumb {
+	border-radius:8px;
+	border:2px solid #fff;
+	background-color:rgba(0,0,0,.3)
+}
 #basic-editarea{ clear: both; display: block; width: 99%; margin: 0 auto; height: 266px;}
 
+#kmath-message{ float: left; margin-top: 20px; padding-left: 5px; font-size: 0.9em;}
 .blue-link{ margin: 10px 0; float: right; border: none; background: none; color: #3a9be5; cursor: pointer;}
 .blue-link:hover{ text-decoration: underline;}
 

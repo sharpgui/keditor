@@ -100,8 +100,9 @@
      * @method createWindow
      */
     function createWindow() {
-        addStyleNode('.math-insert.button,.math-cancel.button{float:right;margin-top:20px;margin-left:15px;box-sizing:border-box}#kmath{padding:0 5px 6px;max-width:900px;min-width:720px;font-family:"Times New Roman",serif;border:1px solid #ccc}#math-category{padding:0;margin:0}#math-category>li{display:inline-block;padding:0 15px;line-height:44px;cursor:pointer;box-sizing:border-box}#math-category>li>span{padding-left:6px}#math-category>li.selected-category{border-bottom:2px solid #5FB554}#math-symbol{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;height:142px;padding:5px 5px 0;margin:0;border:1px solid #dbdbdb;border-top-color:#5FB554;box-sizing:border-box}#math-symbol>li{padding:0;overflow:hidden;margin-left:-1px;margin-bottom:5px;height:40px;width:40px;line-height:35px;text-align:center;color:#008ee6;border:1px solid #dbdbdb;cursor:pointer;box-sizing:border-box}#advance-editarea{display:block;overflow:auto;width:98%;margin:0 auto;height:120px}#advance-view{overflow:auto;margin:0 auto;height:143px}#basic-editarea{clear:both;display:block;width:99%;margin:0 auto;height:266px}.blue-link{margin:10px 0;float:right;border:none;background:none;color:#3a9be5;cursor:pointer}.blue-link:hover{text-decoration:underline}#math-symbol .mq-empty{display:none!important}#math-symbol big{font-size:1.3em}');
+        addStyleNode('.math-insert.button,.math-cancel.button{float:right;margin-top:20px;margin-left:15px;box-sizing:border-box}#kmath{padding:0 5px 6px;max-width:900px;min-width:720px;font-family:"Times New Roman",serif;border:1px solid #ccc}#math-category{padding:0;margin:0}#math-category>li{display:inline-block;padding:0 15px;line-height:44px;cursor:pointer;box-sizing:border-box}#math-category>li>span{padding-left:6px}#math-category>li.selected-category{border-bottom:2px solid #5FB554}#math-symbol{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;height:142px;padding:5px 5px 0;margin:0;border:1px solid #dbdbdb;border-top-color:#5FB554;box-sizing:border-box}#math-symbol>li{padding:0;overflow:hidden;margin-left:-1px;margin-bottom:5px;height:40px;width:40px;line-height:35px;text-align:center;color:#008ee6;border:1px solid #dbdbdb;cursor:pointer;box-sizing:border-box}#advance-editarea{display:block;overflow:auto;width:98%;margin:0 auto;height:120px}#advance-view{overflow:auto;margin:0 auto;height:143px}#advance-editarea::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}#advance-editarea::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}#advance-view::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}#advance-view::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}#basic-editarea{clear:both;display:block;width:99%;margin:0 auto;height:266px}#kmath-message{float:left;margin-top:20px;padding-left:5px;font-size:0.9em}.blue-link{margin:10px 0;float:right;border:none;background:none;color:#3a9be5;cursor:pointer}.blue-link:hover{text-decoration:underline}#math-symbol .mq-empty{display:none!important}#math-symbol big{font-size:1.3em}');
         $(document.body).append($('<div id="kmath-wrapper"><div id="kmath"></div>'+
+        '<div id="kmath-message"></div>'+
         '<button class="math-cancel button">Cancel</button>'+
         '<button class="math-insert button button-theme">Insert</button>'+
         '</div>'));
@@ -162,7 +163,7 @@
     }
       
     function KMath(){
-        var $advance_editarea, $advance_view, $basic_editarea, $tobasic_btn, $toadvance_btn, 
+        var $advance_editarea, $advance_view, $basic_editarea, $tobasic_btn, $toadvance_btn, $message, 
             mathbbReg = /\\mathbb{([A-Z])}/g ,
             notinsetReg = /not\\(in|ni|subset|supset|subseteq|supseteq)/g ,
             controlBox = new ControlBox();
@@ -182,8 +183,24 @@
             $tobasic_btn = $("#tobasic");
             $toadvance_btn = $("#toadvance");
 
+            $message = $("#kmath-message");
+
             // Switch basic \ advance view 
             $("#kmath").on("click", '#tobasic', function(){
+                if(mathField){
+                    var str = $advance_view.find("script").text();
+                    if(str){
+                        str = str.replace(mathbbReg, "\\$1");
+                        str = str.replace(notinsetReg, 'not$1');
+                    }
+                    mathField.select();
+                    mathField.write(str);
+                    if(str && !mathField.latex()){
+                        $message.text('This equation cannot be rendered in Basic View.');
+                        $message.show(100);
+                        return;
+                    }
+                }
                 $basic_editarea.show(0);
                 $toadvance_btn.show(0);
 
@@ -192,15 +209,8 @@
                 $tobasic_btn.hide(0);
 
                 isBasic = true;
-                controlBox.switchSymbols($('.selected-category').find('span').text().trim());
-
-                if(mathField){
-                    var str = $advance_view.find("script").text();
-                    str = str.replace(mathbbReg, "\\$1");
-                    str = str.replace(notinsetReg, 'not$1');
-                    mathField.select();
-                    mathField.write(str);
-                }
+                controlBox.switchSymbols($('.selected-category').attr('data-title'));
+                
             });
             $("#kmath").on("click", '#toadvance', function(){
                 $basic_editarea.hide(0);
@@ -213,7 +223,7 @@
                 typesetView();
 
                 isBasic = false;
-                controlBox.switchSymbols($('.selected-category').find('span').text().trim()); 
+                controlBox.switchSymbols($('.selected-category').attr('data-title')); 
                 if(mathField && mathField.latex()){
                     self.setFormula('$$' + mathField.latex() + '$$');
                 }
@@ -227,6 +237,7 @@
                 // $advance_view.html(checkBreaks($advance_editarea.val()));
                 $advance_view.html("$$" + $advance_editarea.val() + "$$");
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub, $advance_view[0]]);
+                $message.hide();
             }
 
             // Basic view
@@ -338,13 +349,13 @@
         // this.isBasic = false;
 
         category = [
-            {title: 'Basic', icon: '+'},
-            {title: 'Greek', icon: 'π'},
-            {title: 'Operators', icon: '⊕'},
-            {title: 'Relationships', icon: '≤'},
-            {title: 'Arrows', icon: '⇔'},
-            {title: 'Delimiters', icon: '{'},
-            {title: 'Misc', icon: '∞'}
+            {title: 'Basic', icon: '+', displayTitle:'Basic'},
+            {title: 'Greek', icon: 'π',  displayTitle:'Greek'},
+            {title: 'Operators', icon: '⊕', displayTitle:'Operators'},
+            {title: 'Relationships', icon: '≤', displayTitle:'Relationships'},
+            {title: 'Arrows', icon: '⇔', displayTitle:'Arrows'},
+            {title: 'Delimiters', icon: '{', displayTitle:'Delimiters'},
+            {title: 'Misc', icon: '∞', displayTitle:'Misc'}
         ];
 
         this.Basic = [
@@ -596,8 +607,8 @@
                 self = this;
                 
             $.map(category, function(c, index){
-                index === 0 ? str += '<li class="selected-category" >' + c.icon + '<span>' + c.title + '</span></li>' : 
-                    str += '<li>' + c.icon + '<span>' + c.title + '</span></li>'
+                index === 0 ? str += '<li class="selected-category" title="'+c.displayTitle+'" data-title="'+c.title+'">' + c.icon + '<span>' + c.displayTitle + '</span></li>' : 
+                    str += '<li title="'+c.displayTitle+'" data-title="'+c.title+'">' + c.icon + '<span>' + c.displayTitle + '</span></li>'
             });
             $category.html(str);
 
@@ -606,7 +617,7 @@
                     return;
                 }
                 $(this).siblings('li').removeClass('selected-category').end().addClass('selected-category');
-                self.switchSymbols($(this).find('span').text().trim());
+                self.switchSymbols($(this).attr('data-title'));
             });
 
             //this.switchSymbols();
