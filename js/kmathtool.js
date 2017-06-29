@@ -29,7 +29,7 @@
         options: {
             name: "kmath",
             tooltip: "function",
-            template: '<a href="" role="button" class="k-tool" unselectable="on" title="Formulas" aria-pressed="false"><span unselectable="on" style="font-family: serif">π</span></a>',
+            template: '<a href="" role="button" class="k-tool formulas_btn" unselectable="on" title="Formulas" aria-pressed="false"><span unselectable="on" style="font-family: serif">π</span></a>',
             exec: execFun
         }
     };
@@ -131,12 +131,19 @@
             });
             MathJax.Hub.Queue(function () {
                 $('.MathJax_CHTML_focused', editor.body).remove();
-                var fragement = editor.document.createDocumentFragment();
-                fragement.appendChild(kMath.getFormula());
+                var fragement = editor.document.createDocumentFragment(),
+                    result = kMath.getFormula(),
+                    id = result.id,
+                    node;
+                fragement.appendChild(result);
                 range.insertNode(fragement);
+                node = $('#'+ id, editor.body)[0];
+                range.setStartAfter(node);
+                range.collapse(true);
+                editor.selectRange(range);
                 $kmath_window.find('.math-insert').attr('disabled', false);
                 $kmath_window.data("kendoWindow").close();
-                editor.update();
+                editor.focus();
             });
             // editor.focus();
         });
@@ -235,6 +242,10 @@
             $advance_editarea.on({'keyup': typesetView, 'change': typesetView});
             function typesetView(){
                 // $advance_view.html(checkBreaks($advance_editarea.val()));
+                if(!$advance_editarea.val().trim().length){
+                    $advance_view.html('');
+                    return;
+                }
                 $advance_view.html("$$" + $advance_editarea.val() + "$$");
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub, $advance_view[0]]);
                 $message.hide();
