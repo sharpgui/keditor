@@ -10,7 +10,7 @@
      * @var {KMath} kMath 
      * @var {MQ.MathField} mathField 
      * @var {JQuery} $kmath_window  window of kendoWindow
-     * 
+     * @var {JQuery} $message
      */
 
     try {
@@ -22,7 +22,8 @@
         flag = true, editor, range, 
         kMath = new KMath(),
         mathField,
-        $kmath_window;
+        $kmath_window,
+        $message;
 
     kendo.ui.Editor.defaultTools['kmath'] = {
         name: "kmath",
@@ -91,7 +92,7 @@
         }else{
             kMath.setFormula('', true);
         }
-
+        $message.hide();
         $kmath_window.data("kendoWindow").center().open();
     }
 
@@ -133,14 +134,23 @@
                 $('.MathJax_CHTML_focused', editor.body).remove();
                 var fragement = editor.document.createDocumentFragment(),
                     result = kMath.getFormula(),
-                    id = result.id,
+                    id,
                     node;
-                fragement.appendChild(result);
-                range.insertNode(fragement);
-                node = $('#'+ id, editor.body)[0];
-                range.setStartAfter(node);
-                range.collapse(true);
-                editor.selectRange(range);
+                if(!result){
+                    $message.text('Typeset failed. Please retry after reload the webpage.');
+                    $message.show(100);
+                    $kmath_window.find('.math-insert').attr('disabled', false);
+                    return;
+                }
+                id = result.id;
+                if(id){
+                    fragement.appendChild(result);
+                    range.insertNode(fragement);
+                    node = $('#'+ id, editor.body)[0];
+                    range.setStartAfter(node);
+                    range.collapse(true);
+                    editor.selectRange(range);
+                }
                 $kmath_window.find('.math-insert').attr('disabled', false);
                 $kmath_window.data("kendoWindow").close();
                 editor.focus();
@@ -170,7 +180,7 @@
     }
       
     function KMath(){
-        var $advance_editarea, $advance_view, $basic_editarea, $tobasic_btn, $toadvance_btn, $message, 
+        var $advance_editarea, $advance_view, $basic_editarea, $tobasic_btn, $toadvance_btn, 
             mathbbReg = /\\mathbb{([A-Z])}/g ,
             notinsetReg = /not\\(in|ni|subset|supset|subseteq|supseteq)/g ,
             controlBox = new ControlBox();
@@ -308,6 +318,9 @@
             // }else{
                 var latex, dom, styles;
                 dom = $advance_view;
+                if(!dom.html().trim()){
+                    return $('<span>$nbsp;</span>')[0];
+                }
                 latex = dom.find("script").text();
                 dom = dom.clone();
                 latex = "$$" + latex + "$$";
