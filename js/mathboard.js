@@ -3,7 +3,7 @@
  */
 
 (function (window) {
-
+ 'use strict';
     var isBasic = false,
         MQ = MathQuill.getInterface(2);
 
@@ -14,6 +14,7 @@
             notinsetReg = /not\\(in|ni|subset|supset|subseteq|supseteq)/g,
             controlBox = new ControlBox(),
             self = this,
+            $message,
             defaultOptions = { $message: "#kmath-message", isBasic: false, mathField: '', element: "#kmath" }
 
         this.options = $.extend(defaultOptions, options);
