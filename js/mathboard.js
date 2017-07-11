@@ -1,16 +1,29 @@
-(function(){
+/**
+ * define KMath
+ */
+
+(function (window) {
 
     var isBasic = false,
         MQ = MathQuill.getInterface(2);
 
-    function KMath(){
-        var $advance_editarea, $advance_view, $basic_editarea, $tobasic_btn, $toadvance_btn, 
+    function KMath(options) {
+        var $advance_editarea, $advance_view, $basic_editarea, $tobasic_btn, $toadvance_btn,
+            mathField,//   mathField = self.options.mathField =.......
+            mathbbReg = /\\mathbb{([A-Z])}/g,
+            notinsetReg = /not\\(in|ni|subset|supset|subseteq|supseteq)/g,
             controlBox = new ControlBox(),
-            mathField;
-        this._init = function(){
-            $("#kmath").html($('<ul id="math-category"></ul>' + 
+            self = this,
+            defaultOptions = { $message: "#kmath-message", isBasic: false, mathField: '', element: "#kmath" }
+
+        this.options = $.extend(defaultOptions, options);
+
+        this._init = function () {
+            // _init方法createWindow 之后才会创建所以this.element需要在这赋值
+            this.element = $(this.options.element).attr("data-role","kmath");
+            this.element.html('<ul id="math-category"></ul>' +
                 '<ul id="math-symbol">123</ul>' +
-                '<div id="math-editor">456</div>'));
+                '<div id="math-editor">456</div>');
 
             controlBox.init();
             initialView();
@@ -21,8 +34,24 @@
             $tobasic_btn = $("#tobasic");
             $toadvance_btn = $("#toadvance");
 
+            $message = this.options.$message = $(options.$message);
+
             // Switch basic \ advance view 
-            $("#kmath").on("click", '#tobasic', function(){
+            this.element.on("click", '#tobasic', function () {
+                if (mathField) {
+                    var str = $advance_view.find("script").text();
+                    if (str) {
+                        str = str.replace(mathbbReg, "\\$1");
+                        str = str.replace(notinsetReg, 'not$1');
+                    }
+                    mathField.select();
+                    mathField.write(str);
+                    if ($message && str && !mathField.latex()) {
+                        $message.text('This equation cannot be rendered in Basic View.');
+                        $message.show(100);
+                        return;
+                    }
+                }
                 $basic_editarea.show(0);
                 $toadvance_btn.show(0);
 
@@ -30,10 +59,11 @@
                 $advance_view.hide(0);
                 $tobasic_btn.hide(0);
 
-                isBasic = true;
-                controlBox.switchSymbols($('.selected-category').find('span').text().trim());
+                isBasic = self.options.isBasic = true;
+                controlBox.switchSymbols($('.selected-category').attr('data-title'));
+
             });
-            $("#kmath").on("click", '#toadvance', function(){
+            this.element.on("click", '#toadvance', function () {
                 $basic_editarea.hide(0);
                 $toadvance_btn.hide(0);
 
@@ -43,93 +73,134 @@
 
                 typesetView();
 
-                isBasic = false;
-                controlBox.switchSymbols($('.selected-category').find('span').text().trim());              
+                isBasic = self.options.isBasic = false;
+                controlBox.switchSymbols($('.selected-category').attr('data-title'));
+                if (mathField && mathField.latex()) {
+                    self.setFormula('$$' + mathField.latex() + '$$');
+                }
             });
             // set default view
             $("#toadvance").trigger("click");
 
             // Advance view listener
-            $advance_editarea.on({'keyup': typesetView, 'change': typesetView});
-            function typesetView(){
-                $advance_view.html(checkBreaks($advance_editarea.val()));
-                // $advance_view.html('$$' + $advance_editarea.val() + '$$');
+            $advance_editarea.on({ 'keyup': typesetView, 'change': typesetView });
+            function typesetView() {
+                // $advance_view.html(checkBreaks($advance_editarea.val()));
+                if (!$advance_editarea.val().trim().length) {
+                    $advance_view.html('');
+                    return;
+                }
+                $advance_view.html("$$" + $advance_editarea.val() + "$$");
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub, $advance_view[0]]);
+                $message && $message.hide();
             }
 
             // Basic view
-            mathField = MQ.MathField($basic_editarea[0], {
-                spaceBehavesLikeTab: false, 
-                handlers:{
-                    edit: function(){
-                        console.log(mathField.latex());
+            mathField = this.options.mathField = MQ.MathField($basic_editarea[0], {
+                spaceBehavesLikeTab: false,
+                handlers: {
+                    edit: function () {
+                        // console.log(mathField.latex());
+                        // self.setFormula('$$' + mathField.latex() + '$$');
                     }
                 }
             });
 
-            $("#math-symbol").on('click', 'li', function(e){
-
-                if(isBasic){
+            $("#math-symbol").on('click', 'li', function (e) {
+                if (isBasic) {
                     mathField.cmd(this.title);
-                }else{
+                } else {
                     var textarea, start, end, value;
-                 // textarea = isBasic? $("#basic-editarea")[0] : $("#advance-editarea")[0];
+                    // textarea = isBasic? $("#basic-editarea")[0] : $("#advance-editarea")[0];
                     textarea = $("#advance-editarea")[0];
                     value = textarea.value;
                     start = textarea.selectionStart;
                     end = textarea.selectionEnd;
 
-                    textarea.value = value.substr(0, start) + ' ' + this.title + ' ' + value.substr(end, value.length);
+                    //新插入的LaTeX可能会与其后内容一起编译，所以加空格断开。Like \diva. 
+                    textarea.value = value.substr(0, start) + this.title + ' ' + value.substr(end, value.length);
                     $(textarea).trigger("change");
+
+                    textarea.selectionStart = this.title.length + start;
+                    textarea.selectionEnd = textarea.selectionStart;
                     textarea.focus();
                 }
-                
+
             });
 
-        }
+        };
 
-        return this._init();
-    }
-
-    function checkBreaks (text){
-        var arr = text.split('\n');
-        var result = '';
-        $.each(arr, function(index, row){
-            if(row.trim().length > 0){
-                result += '$$' + row + '$$';
+        this.setFormula = function (value, isOpening) {
+            if (isBasic && isOpening) {
+                mathField.select();
+                mathField.write(value.substr(2, value.length - 4));
+            } else {
+                value = value.trim();
+                // 由于IE不支持 startsWith / endsWith 方法、并且新逻辑下value一定是数学公式。所以此处不做判断，直接去掉首尾$$
+                // if(value.startsWith('$$') && value.endsWith('$$')){
+                value = value.substr(2, value.length - 4);
+                // }
+                $advance_editarea.val(value);
+                $advance_editarea.trigger('change');
             }
-        });
-        return result;
+        };
+
+        this.getFormula = function () {
+            var latex, dom, styles;
+            dom = $advance_view;
+            if (!dom.html().trim()) {
+                return $('<span>$nbsp;</span>')[0];
+            }
+            latex = dom.find("script").text();
+            dom = dom.clone();
+            latex = "$$" + latex + "$$";
+            dom = dom.find(".MathJax_CHTML");
+            styles = dom.attr('style');
+            // 阻止选中
+            dom.attr('style', styles + '-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; ');
+            dom.attr("data-mathml", escape(dom.attr("data-mathml")));     // 保留MathML
+            dom.attr('data-latex', latex);
+            dom.attr("contenteditable", false);
+            dom.find(".MJX_Assistive_MathML").remove();
+            // 添加空格。会使光标明显，但在重复编辑的情况下，会出现多个空格。故注掉。
+            // dom = $('<span></span>').append(dom).append('<span>&nbsp;</span>');
+
+
+            return dom[0];
+            // }
+        }
     }
 
-    function initialView(){
-        var $view = $('<div>'+
-            '<button class="blue-link" id="tobasic">switch view to basic</button>' + 
-            '<button class="blue-link" id="toadvance">switch view to Advance</button>' + 
-            '<textarea id="advance-editarea">S_N = \\displaystyle\\sqrt{ \\frac{1}{N} \\sum\^N_{i=1}{(x_i - \\bar{x})\^2} }</textarea>'+
-            '<div id="advance-view"></div>'+
+    function initialView() {
+        var $view = $('<div style="min-height: 307px;">' +
+            '<button class="blue-link" id="tobasic">switch view to basic</button>' +
+            '<button class="blue-link" id="toadvance">switch view to Advance</button>' +
+            '<textarea id="advance-editarea"></textarea>' +          // S_N = \\displaystyle\\sqrt{ \\frac{1}{N} \\sum\^N_{i=1}{(x_i - \\bar{x})\^2} }
+            '<div id="advance-view"></div>' +
             // '<textarea id="basic-editarea"></textarea>'+
-            '<span id="basic-editarea"></span>'+
+            '<span id="basic-editarea"></span>' +
             '</div>');
 
         $("#math-editor").html($view);
-        
+
     }
 
-    function ControlBox(){
+    function ControlBox() {
 
-        var symbolCaches = [], category ;
+        var symbolCaches = [],
+            self = this,
+            category;
 
         // this.isBasic = false;
 
         category = [
-            {title: 'Basic', icon: '+'},
-            {title: 'Greek', icon: 'π'},
-            {title: 'Operators', icon: '⊕'},
-            {title: 'Relationships', icon: '≤'},
-            {title: 'Arrows', icon: '⇔'},
-            {title: 'Delimiters', icon: '{'},
-            {title: 'Misc', icon: '∞'}
+            { title: 'Basic', icon: '+', displayTitle: 'Basic' },
+            { title: 'Greek', icon: 'π', displayTitle: 'Greek' },
+            { title: 'Operators', icon: '⊕', displayTitle: 'Operators' },
+            { title: 'Relationships', icon: '≤', displayTitle: 'Relationships' },
+            { title: 'Arrows', icon: '⇔', displayTitle: 'Arrows' },
+            { title: 'Delimiters', icon: '{', displayTitle: 'Delimiters' },
+            { title: 'Misc', icon: '∞', displayTitle: 'Misc' }
         ];
 
         this.Basic = [
@@ -247,7 +318,7 @@
             new Symbol('\\equiv', '\\equiv', 'group1', '\\equiv'),
             new Symbol('\\cong', '\\cong', 'group1', '\\cong'),
             new Symbol('\\sim', '\\sim', 'group1', '\\sim'),
-            new Symbol('\\not\in', '\\not\in', 'group1', '\\not\in'),
+            new Symbol('\\notin', '\\not\in', 'group1', '\\not\in'),
             new Symbol('\\ne', '\\ne', 'group1', '\\ne'),
             new Symbol('\\propto', '\\propto', 'group1', '\\propto'),
             new Symbol('\\approx', '\\approx', 'group1', '\\approx'),
@@ -255,15 +326,15 @@
             new Symbol('\\ge', '\\ge', 'group1', '\\ge'),
             new Symbol('\\in', '\\in', 'group1', '\\in'),
             new Symbol('\\ni', '\\ni', 'group1', '\\ni'),
-            new Symbol('\\notni', '\\not\\ni', 'group1', '\\notni'),   
+            new Symbol('\\notni', '\\not\\ni', 'group1', '\\notni'),
             new Symbol('\\subset', '\\subset', 'group1', '\\subset'),
             new Symbol('\\supset', '\\supset', 'group1', '\\supset'),
-            new Symbol('\\not\subset', '\\not\\subset', 'group1', '\\not\subset'),
-            new Symbol('\\not\supset', '\\not\\supset', 'group1', '\\not\supset'),
+            new Symbol('\\notsubset', '\\not\\subset', 'group1', '\\not\subset'),
+            new Symbol('\\notsupset', '\\not\\supset', 'group1', '\\not\supset'),
             new Symbol('\\subseteq', '\\subseteq', 'group1', '\\subseteq'),
             new Symbol('\\supseteq', '\\supseteq', 'group1', '\\supseteq'),
-            new Symbol('\\not\subseteq', '\\not\\subseteq', 'group1', '\\not\subseteq'),
-            new Symbol('\\not\supseteq', '\\not\\supseteq', 'group1', '\\not\supseteq'),
+            new Symbol('\\notsubseteq', '\\not\\subseteq', 'group1', '\\not\subseteq'),
+            new Symbol('\\notsupseteq', '\\not\\supseteq', 'group1', '\\not\supseteq'),
             new Symbol('\\models', '\\models', 'group1', '\\models'),
             new Symbol('\\prec', '\\prec', 'group1', '\\prec'),
             new Symbol('\\succ', '\\succ', 'group1', '\\succ'),
@@ -325,7 +396,7 @@
             new Symbol('\\rfloor', '\\rfloor', 'group1', '\\rfloor'),
             new Symbol('\\lceil', '\\lceil', 'group1', '\\lceil'),
             new Symbol('\\rceil', '\\rceil', 'group1', '\\rceil'),
-            new Symbol('\\slash', '\\slash', 'group1', '\\slash'),
+            new Symbol('\\slash', '\/', 'group1', '\\slash'),
             new Symbol('\\lbrace', '\\lbrace', 'group1', '\\lbrace'),
             new Symbol('\\rbrace', '\\rbrace', 'group1', '\\rbrace')
         ];
@@ -355,7 +426,7 @@
             new Symbol('\\perp', '\\perp', 'group1', '\\perp'),
             new Symbol('\\nabla', '\\nabla', 'group1', '\\nabla'),
             new Symbol('\\hbar', '\\hbar', 'group1', '\\hbar'),
-            new Symbol('\\AA', '\\AA', 'group1', '\\AA'),
+            // new Symbol('\\AA', '\\AA', 'group1', '\\AA'),
             new Symbol('\\circ', '\\circ', 'group1', '\\circ'),
             new Symbol('\\bullet', '\\bullet', 'group1', '\\bullet'),
             new Symbol('\\setminus', '\\setminus', 'group1', '\\setminus'),
@@ -375,30 +446,30 @@
         // }
 
         // render category
-        this.init = function(){
+        this.init = function () {
             var str = '',
                 $category = $('#math-category');
-                self = this;
-                
-            $.map(category, function(c, index){
-                index === 0 ? str += '<li class="selected-category" >' + c.icon + '<span>' + c.title + '</span></li>' : 
-                    str += '<li>' + c.icon + '<span>' + c.title + '</span></li>'
+
+
+            $.map(category, function (c, index) {
+                index === 0 ? str += '<li class="selected-category" title="' + c.displayTitle + '" data-title="' + c.title + '">' + c.icon + '<span>' + c.displayTitle + '</span></li>' :
+                    str += '<li title="' + c.displayTitle + '" data-title="' + c.title + '">' + c.icon + '<span>' + c.displayTitle + '</span></li>'
             });
             $category.html(str);
 
-            $category.find('li').click(function(e){
-                if($(this).hasClass('selected-category')){
+            $category.find('li').click(function (e) {
+                if ($(this).hasClass('selected-category')) {
                     return;
                 }
                 $(this).siblings('li').removeClass('selected-category').end().addClass('selected-category');
-                self.switchSymbols($(this).find('span').text().trim());
+                self.switchSymbols($(this).attr('data-title'));
             });
 
-            this.switchSymbols();
+            //this.switchSymbols();
         }
 
         // render symbols
-        this.switchSymbols = function(title){
+        this.switchSymbols = function (title) {
             // 'Basic' in default
             title ? '' : title = category[0].title;
 
@@ -410,67 +481,73 @@
             // if(symbolCaches[title]){
             //     return $symbol.html(symbolCaches[title]);
             // }
-            symbolCache = $.grep(symbolCaches, function(cache){
-                if(cache.title == title && cache.isBasic == isBasic){
+            symbolCache = $.grep(symbolCaches, function (cache) {
+                if (cache.title == title && cache.isBasic == isBasic) {
                     return cache;
                 }
             });
-            if(symbolCache.length){
+            if (symbolCache.length) {
                 $symbol.html(symbolCache[0].ele);
-                $symbol.find('li').each(function(){
+                $symbol.find('li').each(function () {
                     MQ.StaticMath(this);
                 });
 
-                return;               
+                return;
             }
 
-            $.map(this[title], function(s){
+            $.map(this[title], function (s) {
                 // ele += '<li class="'+ s.group +'" title="'+ s.latex +'" advance="'+ s.advance +'">' + s.text + '</li>';
                 ele += s.createTemplate();
                 groups[s.group] = 1;
             });
             ele = $(ele);
             // set styles for the last one in each group 
-            for(key in groups){
+            for (var key in groups) {
                 ele.filter('.' + key).last().css('margin-right', '5px');
             }
             $symbol.html(ele);
 
-            $symbol.find('li').each(function(){
-                MQ.StaticMath(this);
+            // 首次执行可能由于页面渲染未完成导致数学符号的缩放计算不正确，故setTimeout。
+            // MQ.StaticMath 会忽略所有标签，故在li级别循环执行。
+            setTimeout(function () {
+                $symbol.find('li').each(function () {
+                    MQ.StaticMath(this);
+                });
             });
 
             symbolCaches.push({
                 ele: ele,
                 title: title,
                 isBasic: isBasic
-            }); 
+            });
         }
 
     }
-
-    function Symbol(latex, advance, group, text, style){
+    /**
+     * @class Symbol 
+     * @param {String} latex basicView latex
+     * @param {String} advance advanceView latex
+     * @param {String} group 
+     * @param {String} text 
+     * @param {String} style 
+     */
+    function Symbol(latex, advance, group, text, style) {
         this.text = text;
         this.latex = latex;
         this.advance = advance;
         this.group = group;
         this.style = style;
-        this.createTemplate = function() {
-            var tit = isBasic? this.latex : this.advance;
-            var result = this.style ? '<li class="'+ this.group +'" title="'+ tit +'" style="'+ this.style +'">' + this.text + '</li>' : 
-             '<li class="'+ this.group +'" title="'+ tit +'">' + this.text + '</li>';
+        this.createTemplate = function () {
+            var tit = isBasic ? this.latex : this.advance;
+            var result = this.style ?
+                '<li class="' + this.group + '" title="' + tit + '" style="' + this.style + '">' + this.text + '</li>' :
+                '<li class="' + this.group + '" title="' + tit + '">' + this.text + '</li>';
             // var result = '<li class="'+ this.group +'" title="'+ tit +'">' + this.advance + '</li>';
             return result;
         }
     }
-
-    new KMath();
-    // Symbol.prototype.createTemplate = function(isBasic) {
-    //       var tit = isBasic? this.latex : this.advance;
-    //       var result = '<li class="'+ this.group +'" title="'+ this.latex +'" advance="'+ this.advance +'">' + this.text + '</li>';
-    //       return result;
-    // }
+    //export KMath
+    window.KMath = KMath;
+})(window);
 
 
-
-})();

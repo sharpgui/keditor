@@ -1,3 +1,6 @@
+ /**
+  * desc draft
+  */
  +function () {
             /**
               * @var flag {bool} when first click  create and initial preview_window

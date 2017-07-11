@@ -1,6 +1,6 @@
 
 .math-insert.button, .math-cancel.button{ float: right; margin-top: 20px; margin-left: 15px; box-sizing: border-box;}
-#kmath{ padding: 0 5px 6px; max-width: 900px; min-width: 720px; font-family: "Times New Roman", serif; border: 1px solid #ccc;}
+#kmath,[data-role="kmath"]{ padding: 0 5px 6px; max-width: 900px; min-width: 720px; font-family: "Times New Roman", serif; border: 1px solid #ccc;}
 /* Category */
 #math-category{ padding: 0; margin: 0;}
 #math-category>li{ display: inline-block; padding: 0 15px; line-height: 44px;
