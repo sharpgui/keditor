@@ -1,7 +1,7 @@
 //+++++KMath 
 //=================================
 (function (window) {
- 'use strict';
+    'use strict';
     var isBasic = false,
         MQ = MathQuill.getInterface(2);
 
@@ -19,13 +19,14 @@
 
         this._init = function () {
             // _init方法createWindow 之后才会创建所以this.element需要在这赋值
-            this.element = $(this.options.element).attr("data-role","kmath");
+            this.element = $(this.options.element).attr("data-role", "kmath");
             this.element.html('<ul id="math-category"></ul>' +
-                              '<ul id="math-symbol"></ul>' +
-                              '<div id="math-editor"></div>');
+                '<ul id="math-symbol"></ul>' +
+                '<div id="math-editor"></div>');
 
             controlBox.init();
             initialView();
+            addStyleNode(kmathcss);
 
             $advance_editarea = $("#advance-editarea");
             $advance_view = $("#advance-view");
@@ -190,7 +191,7 @@
             self = this,
             category;
 
-       
+
 
         category = [
             { title: 'Basic', icon: '+', displayTitle: 'Basic' },
@@ -545,6 +546,25 @@
             return result;
         }
     }
+
+    /**
+     * Add style node to specified document
+     * @param {String} str inner css 
+     * @param {document} doc default in window.document
+     */
+    function addStyleNode(str, doc) {
+        doc = doc ? doc : document;
+        var styleNode = doc.createElement("style");
+        styleNode.type = "text/css";
+        if (styleNode.styleSheet) {
+            styleNode.styleSheet.cssText = str;       //ie下要通过 styleSheet.cssText写入.   
+        } else {
+            styleNode.innerHTML = str;       //在ff中， innerHTML是可读写的，但在ie中，它是只读的.   
+        }
+        doc.getElementsByTagName("head")[0].appendChild(styleNode);
+    }
+
+    var kmathcss = '.math-insert.button,.math-cancel.button{float:right;margin-top:20px;margin-left:15px;box-sizing:border-box}#kmath,[data-role="kmath"]{padding:0 5px 6px;max-width:900px;min-width:720px;font-family:"Times New Roman",serif;border:1px solid #ccc}#math-category{padding:0;margin:0}#math-category>li{display:inline-block;padding:0 15px;line-height:44px;cursor:pointer;box-sizing:border-box}#math-category>li>span{padding-left:6px}#math-category>li.selected-category{border-bottom:2px solid #5FB554}#math-symbol{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;height:142px;padding:5px 5px 0;margin:0;border:1px solid #dbdbdb;border-top-color:#5FB554;box-sizing:border-box}#math-symbol>li{padding:0;overflow:hidden;margin-left:-1px;margin-bottom:5px;height:40px;width:40px;line-height:35px;text-align:center;color:#008ee6;border:1px solid #dbdbdb;cursor:pointer;box-sizing:border-box}#advance-editarea{display:block;overflow:auto;width:98%;margin:0 auto;height:120px}#advance-view{overflow:auto;margin:0 auto;height:143px}#advance-editarea::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}#advance-editarea::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}#advance-view::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}#advance-view::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}#basic-editarea{clear:both;display:block;width:99%;margin:0 auto;height:266px}#kmath-message{float:left;margin-top:20px;padding-left:5px;font-size:0.9em}.blue-link{margin:10px 0;float:right;border:none;background:none;color:#3a9be5;cursor:pointer}.blue-link:hover{text-decoration:underline}#math-symbol .mq-empty{display:none!important}#math-symbol big{font-size:1.3em}';
     //export KMath
     window.KMath = KMath;
 })(window);

@@ -15,7 +15,7 @@
     </textarea>-->
     
     <div id="message"></div>
-    <link rel="stylesheet" href="../styles/kmath.css">
+    <!-- <link rel="stylesheet" href="../styles/kmath.css"> -->
     <script src="https://cdn.bootcss.com/jquery/1.12.2/jquery.js"></script>
     <script src="../js/kendo.all.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -23,9 +23,9 @@
     <script src="../js/mathboard.js"></script>
     <script src="../js/math.window.extend.js"></script>
     <script>
-      
     
       var  mathEditor = new KMath();
+      //mathWindow.formula 即为返回DOM 对象
       var mathWindow=  mathEditor.init();
       mathWindow.center().open();
     </script>
