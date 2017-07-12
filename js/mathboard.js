@@ -33,7 +33,7 @@
             $tobasic_btn = $("#tobasic");
             $toadvance_btn = $("#toadvance");
 
-            $message = this.options.$message;
+            $message = $(this.options.$message);
 
             // Switch basic \ advance view 
             this.element.on("click", '#tobasic', function () {
