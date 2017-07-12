@@ -13,7 +13,7 @@
 <body>
     <!--<textarea id="editor" rows="10" cols="30" style="width: 60%;height:400px" >
     </textarea>-->
-  
+    
     <div id="message"></div>
     <link rel="stylesheet" href="../styles/kmath.css">
     <script src="https://cdn.bootcss.com/jquery/1.12.2/jquery.js"></script>
@@ -24,8 +24,8 @@
     <script src="../js/math.window.extend.js"></script>
     <script>
       
-       var options = { $message: "#kmath-message", isBasic: false },
-        mathEditor = new KMath(options);
+    
+      var  mathEditor = new KMath();
       var mathWindow=  mathEditor.init();
       mathWindow.center().open();
     </script>

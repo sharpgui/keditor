@@ -5,14 +5,14 @@
    
    KMath.prototype.init= createWindow;
     /**
-         * Init KendoWindow
+         * 先创建kendo window ，window dom 初始化完毕后调用 KMath 的_init 创建DOM 结构
          * @method createWindow
          */
     function createWindow() {
         var self=this,//KMath instance
          $kmath_window ;
         $(document.body).append('<div id="kmath-wrapper">' +
-            '<div id="kmath"></div>' +
+            '<div id="'+this.options.element.slice(1)+'"></div>' +//KMath 容器根据传入参数动态生成
             '<div id="kmath-message"></div>' +
             '<button class="math-cancel button">Cancel</button>' +
             '<button class="math-insert button button-theme">Insert</button>' +
