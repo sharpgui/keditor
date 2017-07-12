@@ -1,4 +1,5 @@
-
+//+++++KMath extend for Kendo Window
+//=================================
 +function () {
 'use strict';
    

@@ -1,7 +1,5 @@
-/**
- * define KMath
- */
-
+//+++++KMath 
+//=================================
 (function (window) {
  'use strict';
     var isBasic = false,
@@ -23,8 +21,8 @@
             // _init方法createWindow 之后才会创建所以this.element需要在这赋值
             this.element = $(this.options.element).attr("data-role","kmath");
             this.element.html('<ul id="math-category"></ul>' +
-                '<ul id="math-symbol">123</ul>' +
-                '<div id="math-editor">456</div>');
+                '<ul id="math-symbol"></ul>' +
+                '<div id="math-editor"></div>');
 
             controlBox.init();
             initialView();
