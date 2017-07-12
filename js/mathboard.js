@@ -192,7 +192,7 @@
             self = this,
             category;
 
-        // this.isBasic = false;
+       
 
         category = [
             { title: 'Basic', icon: '+', displayTitle: 'Basic' },

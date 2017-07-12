@@ -7,11 +7,13 @@ extend kendo editor for edit &amp; review   math
 - [mathjax](http://docs.mathjax.org/en/latest/start.html)
 - [latex editor](https://arachnoid.com/latex/)
 - [mathquill](http://mathquill.com/)
+- [limit-calculator martix](https://www.symbolab.com/solver/limit-calculator)
+- [eqneditor vector](https://www.codecogs.com/latex/eqneditor.php)
 ## demo
 
-- [第一版](https://sharpgui.github.io/keditor/keditor.html)
-- [new DEMO](https://sharpgui.github.io/keditor/demos/mathboard.html)
-- [DEMO in KendoEditor](https://sharpgui.github.io/keditor/demos/kmath.html)
+- [KMath](https://sharpgui.github.io/keditor/demos/mathboard.html)
+- [DEMO in KendoEditor](https://sharpgui.github.io/keditor/demos/kmath.editor.html)
+- [DEMO in kendoWindow](https://sharpgui.github.io/keditor/demos/kamth.window.html)
 ## Canvas
 
 > 1
