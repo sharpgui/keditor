@@ -18,6 +18,7 @@
     <div id="editor">
 
     </div>
+    <div id="mathe"></div>
     <div id="message"></div>
     <!-- <link rel="stylesheet" href="../styles/kmath.css"> -->
     <script src="https://cdn.bootcss.com/jquery/1.12.2/jquery.js"></script>
@@ -27,8 +28,10 @@
     <script src="../js/mathboard.js"></script>
     <script>
         var options = { $message: "#message", element: "#editor" };
+          var _options = { $message: "#message", element: "#mathe" };
         var editor = new KMath(options);
         editor._init();
+         new KMath(_options)._init();
     </script>
 
 </body>

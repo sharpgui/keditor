@@ -17,11 +17,10 @@
     var flag = true,
         editor,
         range,
-        options = { $message: "#kmath-message", isBasic: false },
         $kmath_window,
         kMath;//lowercase k uppercase M 
 
-    kMath = new KMath(options);//uppercase K uppercase M
+    kMath = new KMath();//uppercase K uppercase M
 
     //kendo editor math extend
     kendo.ui.Editor.defaultTools['kmath'] = {
@@ -33,7 +32,11 @@
             exec: execFun
         }
     };
-
+    /**
+     * 点击 PI(mathEditor toolbar) 时执行的逻辑
+     * @desc 弹出mathEditor 窗口，并且当前有formula 选中的话，回显并且重新编辑
+     * @param {*} e 
+     */
     function execFun(e) {
         var equation_dom;
         editor = $(this).data('kendoEditor');
@@ -64,13 +67,6 @@
                 menuSettings: { context: "Browser" }    // hide right-clicking menu
             });
         }
-
-        // equation_dom = $(range.cloneContents()).find(".MathJax_CHTML");
-        // if (equation_dom.length) {
-        //     kMath.setFormula(equation_dom.attr("data-latex"));
-        // } else {
-        //     kMath.setFormula(range.toString());
-        // }
 
         // kendoWindow 打开前 检查 .MathJax_CHTML_focused
         equation_dom = $('.MathJax_CHTML_focused', editor.body);
