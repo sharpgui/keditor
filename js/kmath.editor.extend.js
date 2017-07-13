@@ -4,11 +4,10 @@
     'use strict';
 
     /**
-     * @var {Boolean} isBasic 
      * @var {KendoEditor} editor 
      * @var {Boolean} flag 
      * @var {Range} range
-     * @var {KMath} kMath  lowercase k uppercase M 
+     * @var {KMath} mathEditor   
      * @var {JQuery} $kmath_window  window of kendoWindow
      */
 
@@ -18,9 +17,7 @@
         editor,
         range,
         $kmath_window,
-        kMath;//lowercase k uppercase M 
-
-    kMath = new KMath();//uppercase K uppercase M
+        mathEditor = new KMath();//uppercase K uppercase M
 
     //kendo editor math extend
     kendo.ui.Editor.defaultTools['kmath'] = {
@@ -50,7 +47,7 @@
             // 双击 .MathJax_CHTML 进入公式编辑
             // 通过 .MathJax_CHTML_focused 标记选中的公式
             $(editor.body).on('dblclick', '.MathJax_CHTML', function () {
-                kMath.setFormula($(this).attr("data-latex"));
+                mathEditor.setFormula($(this).attr("data-latex"));
                 $kmath_window.data("kendoWindow").center().open();
             });
             $(editor.body).on('click', '.MathJax_CHTML', function (e) {
@@ -71,11 +68,11 @@
         // kendoWindow 打开前 检查 .MathJax_CHTML_focused
         equation_dom = $('.MathJax_CHTML_focused', editor.body);
         if (equation_dom.length) {
-            kMath.setFormula(equation_dom.attr("data-latex"), true);
+            mathEditor.setFormula(equation_dom.attr("data-latex"), true);
         } else {
-            kMath.setFormula('', true);
+            mathEditor.setFormula('', true);
         }
-        kMath.options.$message && kMath.options.$message.hide();
+        mathEditor.$message && mathEditor.$message.hide();
         $kmath_window.data("kendoWindow").center().open();
     }
 
@@ -106,23 +103,23 @@
         });
         $kmath_window.find('.math-insert').click(function () {
             range.deleteContents();
-            // range.insertNode(kMath.getFormula());
-            // editor.paste(kMath.getFormula().outerHTML);
+            // range.insertNode(mathEditor.getFormula());
+            // editor.paste(mathEditor.getFormula().outerHTML);
             $(this).attr('disabled', true);
             MathJax.Hub.Queue(function () {
-                if (kMath.options.isBasic && kMath.options.mathField) {
-                    kMath.setFormula('$$' + kMath.options.mathField.latex() + '$$');
+                if (mathEditor.isBasic && mathEditor.mathField) {
+                    mathEditor.setFormula('$$' + mathEditor.mathField.latex() + '$$');
                 }
             });
             MathJax.Hub.Queue(function () {
                 $('.MathJax_CHTML_focused', editor.body).remove();
                 var fragement = editor.document.createDocumentFragment(),
-                    result = kMath.getFormula(),
+                    result = mathEditor.getFormula(),
                     id,
                     node;
-                if (kMath.options.$message && !result) {
-                    kMath.options.$message.text('Typeset failed. Please retry after reload the webpage.');
-                    kMath.options.$message.show(100);
+                if (mathEditor.$message && !result) {
+                    mathEditor.$message.text('Typeset failed. Please retry after reload the webpage.');
+                    mathEditor.$message.show(100);
                     $kmath_window.find('.math-insert').attr('disabled', false);
                     return;
                 }
@@ -142,8 +139,8 @@
             // editor.focus();
         });
 
-        kMath._init();
-        kMath.options.$message = kMath.options.$message;
+        mathEditor._init();
+      
 
     }
 

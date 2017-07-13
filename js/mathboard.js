@@ -13,14 +13,19 @@
      */
     function KMath(options) {
         /**
-         * 
+         * @prop {MathField} mathFiled
+         * @prop {jQuery} $message
+         * @prop {Bool} isBasic
+         * @var {PlanObject} defaultOptions{$message:"提示信息DOM selector",element:"KMath container"}
+         * @var {jQuery} $category category container
+         * @var {jQuery} $mathEditor container
+         * @var {jQuery} $mathSymbol container
          */
         var $advance_editarea,
             $advance_view,
             $basic_editarea,
             $tobasic_btn,
             $toadvance_btn,
-            $message,
             $category,
             $mathEditor,
             $mathSymbol,
@@ -28,12 +33,11 @@
             notinsetReg = /not\\(in|ni|subset|supset|subseteq|supseteq)/g,
             controlBox = new ControlBox(),
             self = this,
-            mathField,
-            isBasic = false,//转移isBasic去除耦合性 ControlBox 和Symbol 依赖isBasic  好在 ControlBox.switchSymbol调用Symboy.createTemplate可以传一个参数解决 
-            defaultOptions = { $message: "#kmath-message", isBasic: false, mathField: '', element: "#kmath" }
-
+            defaultOptions = { $message: "#kmath-message", element: "#kmath" }
+        this.mathField = null;//之后赋值因为现在DOM对象还没有生成
+        this.isBasic =false;// this._toggleView中修改
         this.options = $.extend(defaultOptions, options);
-
+        this.$message = $(this.options.$message);
         this._init = function () {
             // _init方法createWindow 之后才会创建所以this.element需要在这赋值
             this.element = $(this.options.element).attr("data-role", "kmath");
@@ -56,23 +60,23 @@
 
             // Switch basic \ advance view 
             this.element.on("click", '#tobasic', function () {
-                if (mathField) {
+                if (self.mathField) {
                     var str = $advance_view.find("script").text();
                     if (str) {
                         str = str.replace(mathbbReg, "\\$1");
                         str = str.replace(notinsetReg, 'not$1');
                     }
-                    mathField.select();
-                    mathField.write(str);
-                    if ($message && str && !mathField.latex()) {
-                        $message.text('This equation cannot be rendered in Basic View.');
-                        $message.show(100);
+                    self.mathField.select();
+                    self.mathField.write(str);
+                    if (this.$message && str && !self.mathField.latex()) {
+                        this.$message.text('This equation cannot be rendered in Basic View.');
+                        this.$message.show(100);
                         return;
                     }
                 }
 
                 self._toggleView(true);
-                controlBox.switchSymbols($('.selected-category',$category).attr('data-title'), true,$mathSymbol);
+                controlBox.switchSymbols($('.selected-category', $category).attr('data-title'), true, $mathSymbol);
 
             });
 
@@ -80,15 +84,15 @@
 
                 self._toggleView(false);
                 self._typesetView();
-                controlBox.switchSymbols($('.selected-category',$category).attr('data-title'), false,$mathSymbol);
-                if (mathField && mathField.latex()) {
-                    self.setFormula('$$' + mathField.latex() + '$$');
+                controlBox.switchSymbols($('.selected-category', $category).attr('data-title'), false, $mathSymbol);
+                if (self.mathField && self.mathField.latex()) {
+                    self.setFormula('$$' + self.mathField.latex() + '$$');
                 }
             });
 
             $mathSymbol.on('click', 'li', function (e) {
-                if (isBasic) {
-                    mathField.cmd(this.title);
+                if (self.isBasic) {
+                    self.mathField.cmd(this.title);
                 } else {
                     var textarea, start, end, value;
                     // textarea = isBasic? $("#basic-editarea")[0] : $("#advance-editarea")[0];
@@ -108,25 +112,23 @@
 
             });
 
-            $category.on('click','li',function (e) {
+            $category.on('click', 'li', function (e) {
                 if ($(this).hasClass('selected-category')) {
                     return;
                 }
                 $(this).siblings('li').removeClass('selected-category').end().addClass('selected-category');
-                controlBox.switchSymbols($(this).attr('data-title'), isBasic,$mathSymbol);
+                controlBox.switchSymbols($(this).attr('data-title'), self.isBasic, $mathSymbol);
             });
 
-            $advance_editarea.on({ 'keyup': self._typesetView,'change': this._typesetView});
+            $advance_editarea.on({ 'keyup': self._typesetView, 'change': this._typesetView });
 
-            //set $message
-            $message = this.options.$message = $(this.options.$message);
+
             // Basic view
-            mathField = this.options.mathField = MQ.MathField($basic_editarea[0], {
+            this.mathField = MQ.MathField($basic_editarea[0], {
                 spaceBehavesLikeTab: false,
                 handlers: {
                     edit: function () {
-                        // console.log(mathField.latex());
-                        // self.setFormula('$$' + mathField.latex() + '$$');
+
                     }
                 }
             });
@@ -141,9 +143,9 @@
          * @param {Bool} 只有isOpening为true 的时候才会向 $basic_deitarea 赋值,因为BasicView 和AdvanceView insert 时都是采用mathjax渲染使用同一个insert 事件所以才有这个设置
          */
         this.setFormula = function (value, isOpening) {
-            if (isBasic && isOpening) {
-                mathField.select();
-                mathField.write(value.substr(2, value.length - 4));
+            if (this.isBasic && isOpening) {
+                this.mathField.select();
+                this.mathField.write(value.substr(2, value.length - 4));
             } else {
                 value = value.trim();
                 // 由于IE不支持 startsWith / endsWith 方法、并且新逻辑下value一定是数学公式。所以此处不做判断，直接去掉首尾$$
@@ -179,10 +181,12 @@
             return dom[0];
             // }
         }
-
+        /**
+         * 唯一改变this.isBasic的method
+         */
         this._toggleView = function (starus) {
-            isBasic = self.options.isBasic = starus;
-            if (isBasic) {
+             this.isBasic = starus;
+            if (this.isBasic) {
                 $basic_editarea.show(0);
                 $toadvance_btn.show(0);
                 $advance_editarea.hide(0);
@@ -218,7 +222,7 @@
             }
             $advance_view.html("$$" + $advance_editarea.val() + "$$");
             MathJax.Hub.Queue(["Typeset", MathJax.Hub, $advance_view[0]]);
-            $message && $message.hide();
+            this.$message && this.$message.hide();
         }
     }
 
@@ -488,9 +492,9 @@
         /**
          * render category
          */
-        this.init = function ( $category) {
+        this.init = function ($category) {
             var str = '';
-              
+
 
 
             $.map(category, function (c, index) {
@@ -513,7 +517,7 @@
          * @param {Bool} isBasic 状态
          * @param {jQuery} math symbol 容器
          */
-        this.switchSymbols = function (title, isBasic,$mathSymbol) {
+        this.switchSymbols = function (title, isBasic, $mathSymbol) {
             // 'Basic' in default
             title ? '' : title = category[0].title;
 

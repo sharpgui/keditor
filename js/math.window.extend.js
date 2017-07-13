@@ -34,7 +34,7 @@
 
             $(this).attr('disabled', true);
             MathJax.Hub.Queue(function () {
-                if (self.options.isBasic && self.options.mathField) {
+                if (self.isBasic && self.options.mathField) {
                     self.setFormula('$$' + self.options.mathField.latex() + '$$');
                 }
             });
@@ -42,9 +42,9 @@
 
                 var result = self.getFormula();
 
-                if (self.options.$message && !result) {
-                    self.options.$message.text('Typeset failed. Please retry after reload the webpage.');
-                    self.options.$message.show(100);
+                if (self.$message && !result) {
+                    self.$message.text('Typeset failed. Please retry after reload the webpage.');
+                    self.$message.show(100);
                     $kmath_window.find('.math-insert').attr('disabled', false);
                     return;
                 }
