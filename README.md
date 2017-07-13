@@ -14,29 +14,15 @@ extend kendo editor for edit &amp; review   math
 - [KMath](https://sharpgui.github.io/keditor/demos/mathboard.html)
 - [DEMO in KendoEditor](https://sharpgui.github.io/keditor/demos/kmath.editor.html)
 - [DEMO in kendoWindow](https://sharpgui.github.io/keditor/demos/kmath.window.html)
-## Canvas
 
-> 1
+## 效果图
 
-![](pic/MathML_01.png)
+![](pic/mathEditor.gif)
 
-> 2
-
-![](pic/MathML_02.png)
-
-> 3
-
-![](pic/MathML_03.png)
-
-> 4
-
-![](pic/MathML_04.png)
-
-## RP
-> 1
-
-![](pic/Calculator_new.png)
-
-> 2
-
-![](pic/Calculator_new2.png)
+## Basic view 支持一些键盘操作
+- m^n  上标
+- m_n  下标
+- M*N  乘
+- m/n  除
+- \sqrt+space出现根号  \sum+space             支持latex 输入如果了解
+![](pic/basic.gif)
