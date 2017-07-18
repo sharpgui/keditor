@@ -26,3 +26,6 @@ extend kendo editor for edit &amp; review   math
 - m/n  除
 - \sqrt+space出现根号  \sum+space             支持latex 输入如果了解
 ![](pic/basic.gif)
+
+## TODO
+- [ ]mathboard KMath 中添加判断一页只执行一次addStyleNode
