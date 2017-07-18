@@ -1,4 +1,7 @@
-# keditor /play letitgo
+# keditor 
+
+/play letitgo
+
 extend kendo editor for edit &amp; review   math
 
 ## REF
