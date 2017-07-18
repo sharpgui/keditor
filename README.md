@@ -1,4 +1,4 @@
-# keditor
+# keditor /play letitgo
 extend kendo editor for edit &amp; review   math
 
 ## REF
@@ -28,4 +28,4 @@ extend kendo editor for edit &amp; review   math
 ![](pic/basic.gif)
 
 ## TODO
-- [ ]mathboard KMath 中添加判断一页只执行一次addStyleNode
+- [ ] mathboard KMath 中添加判断一页只执行一次addStyleNode
