@@ -11,20 +11,23 @@
     function createWindow() {
         var self=this,//KMath instance
          $kmath_window ;
-        $(document.body).append('<div id="kmath-wrapper">' +
+        $(document.body).append('<div id="kmath-wrapper-'+ this.uuid +'">' +
             '<div id="'+this.options.element.slice(1)+'"></div>' +//KMath 容器根据传入参数动态生成
-            '<div id="kmath-message"></div>' +
+            '<div class="'+ this.options.message.slice(1) +'"></div>' +
             '<button class="math-cancel button">Cancel</button>' +
             '<button class="math-insert button button-theme">Insert</button>' +
             '</div>');
-        $kmath_window = $("#kmath-wrapper");
+        $kmath_window = $("#kmath-wrapper-"+ this.uuid);
         $kmath_window.kendoWindow({
             width: '875px',
             height: '590px',
             visible: false,
             actions: ['close'],
             title: 'Formulas',
-            close: function () { }
+            close: function () { },
+            open: function(){
+                self._init();   // 渲染符号时，依赖于父级元素的位置与大小去计算缩放。故先open，再init。
+            }
         });
 
         $kmath_window.find('.math-cancel').click(function () {
@@ -33,11 +36,11 @@
         $kmath_window.find('.math-insert').click(function () {
 
             $(this).attr('disabled', true);
-            MathJax.Hub.Queue(function () {
+            // MathJax.Hub.Queue(function () {
                 if (self.isBasic && self.options.mathField) {
                     self.setFormula('$$' + self.options.mathField.latex() + '$$');
                 }
-            });
+            // });
             MathJax.Hub.Queue(function () {
 
                 var result = self.getFormula();
@@ -51,14 +54,14 @@
 
                 $kmath_window.find('.math-insert').attr('disabled', false);
                // $kmath_window.data("kendoWindow").close();
-                $kmath_window.data("kendoWindow").formula=result;
-                console.dir(result);
+                // $kmath_window.data("kendoWindow").formula=result;
+                // console.dir(result);
 
             });
           
         });
 
-        mathEditor._init();
+        // this._init();
      
         return   $kmath_window.data("kendoWindow");
 

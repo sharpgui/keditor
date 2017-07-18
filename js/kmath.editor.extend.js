@@ -82,13 +82,13 @@
      */
     function createWindow() {
    
-        $(document.body).append('<div id="kmath-wrapper">' +
-            '<div id="kmath"></div>' +
-            '<div id="kmath-message"></div>' +
+        $(document.body).append('<div id="kmath-wrapper-'+ mathEditor.uuid +'">' +
+            '<div id="'+ mathEditor.options.element.slice(1) +'"></div>' +
+            '<div class="'+ mathEditor.options.message.slice(1) +'"></div>' +
             '<button class="math-cancel button">Cancel</button>' +
             '<button class="math-insert button button-theme">Insert</button>' +
             '</div>');
-        $kmath_window = $("#kmath-wrapper");
+        $kmath_window = $("#kmath-wrapper-"+ mathEditor.uuid);
         $kmath_window.kendoWindow({
             width: '875px',
             height: '590px',

@@ -11,8 +11,8 @@
 
 </head>
 <body>
-    <!--<textarea id="editor" rows="10" cols="30" style="width: 60%;height:400px" >
-    </textarea>-->
+    <textarea id="editor" rows="10" cols="30" style="width: 60%;height:400px" >
+    </textarea>
     
     <div id="message"></div>
     <!-- <link rel="stylesheet" href="../styles/kmath.css"> -->
@@ -22,12 +22,23 @@
     <script src="../build/mathquill.js"></script>
     <script src="../js/mathboard.js"></script>
     <script src="../js/math.window.extend.js"></script>
+    <script src="../js/kmath.editor.extend.js"></script>
     <script>
     
       var  mathEditor = new KMath();
       //mathWindow.formula 即为返回DOM 对象
-      var mathWindow=  mathEditor.init();
+      var mathWindow =  mathEditor.init();
       mathWindow.center().open();
+
+      var  mathEditor02 = new KMath();
+      //mathWindow.formula 即为返回DOM 对象
+      var mathWindow02 =  mathEditor02.init();
+
+      $("#editor").kendoEditor({
+            tools: [
+                "kmath"
+            ],
+        });
     </script>
     
 </body>

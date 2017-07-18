@@ -2,7 +2,8 @@
 //=================================
 (function (window) {
     'use strict';
-    var MQ = MathQuill.getInterface(2);
+    var MQ = MathQuill.getInterface(2),
+        uuid = 0;
 
     /**
      * KMath
@@ -33,33 +34,39 @@
             notinsetReg = /not\\(in|ni|subset|supset|subseteq|supseteq)/g,
             controlBox = new ControlBox(),
             self = this,
-            defaultOptions = { $message: "#kmath-message", element: "#kmath" }
+            defaultOptions = { message: ".kmath-message-" + uuid, element: "#kmath-" + uuid }
+        this.uuid = uuid++;
         this.mathField = null;//之后赋值因为现在DOM对象还没有生成
         this.isBasic =false;// this._toggleView中修改
         this.options = $.extend(defaultOptions, options);
-        this.$message = $(this.options.$message);
+
         this._init = function () {
+            // math.window.extend中执行 _init() 在kendowindow open时，故作此判断。
+            if($(this.options.element).attr("data-role") == 'kmath'){
+                return;
+            }
             // _init方法createWindow 之后才会创建所以this.element需要在这赋值
             this.element = $(this.options.element).attr("data-role", "kmath");
-            this.element.html('<ul id="math-category"></ul>' +
-                '<ul id="math-symbol"></ul>' +
-                '<div id="math-editor"></div>');
+            this.element.html('<ul class="math-category"></ul>' +
+                '<ul class="math-symbol"></ul>' +
+                '<div class="math-editor"></div>');
+            this.$message = $(this.options.message);
 
-            $category = $("#math-category", this.element);
-            $mathSymbol = $("#math-symbol", this.element);
-            $mathEditor = $("#math-editor", this.element);
+            $category = $(".math-category", this.element);
+            $mathSymbol = $(".math-symbol", this.element);
+            $mathEditor = $(".math-editor", this.element);
             controlBox.init($category);
             this._initialView();
             addStyleNode(kmathcss);
             //下面这几个DOM元素只有this._initialView 完成之后才有值
-            $advance_editarea = $("#advance-editarea", this.element);
-            $advance_view = $("#advance-view", this.element);
-            $basic_editarea = $("#basic-editarea", this.element);
-            $tobasic_btn = $("#tobasic", this.element);
-            $toadvance_btn = $("#toadvance", this.element);
+            $advance_editarea = $(".advance-editarea", this.element);
+            $advance_view = $(".advance-view", this.element);
+            $basic_editarea = $(".basic-editarea", this.element);
+            $tobasic_btn = $(".tobasic", this.element);
+            $toadvance_btn = $(".toadvance", this.element);
 
             // Switch basic \ advance view 
-            this.element.on("click", '#tobasic', function () {
+            this.element.on("click", '.tobasic', function () {
                 if (self.mathField) {
                     var str = $advance_view.find("script").text();
                     if (str) {
@@ -68,11 +75,17 @@
                     }
                     self.mathField.select();
                     self.mathField.write(str);
-                    if (this.$message && str && !self.mathField.latex()) {
-                        this.$message.text('This equation cannot be rendered in Basic View.');
-                        this.$message.show(100);
+                    if (self.$message && str && !self.mathField.latex()) {
+                        self.$message.text('This equation cannot be rendered in Basic View.');
+                        self.$message.show(100);
                         return;
                     }
+                    // 重写一遍是为保证Dom显示完成，使得公式缩放计算正确。
+                    setTimeout(function(){
+                        self.mathField.select();
+                        self.mathField.write(str);
+                    });
+
                 }
 
                 self._toggleView(true);
@@ -80,13 +93,15 @@
 
             });
 
-            this.element.on("click", '#toadvance', function () {
+            this.element.on("click", '.toadvance', function () {
 
                 self._toggleView(false);
-                self._typesetView();
+                // self._typesetView();
                 controlBox.switchSymbols($('.selected-category', $category).attr('data-title'), false, $mathSymbol);
                 if (self.mathField && self.mathField.latex()) {
                     self.setFormula('$$' + self.mathField.latex() + '$$');
+                }else{
+                    self.setFormula('$$$$');
                 }
             });
 
@@ -203,12 +218,12 @@
 
         this._initialView = function () {
             var $view = $('<div style="min-height: 307px;">' +
-                '<button class="blue-link" id="tobasic">switch view to basic</button>' +
-                '<button class="blue-link" id="toadvance">switch view to Advance</button>' +
-                '<textarea id="advance-editarea"></textarea>' +          // S_N = \\displaystyle\\sqrt{ \\frac{1}{N} \\sum\^N_{i=1}{(x_i - \\bar{x})\^2} }
-                '<div id="advance-view"></div>' +
+                '<button class="blue-link tobasic">switch view to basic</button>' +
+                '<button class="blue-link toadvance">switch view to Advance</button>' +
+                '<textarea class="advance-editarea"></textarea>' +          // S_N = \\displaystyle\\sqrt{ \\frac{1}{N} \\sum\^N_{i=1}{(x_i - \\bar{x})\^2} }
+                '<div class="advance-view"></div>' +
                 // '<textarea id="basic-editarea"></textarea>'+
-                '<span id="basic-editarea"></span>' +
+                '<span class="basic-editarea"></span>' +
                 '</div>');
 
             $mathEditor.html($view);
@@ -222,7 +237,7 @@
             }
             $advance_view.html("$$" + $advance_editarea.val() + "$$");
             MathJax.Hub.Queue(["Typeset", MathJax.Hub, $advance_view[0]]);
-            this.$message && this.$message.hide();
+            self.$message && self.$message.hide();
         }
     }
 
@@ -616,7 +631,7 @@
         doc.getElementsByTagName("head")[0].appendChild(styleNode);
     }
 
-    var kmathcss = '.math-insert.button,.math-cancel.button{float:right;margin-top:20px;margin-left:15px;box-sizing:border-box}#kmath,[data-role="kmath"]{padding:0 5px 6px;max-width:900px;min-width:720px;font-family:"Times New Roman",serif;border:1px solid #ccc}#math-category{padding:0;margin:0}#math-category>li{display:inline-block;padding:0 15px;line-height:44px;cursor:pointer;box-sizing:border-box}#math-category>li>span{padding-left:6px}#math-category>li.selected-category{border-bottom:2px solid #5FB554}#math-symbol{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;height:142px;padding:5px 5px 0;margin:0;border:1px solid #dbdbdb;border-top-color:#5FB554;box-sizing:border-box}#math-symbol>li{padding:0;overflow:hidden;margin-left:-1px;margin-bottom:5px;height:40px;width:40px;line-height:35px;text-align:center;color:#008ee6;border:1px solid #dbdbdb;cursor:pointer;box-sizing:border-box}#advance-editarea{display:block;overflow:auto;width:98%;margin:0 auto;height:120px}#advance-view{overflow:auto;margin:0 auto;height:143px}#advance-editarea::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}#advance-editarea::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}#advance-view::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}#advance-view::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}#basic-editarea{clear:both;display:block;width:99%;margin:0 auto;height:266px}#kmath-message{float:left;margin-top:20px;padding-left:5px;font-size:0.9em}.blue-link{margin:10px 0;float:right;border:none;background:none;color:#3a9be5;cursor:pointer}.blue-link:hover{text-decoration:underline}#math-symbol .mq-empty{display:none!important}#math-symbol big{font-size:1.3em}';
+    var kmathcss = '.math-insert.button,.math-cancel.button{float:right;margin-top:20px;margin-left:15px;box-sizing:border-box}#kmath,[data-role="kmath"]{padding:0 5px 6px;max-width:900px;min-width:720px;font-family:"Times New Roman",serif;border:1px solid #ccc}.math-category{padding:0;margin:0}.math-category>li{display:inline-block;padding:0 15px;line-height:44px;cursor:pointer;box-sizing:border-box}.math-category>li>span{padding-left:6px}.math-category>li.selected-category{border-bottom:2px solid #5FB554}.math-symbol{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;height:142px;padding:5px 5px 0;margin:0;border:1px solid #dbdbdb;border-top-color:#5FB554;box-sizing:border-box}.math-symbol>li{padding:0;overflow:hidden;margin-left:-1px;margin-bottom:5px;height:40px;width:40px;line-height:35px;text-align:center;color:#008ee6;border:1px solid #dbdbdb;cursor:pointer;box-sizing:border-box}.advance-editarea{display:block;overflow:auto;width:98%;margin:0 auto;height:120px}.advance-view{overflow:auto;margin:0 auto;height:143px}.advance-editarea::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}.advance-editarea::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}.advance-view::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}.advance-view::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}.basic-editarea{clear:both;display:block;width:99%;margin:0 auto;height:266px}.kmath-message{float:left;margin-top:20px;padding-left:5px;font-size:0.9em}.blue-link{margin:10px 0;float:right;border:none;background:none;color:#3a9be5;cursor:pointer}.blue-link:hover{text-decoration:underline}.math-symbol .mq-empty{display:none!important}.math-symbol big{font-size:1.3em}';
     //export KMath
     window.KMath = KMath;
 })(window);

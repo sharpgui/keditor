@@ -2,61 +2,61 @@
 .math-insert.button, .math-cancel.button{ float: right; margin-top: 20px; margin-left: 15px; box-sizing: border-box;}
 #kmath,[data-role="kmath"]{ padding: 0 5px 6px; max-width: 900px; min-width: 720px; font-family: "Times New Roman", serif; border: 1px solid #ccc;}
 /* Category */
-#math-category{ padding: 0; margin: 0;}
-#math-category>li{ display: inline-block; padding: 0 15px; line-height: 44px;
+.math-category{ padding: 0; margin: 0;}
+.math-category>li{ display: inline-block; padding: 0 15px; line-height: 44px;
  cursor: pointer; box-sizing: border-box;}
-#math-category>li>span{ padding-left: 6px;}
-#math-category>li.selected-category{ border-bottom: 2px solid #5FB554; }
+.math-category>li>span{ padding-left: 6px;}
+.math-category>li.selected-category{ border-bottom: 2px solid #5FB554; }
 
  /* Symbol */
-#math-symbol{ 
+.math-symbol{ 
     display: flex; flex-wrap: wrap; align-items: flex-start;  align-content: flex-start;
      height: 142px;  
     padding: 5px 5px 0; margin: 0; 
     border: 1px solid #dbdbdb; border-top-color: #5FB554; box-sizing: border-box;}
-#math-symbol>li{ 
+.math-symbol>li{ 
     padding: 0; overflow: hidden;
     margin-left: -1px; margin-bottom: 5px; height: 40px; width: 40px; 
     line-height: 35px; text-align: center; 
     color: #008ee6; 
     border:1px solid #dbdbdb; cursor: pointer; box-sizing: border-box;
 }
-/*#math-symbol>li * {
+/*.math-symbol>li * {
     font-family: Symbola, "Times New Roman", serif!important;
 }*/
 
 /* Edit Area */
-#advance-editarea{ display: block; overflow: auto; width: 98%; margin: 0 auto; height: 120px; }
-#advance-view{ overflow: auto; margin: 0 auto; height: 143px; }
-#advance-editarea::-webkit-scrollbar{
+.advance-editarea{ display: block; overflow: auto; width: 98%; margin: 0 auto; height: 120px; }
+.advance-view{ overflow: auto; margin: 0 auto; height: 143px; }
+.advance-editarea::-webkit-scrollbar{
     -webkit-appearance:none;
 	width:10px;
 	height:10px
 }
-#advance-editarea::-webkit-scrollbar-thumb {
+.advance-editarea::-webkit-scrollbar-thumb {
 	border-radius:8px;
 	border:2px solid #fff;
 	background-color:rgba(0,0,0,.3)
 }
-#advance-view::-webkit-scrollbar{
+.advance-view::-webkit-scrollbar{
     -webkit-appearance:none;
 	width:10px;
 	height:10px
 }
-#advance-view::-webkit-scrollbar-thumb {
+.advance-view::-webkit-scrollbar-thumb {
 	border-radius:8px;
 	border:2px solid #fff;
 	background-color:rgba(0,0,0,.3)
 }
-#basic-editarea{ clear: both; display: block; width: 99%; margin: 0 auto; height: 266px;}
+.basic-editarea{ clear: both; display: block; width: 99%; margin: 0 auto; height: 266px;}
 
-#kmath-message{ float: left; margin-top: 20px; padding-left: 5px; font-size: 0.9em;}
+.kmath-message{ float: left; margin-top: 20px; padding-left: 5px; font-size: 0.9em;}
 .blue-link{ margin: 10px 0; float: right; border: none; background: none; color: #3a9be5; cursor: pointer;}
 .blue-link:hover{ text-decoration: underline;}
 
 /* rewrite Math Symbols styles */
-#math-symbol .mq-empty{ display: none!important;}
-#math-symbol big{ font-size: 1.3em;}
+.math-symbol .mq-empty{ display: none!important;}
+.math-symbol big{ font-size: 1.3em;}
 
 
 /*mathjax*/
