@@ -13,14 +13,16 @@
              $kmath_window;
             $(document.body).append('<div id="kmath-wrapper-' + this.uuid + '">' +
                 '<div id="' + this.options.element.slice(1) + '"></div>' +//KMath 容器根据传入参数动态生成
-                '<div class="' + this.options.message.slice(1) + '"></div>' +
+                // '<div class="' + this.options.message.slice(1) + '"></div>' +
                 '<button class="math-cancel button">' + $$.GCI18N.kMath.Cancel + '</button>' +
                 '<button class="math-insert button button-theme">' + $$.GCI18N.kMath.Insert + '</button>' +
                 '</div>');
             $kmath_window = $("#kmath-wrapper-" + this.uuid);
             $kmath_window.kendoWindow({
-                width: '875px',
-                height: '590px',
+                minWidth: 810,
+                maxWidth: 875,
+                minHeight: 595,
+                maxHeight: 620,
                 visible: false,
                 actions: ['close'],
                 title: $$.GCI18N.kMath.Formulas,

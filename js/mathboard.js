@@ -34,7 +34,10 @@
                 notinsetReg = /not\\(in|ni|subset|supset|subseteq|supseteq)/g,
                 controlBox = new ControlBox(),
                 self = this,
-                defaultOptions = { message: ".kmath-message-" + uuid, element: "#kmath-" + uuid };
+                defaultOptions = { 
+                    // message: ".kmath-message-" + uuid, 
+                    element: "#kmath-" + uuid 
+                };
             this.uuid = uuid++;
             this.mathField = null;//之后赋值因为现在DOM对象还没有生成
             this.isBasic = false;// this._toggleView中修改
@@ -50,7 +53,7 @@
                 this.element.html('<ul class="math-category"></ul>' +
                     '<ul class="math-symbol"></ul>' +
                     '<div class="math-editor"></div>');
-                this.$message = $(this.options.message);
+                // this.$message = $(this.options.message);
 
                 $category = $(".math-category", this.element);
                 $mathSymbol = $(".math-symbol", this.element);
@@ -64,6 +67,7 @@
                 $basic_editarea = $(".basic-editarea", this.element);
                 $tobasic_btn = $(".tobasic", this.element);
                 $toadvance_btn = $(".toadvance", this.element);
+                this.$message = $('.kmath-message', this.element);
 
                 // Switch basic \ advance view 
                 this.element.on("click", '.tobasic', function () {
@@ -213,13 +217,14 @@
             }
 
             this._initialView = function () {
-                var $view = $('<div style="min-height: 307px;">' +
+                var $view = $('<div style="padding-bottom: 1.5em; position: relative">' +
                     '<button class="blue-link tobasic">' + $$.GCI18N.kMath.SwitchtoBasic + '</button>' +
                     '<button class="blue-link toadvance">' + $$.GCI18N.kMath.SwitchtoAdvance + '</button>' +
                     '<textarea class="advance-editarea"></textarea>' +          // S_N = \\displaystyle\\sqrt{ \\frac{1}{N} \\sum\^N_{i=1}{(x_i - \\bar{x})\^2} }
                     '<div class="advance-view"></div>' +
                     // '<textarea id="basic-editarea"></textarea>'+
                     '<span class="basic-editarea"></span>' +
+                    '<div class="kmath-message"></div>'+
                     '</div>');
 
                 $mathEditor.html($view);
@@ -619,7 +624,7 @@
             doc.getElementsByTagName("head")[0].appendChild(styleNode);
         }
 
-        var kmathcss = '.math-insert.button,.math-cancel.button{float:right;margin-top:20px;margin-left:15px;box-sizing:border-box}#kmath,[data-role="kmath"]{padding:0 5px 6px;max-width:900px;min-width:720px;font-family:"Times New Roman",serif;border:1px solid #ccc}.math-category{padding:0;margin:0}.math-category>li{display:inline-block;padding:0 15px;line-height:44px;cursor:pointer;box-sizing:border-box}.math-category>li>span{padding-left:6px}.math-category>li.selected-category{border-bottom:2px solid #5FB554}.math-symbol{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;height:142px;padding:5px 5px 0;margin:0;border:1px solid #dbdbdb;border-top-color:#5FB554;box-sizing:border-box}.math-symbol>li{padding:0;overflow:hidden;margin-left:-1px;margin-bottom:5px;height:40px;width:40px;line-height:35px;text-align:center;color:#008ee6;border:1px solid #dbdbdb;cursor:pointer;box-sizing:border-box}.advance-editarea{display:block;overflow:auto;width:98%;margin:0 auto;height:120px}.advance-view{overflow:auto;margin:0 auto;height:143px}.advance-editarea::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}.advance-editarea::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}.advance-view::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}.advance-view::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}.basic-editarea{clear:both;display:block;width:99%;margin:0 auto;height:266px}.kmath-message{float:left;margin-top:20px;padding-left:5px;font-size:0.9em}.blue-link{margin:10px 0;float:right;border:none;background:none;color:#3a9be5;cursor:pointer}.blue-link:hover{text-decoration:underline}.math-symbol .mq-empty{display:none!important}.math-symbol big{font-size:1.3em}';
+        var kmathcss = '.math-insert.button,.math-cancel.button{float:right;margin-top:20px;margin-left:15px;box-sizing:border-box}#kmath,[data-role="kmath"]{padding:0 5px 6px;max-width:900px;min-width:720px;font-family:"Times New Roman",serif;border:1px solid #ccc}.math-category{padding:0;margin:0}.math-category>li{display:inline-block;padding:0 15px;line-height:44px;cursor:pointer;box-sizing:border-box}.math-category>li>span{padding-left:6px}.math-category>li.selected-category{border-bottom:2px solid #5FB554}.math-symbol{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;height:142px;padding:5px 5px 0;margin:0;border:1px solid #dbdbdb;border-top-color:#5FB554;box-sizing:border-box}.math-symbol>li{padding:0;overflow:hidden;margin-left:-1px;margin-bottom:5px;height:40px;width:40px;line-height:35px;text-align:center;color:#008ee6;border:1px solid #dbdbdb;cursor:pointer;box-sizing:border-box}.advance-editarea{display:block;overflow:auto;width:98%;margin:0 auto;height:120px}.advance-view{overflow:auto;margin:0 auto;height:143px}.advance-editarea::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}.advance-editarea::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}.advance-view::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}.advance-view::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}.basic-editarea{clear:both;display:block;width:99%;margin:0 auto;height:267px}.kmath-message{position:absolute;bottom:0.1em;left:0.5em;font-size:0.9em}.blue-link{margin:10px 0;float:right;border:none;background:none;color:#3a9be5;cursor:pointer}.blue-link:hover{text-decoration:underline}.math-symbol .mq-empty{display:none!important}.math-symbol big{font-size:1.3em}';
         //export KMath
         window.KMath = KMath;
     })(window);

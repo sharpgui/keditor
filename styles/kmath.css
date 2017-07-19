@@ -48,9 +48,10 @@
 	border:2px solid #fff;
 	background-color:rgba(0,0,0,.3)
 }
-.basic-editarea{ clear: both; display: block; width: 99%; margin: 0 auto; height: 266px;}
+.basic-editarea{ clear: both; display: block; width: 99%; margin: 0 auto; height: 267px;}
 
-.kmath-message{ float: left; margin-top: 20px; padding-left: 5px; font-size: 0.9em;}
+.kmath-message{ position: absolute; bottom: 0.1em; left: 0.5em; font-size: 0.9em;}
+/*height: 1.5em; line-height: 1.5em; padding-left: 5px; */
 .blue-link{ margin: 10px 0; float: right; border: none; background: none; color: #3a9be5; cursor: pointer;}
 .blue-link:hover{ text-decoration: underline;}
 
