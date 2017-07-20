@@ -6,13 +6,14 @@
         /**
          * @var {KendoEditor} editor 
          * @var {Boolean} flag 
+         * @var {Range} range
          * @var {KMath} mathEditor   
          * @var {JQuery} $kmath_window  window of kendoWindow
          */
 
         var flag = true,
             editor,
-            // range,
+            range,
             $kmath_window,
             mathEditor = new KMath();//uppercase K uppercase M
 
@@ -34,7 +35,7 @@
         function execFun(e) {
             var equation_dom;
             editor = $(this).data('kendoEditor');
-            // range = editor.getRange();
+            range = editor.getRange();
 
             editor.flag = !!editor.flag;    // editor.flag 默认为 undefined，即赋值为false。editor.flag 为 true 时，值不变。
 
@@ -53,6 +54,11 @@
                 $(editor.body).on('dblclick', '.MathJax_CHTML', {currentEditor: editor},  function (e) {
                     mathEditor.setFormula($(this).attr("data-latex"));
                     editor = e.data.currentEditor;
+                    var n = $(this)[0];
+                    // 设置range
+                    range.setStartBefore(n);
+                    range.setEndAfter(n);
+                    // range.selectNode(n);
                     $kmath_window.data("kendoWindow").center().open();
                 });
                 $(editor.body).on('click', '.MathJax_CHTML', function (e) {
@@ -109,7 +115,8 @@
                 $kmath_window.data("kendoWindow").close();
             });
             $kmath_window.find('.math-insert').click(function () {
-                var range = editor.getRange();
+                // IE：此时editor已经失去焦点，所以不能得到range。
+                // var range = editor.getRange();
                 range.deleteContents();
                 // range.insertNode(mathEditor.getFormula());
                 // editor.paste(mathEditor.getFormula().outerHTML);
