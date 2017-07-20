@@ -11,7 +11,9 @@
 
 </head>
 <body>
-    <textarea id="editor" rows="10" cols="30" style="width: 60%;height:400px" >
+    <textarea id="editor" rows="10" cols="30" style="width: 60%;height:200px" >
+    </textarea>
+    <textarea id="editor2" rows="10" cols="30" style="width: 60%;height:200px" >
     </textarea>
     
     <div id="message"></div>
@@ -28,7 +30,7 @@
       var  mathEditor = new KMath();
       //mathWindow.formula 即为返回DOM 对象
       var mathWindow =  mathEditor.init();
-      mathWindow.center().open();
+    //   mathWindow.center().open();
 
       var  mathEditor02 = new KMath();
       //mathWindow.formula 即为返回DOM 对象
@@ -39,6 +41,12 @@
                 "kmath"
             ],
         });
+        $("#editor2").kendoEditor({
+            tools: [
+                "kmath"
+            ],
+        });
+
     </script>
     
 </body>

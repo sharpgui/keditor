@@ -71,28 +71,15 @@
 
                 // Switch basic \ advance view 
                 this.element.on("click", '.tobasic', function () {
-                    if (self.mathField) {
-                        var str = $advance_view.find("script").text();
-                        if (str) {
-                            str = str.replace(mathbbReg, "\\$1");
-                            str = str.replace(notinsetReg, 'not$1');
-                        }
-                        self.mathField.select();
-                        self.mathField.write(str);
-                        if (self.$message && str && !self.mathField.latex()) {
-                            self.$message.text($$.GCI18N.kMath.CannotRenderinMQ);
-                            self.$message.show(100);
-                            return;
-                        }
-                        // 重写一遍是为保证Dom显示完成，使得公式缩放计算正确。
-                        setTimeout(function () {
-                            self.mathField.select();
-                            self.mathField.write(str);
-                        });
-
+                    if(!self._ableToBasic()){
+                        return;
                     }
 
                     self._toggleView(true);
+
+                    var str = $advance_view.find("script").text();
+                    
+                    self.setFormula('$$' + str + '$$');
                     controlBox.switchSymbols($('.selected-category', $category).attr('data-title'), true, $mathSymbol);
 
                 });
@@ -158,10 +145,16 @@
              * @param {String}latex 数据源
              * @param {Bool} 只有isOpening为true 的时候才会向 $basic_deitarea 赋值,因为BasicView 和AdvanceView insert 时都是采用mathjax渲染使用同一个insert 事件所以才有这个设置
              */
-            this.setFormula = function (value, isOpening) {
-                if (this.isBasic && isOpening) {
-                    this.mathField.select();
-                    this.mathField.write(value.substr(2, value.length - 4));
+            this.setFormula = function (value, isNotOpening) {
+                if (this.isBasic && !isNotOpening) {
+                    value = value.substr(2, value.length - 4);
+                    value = value.replace(mathbbReg, "\\$1");
+                    value = value.replace(notinsetReg, 'not$1');
+                    // setTimeout 为保证Dom显示完成，使得公式缩放计算正确。
+                    setTimeout(function(){
+                        self.mathField.select();
+                        self.mathField.write(value);
+                    });
                 } else {
                     value = value.trim();
                     // 由于IE不支持 startsWith / endsWith 方法、并且新逻辑下value一定是数学公式。所以此处不做判断，直接去掉首尾$$
@@ -213,6 +206,27 @@
                     $advance_editarea.show(0);
                     $advance_view.show(0);
                     $tobasic_btn.show(0);
+                }
+            }
+
+            this._ableToBasic = function(){
+                if (self.mathField) {
+                    var str = $advance_view.find("script").text();
+                    if (str) {
+                        str = str.replace(mathbbReg, "\\$1");
+                        str = str.replace(notinsetReg, 'not$1');
+                    }
+                    self.mathField.select();
+                    self.mathField.write(str);
+                    if (self.$message && str && !self.mathField.latex()) {
+                        self.$message.text($$.GCI18N.kMath.CannotRenderinMQ);
+                        self.$message.show(100);
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }else{
+                    return false;
                 }
             }
 

@@ -39,7 +39,7 @@
 
                 $(this).attr('disabled', true);
                 if (self.isBasic && self.options.mathField) {
-                    self.setFormula('$$' + self.options.mathField.latex() + '$$');
+                    self.setFormula('$$' + self.options.mathField.latex() + '$$', true);
                 }
                 MathJax.Hub.Queue(function () {
                     var result = self.getFormula();

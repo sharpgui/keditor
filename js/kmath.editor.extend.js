@@ -6,14 +6,13 @@
         /**
          * @var {KendoEditor} editor 
          * @var {Boolean} flag 
-         * @var {Range} range
          * @var {KMath} mathEditor   
          * @var {JQuery} $kmath_window  window of kendoWindow
          */
 
         var flag = true,
             editor,
-            range,
+            // range,
             $kmath_window,
             mathEditor = new KMath();//uppercase K uppercase M
 
@@ -35,17 +34,25 @@
         function execFun(e) {
             var equation_dom;
             editor = $(this).data('kendoEditor');
-            range = editor.getRange();
+            // range = editor.getRange();
+
+            editor.flag = !!editor.flag;    // editor.flag 默认为 undefined，即赋值为false。editor.flag 为 true 时，值不变。
 
             if (flag) {
-                addStyleNode(mathjaxcss, editor.document)
                 createWindow();
                 flag = false;
+            }
+            if (!editor.flag) {
+                addStyleNode(mathjaxcss, editor.document)
+                
+                editor.flag = true;
 
                 // 双击 .MathJax_CHTML 进入公式编辑
                 // 通过 .MathJax_CHTML_focused 标记选中的公式
-                $(editor.body).on('dblclick', '.MathJax_CHTML', function () {
+                // e.data.currentEditor 为双击事件中更新全局变量 editor
+                $(editor.body).on('dblclick', '.MathJax_CHTML', {currentEditor: editor},  function (e) {
                     mathEditor.setFormula($(this).attr("data-latex"));
+                    editor = e.data.currentEditor;
                     $kmath_window.data("kendoWindow").center().open();
                 });
                 $(editor.body).on('click', '.MathJax_CHTML', function (e) {
@@ -66,9 +73,9 @@
             // kendoWindow 打开前 检查 .MathJax_CHTML_focused
             equation_dom = $('.MathJax_CHTML_focused', editor.body);
             if (equation_dom.length) {
-                mathEditor.setFormula(equation_dom.attr("data-latex"), true);
+                mathEditor.setFormula(equation_dom.attr("data-latex"));
             } else {
-                mathEditor.setFormula('', true);
+                mathEditor.setFormula('');
             }
             mathEditor.$message && mathEditor.$message.hide();
             $kmath_window.data("kendoWindow").center().open();
@@ -102,13 +109,14 @@
                 $kmath_window.data("kendoWindow").close();
             });
             $kmath_window.find('.math-insert').click(function () {
+                var range = editor.getRange();
                 range.deleteContents();
                 // range.insertNode(mathEditor.getFormula());
                 // editor.paste(mathEditor.getFormula().outerHTML);
                 $(this).attr('disabled', true);
                 MathJax.Hub.Queue(function () {
                     if (mathEditor.isBasic && mathEditor.mathField) {
-                        mathEditor.setFormula('$$' + mathEditor.mathField.latex() + '$$');
+                        mathEditor.setFormula('$$' + mathEditor.mathField.latex() + '$$', true);
                     }
                 });
                 MathJax.Hub.Queue(function () {
