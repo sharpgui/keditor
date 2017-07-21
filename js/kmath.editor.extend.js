@@ -61,12 +61,14 @@
                     // range.selectNode(n);
                     $kmath_window.data("kendoWindow").center().open();
                 });
-                $(editor.body).on('click', '.MathJax_CHTML', function (e) {
+                $(editor.body).on('click', '.MathJax_CHTML', {currentEditor: editor}, function (e) {
+                    editor = e.data.currentEditor;
                     $('.MathJax_CHTML', editor.body).removeClass('MathJax_CHTML_focused');
                     $(this).addClass('MathJax_CHTML_focused');
                     e.stopPropagation();
                 });
-                $(editor.body).on('click', function () {
+                $(editor.body).on('click', {currentEditor: editor},  function (e) {
+                    editor = e.data.currentEditor;
                     $('.MathJax_CHTML', editor.body).removeClass('MathJax_CHTML_focused');
                     e.stopPropagation();
                 });
