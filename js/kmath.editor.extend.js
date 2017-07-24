@@ -119,7 +119,12 @@
             $kmath_window.find('.math-insert').click(function () {
                 // IE：此时editor已经失去焦点，所以不能得到range。
                 // var range = editor.getRange();
-                range.deleteContents();
+                // range.deleteContents();
+                var ele = range.extractContents();
+                var needSpace = true;
+                if(ele.childElementCount){
+                    needSpace = !$(ele.firstElementChild).hasClass('MathJax_CHTML_focused')
+                }
                 // range.insertNode(mathEditor.getFormula());
                 // editor.paste(mathEditor.getFormula().outerHTML);
                 $(this).attr('disabled', true);
@@ -142,9 +147,10 @@
                     }
                     id = result.id;
                     if (id) {
+                        needSpace ? result = $('<span></span>').append(result).append('<span>&nbsp;</span>')[0] : '';
                         fragement.appendChild(result);
                         range.insertNode(fragement);
-                        node = $('#' + id, editor.body)[0];
+                        node = needSpace ? $('#' + id, editor.body).parent('span')[0] : $('#' + id, editor.body)[0];
                         range.setStartAfter(node);
                         range.collapse(true);
                         editor.selectRange(range);
