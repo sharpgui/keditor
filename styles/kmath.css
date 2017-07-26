@@ -18,7 +18,7 @@
     padding: 0; overflow: hidden;
     margin-left: -1px; margin-bottom: 5px; height: 40px; width: 40px; 
     line-height: 35px; text-align: center; 
-    color: #008ee6; 
+    /*color: #008ee6; */ color: #000;
     border:1px solid #dbdbdb; cursor: pointer; box-sizing: border-box;
 }
 /*.math-symbol>li * {
