@@ -57,7 +57,7 @@
 
 /* rewrite Math Symbols styles */
 .math-symbol .mq-empty{ display: none!important;}
-.math-symbol big{ font-size: 1.3em;}
+.math-symbol big{ font-size: 1.3em!important;}
 
 
 /*mathjax*/
