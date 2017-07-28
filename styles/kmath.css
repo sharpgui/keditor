@@ -1,4 +1,11 @@
 
+.customMatrix{ position: absolute; display: inline-block; padding: 5px; background: #fff; border: 1px solid #9c9a9a; border-radius: 6px; z-index: 99999; font-family: Segoe UI;}
+.customMatrix .title{float: left; padding-bottom: 2px;}
+.closeCustomMatrix{float: right; cursor: pointer; }
+.customMatrixTable{ clear: both; border-right: 1px solid #eee; border-bottom: 1px solid #eee; border-spacing: 0;}
+.customMatrixTable td{ height: 20px; width: 20px; border-top: 1px solid #eee; border-left: 1px solid #eee; cursor: pointer;}
+.customMatrixTable td.on{ background: darkgray;}
+
 .math-insert.button, .math-cancel.button{ float: right; margin-top: 20px; margin-left: 15px; box-sizing: border-box;}
 #kmath,[data-role="kmath"]{ padding: 0 5px 6px; max-width: 900px; min-width: 720px; font-family: "Times New Roman", serif; border: 1px solid #ccc;}
 /* Category */

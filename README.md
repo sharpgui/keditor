@@ -12,6 +12,7 @@ extend kendo editor for edit &amp; review   math
 - [mathquill](http://mathquill.com/)
 - [limit-calculator martix](https://www.symbolab.com/solver/limit-calculator)
 - [eqneditor vector](https://www.codecogs.com/latex/eqneditor.php)
+- [clipboard](https://clipboardjs.com/)
 ## demo
 
 - [KMath](https://sharpgui.github.io/keditor/demos/mathboard.html)

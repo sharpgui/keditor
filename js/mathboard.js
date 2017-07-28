@@ -96,7 +96,7 @@
                     }
                 });
 
-                $mathSymbol.on('click', 'li', function (e) {
+                $mathSymbol.on('click', 'li:not(.matrix)', function (e) {
                     if (self.isBasic) {
                         self.mathField.cmd(this.title);
                     } else {
@@ -115,7 +115,11 @@
                         textarea.selectionEnd = textarea.selectionStart;
                         textarea.focus();
                     }
+                });
 
+                $mathSymbol.on('click', 'li.matrix', function (e) {
+                    console.log('martrix...', e);
+                    controlBox.createCustomMatrix(this, self.isBasic, $advance_editarea);
                 });
 
                 $category.on('click', 'li', function (e) {
@@ -335,7 +339,16 @@
                 new Symbol('\\Q', '\\mathbb{Q}', 'group3', '\\Q'),
                 new Symbol('\\R', '\\mathbb{R}', 'group3', '\\R'),
                 new Symbol('\\C', '\\mathbb{C}', 'group3', '\\C'),
-                new Symbol('\\H', '\\mathbb{H}', 'group3', '\\H')
+                new Symbol('\\H', '\\mathbb{H}', 'group3', '\\H'),
+
+                new Matrix('matrix', 'icon', 'group4'),
+                new Matrix('bmatrix', 'icon', 'group4'),
+                new Matrix('pmatrix', 'icon', 'group4'),
+                new Matrix('Bmatrix', 'icon', 'group4'),
+                new Matrix('smallmatrix', 'icon', 'group4'),
+                new Matrix('vmatrix', 'icon', 'group4'),
+                new Matrix('Vmatrix', 'icon', 'group4'),
+                
             ];
 
             this.Greek = [
@@ -590,7 +603,7 @@
                 });
                 if (symbolCache.length) {
                     $mathSymbol.html(symbolCache[0].ele);
-                    $mathSymbol.find('li').each(function () {
+                    $mathSymbol.find('li').not('.matrix').each(function () {
                         MQ.StaticMath(this);
                     });
 
@@ -614,7 +627,7 @@
                 // 首次执行可能由于页面渲染未完成导致数学符号的缩放计算不正确，故setTimeout。
                 // MQ.StaticMath 会忽略所有标签，故在li级别循环执行。
                 setTimeout(function () {
-                    $mathSymbol.find('li').each(function () {
+                    $mathSymbol.find('li').not('.matrix').each(function () {
                         MQ.StaticMath(this);
                     });
                 });
@@ -624,6 +637,126 @@
                     title: title,
                     isBasic: isBasic
                 });
+            }
+
+            this.createCustomMatrix = function(symbol, isBasic, $advance_editarea){
+                var $table = $(".customMatrix"),
+                    x, y;
+                if(!$table.length){
+                    var $wrap = $('<div class="customMatrix"></div>');
+                    $wrap.append('<div class="title">' + 'select size: ' + ' <span class="customMatrixDimensions"></span></div>');
+	                $wrap.append('<span class="closeCustomMatrix"><div>' + 'close' + '</div></span>');
+                    var row = 10,
+                        str = '<table class="customMatrixTable">';
+                    for(var i = row; i--;){
+                        str += '<tr>';
+                        for(var j = row; j--; ){
+                            str += '<td></td>'
+                        }
+                        str += '</tr>'
+                    }
+                    str += '</table>';
+                    $wrap.append(str);
+                    $(document.body).append($wrap);
+                    $table = $(".customMatrix");
+
+                    $table.find('td').hover(function(){
+                        $table.find('td').removeClass('on');
+                        x = $(this).parent().find('td').index($(this)) + 1;
+                        y = $(this).closest('tbody').find('tr').index($(this).parent()) + 1;
+                        var trs = $('tr:nth-child(-n + '+ y +')', $(this).closest('tbody'));
+                        $('td:nth-child(-n + '+ x +')', trs).addClass('on');
+                        $('.customMatrixDimensions', $table).text(x + ' x ' + y);
+                    });
+
+                    $table.find('.closeCustomMatrix').click(function(){
+                        hideTable(); 
+                    });
+
+                    $table.find('td').click(function(){
+                        var latex = createMatrixLatex(x, y, symbol);
+                        if(isBasic){
+                            hideTable();
+                            console.log(' basic view ... ')
+                        }else{
+                            var textarea, start, end, value;
+                            // textarea = isBasic? $("#basic-editarea")[0] : $("#advance-editarea")[0];
+                            textarea = $advance_editarea[0];
+                            value = textarea.value;
+                            start = textarea.selectionStart;
+                            end = textarea.selectionEnd;
+
+                            textarea.value = value.substr(0, start) + latex + ' ' + value.substr(end, value.length);
+                            $(textarea).trigger("change");
+
+                            textarea.selectionStart = latex.length + start + 1;
+                            textarea.selectionEnd = textarea.selectionStart;
+                            textarea.focus();
+                            hideTable();
+                        }
+
+                    });
+                }
+
+                function hideTable(){
+                    $table.find('td').removeClass('on');
+                    $table.hide();   
+                }
+
+                function createMatrixLatex(x, y, symbol) {
+                    var begintxt = '',
+                        endtxt = '',
+                        result = '';
+                    switch(symbol.title){
+                        case 'matrix':
+                            begintxt = "\\begin{matrix}\n";
+                            endtxt = "\n\\end{matrix}";
+                            break;
+                        case 'bmatrix':
+                            begintxt = "\\begin{bmatrix}\n";
+                            endtxt = "\n\\end{bmatrix}";
+                            break;
+                        case 'Bmatrix':
+                            begintxt = "\\begin{Bmatrix}\n";
+                            endtxt = "\n\\end{Bmatrix}";
+                            break;
+                        case 'pmatrix':
+                            begintxt = "\\begin{pmatrix}\n";
+                            endtxt = "\n\\end{pmatrix}";
+                            break;
+                        case 'smallmatrix':
+                            begintxt = "\\bigl(\\begin{smallmatrix}\n";
+                            endtxt = "\n\\end{smallmatrix}\\bigr)";
+                            break;
+                        case 'vmatrix':
+                            begintxt = "\\begin{vmatrix}\n";
+                            endtxt = "\n\\end{vmatrix}";
+                            break;
+                        case 'Vmatrix':
+                            begintxt = "\\begin{Vmatrix}\n";
+                            endtxt = "\n\\end{Vmatrix}";
+                            break;
+                        default:
+                            console.log('no match.');
+                            return '';
+                    }
+
+                    for (var c = 0; c < y; c++) {
+                        for (var a = 0; a < x - 1; a++) {
+                            result += " & "
+                        }
+                        if (c < y - 1) {
+                            result += "\\\\\n"
+                        }
+                    }
+                    
+                    return begintxt + result + endtxt;
+                }
+
+                var offset = $(symbol).offset();
+                $table.css('left', offset.left);
+                $table.css('top', offset.top + 50);
+                $table.show();
             }
 
         }
@@ -649,6 +782,15 @@
                     '<li class="' + this.group + '" title="' + tit + '">' + this.text + '</li>';
                 // var result = '<li class="'+ this.group +'" title="'+ tit +'">' + this.advance + '</li>';
                 return result;
+            }
+        }
+
+        function Matrix(title, icon, group){
+            this.title = title;
+            this.icon = icon;
+            this.group = group;
+            this.createTemplate = function () {
+                return '<li class="' + this.group + ' matrix" title="' + title + '"><span class="'+ this.icon +'"></span></li>';
             }
         }
 
