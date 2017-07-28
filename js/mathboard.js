@@ -118,7 +118,7 @@
                 });
 
                 $mathSymbol.on('click', 'li.matrix', function (e) {
-                    console.log('martrix...', e);
+                    e.stopPropagation();
                     controlBox.createCustomMatrix(this, self.isBasic, $advance_editarea);
                 });
 
@@ -694,7 +694,14 @@
                             textarea.focus();
                             hideTable();
                         }
+                    });
 
+                    $table.click(function(e){
+                        e.stopPropagation();
+                    });
+
+                    $(document).click(function(){
+                        hideTable();
                     });
                 }
 
