@@ -23,7 +23,7 @@
             options: {
                 name: "kmath",
                 tooltip: "function",
-                template: '<a href="" role="button" class="k-tool formulas_btn" unselectable="on" title="' + $$.GCI18N.kMath.Formulas + '" aria-pressed="false"><span unselectable="on" style="font-family: serif">π</span></a>',
+                template: '<a href="" role="button" class="k-tool formulas_btn underline-none" unselectable="on" title="' + $$.GCI18N.kMath.Formulas + '" aria-pressed="false"><span unselectable="on" style="font-size: 22px; font-family: serif">π</span></a>',
                 exec: execFun
             }
         };
@@ -110,7 +110,9 @@
                 visible: false,
                 actions: ['close'],
                 title: $$.GCI18N.kMath.Formulas,
-                close: function () { }
+                close: function () { },
+                draggable: false,
+                modal: true
             });
 
             $kmath_window.find('.math-cancel').click(function () {
