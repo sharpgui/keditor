@@ -71,4 +71,45 @@
 
     }();
 
-    
+
+    $(function () {
+        try {
+            new Clipboard('.test');
+        } catch (e) {
+            return;
+        }
+        $(document).on('contextmenu', '.MathJax_CHTML', contextmenuFunc);
+        $(document).on('click', function () {
+            $('.kmath-contextmenu', $(this)).hide();
+        });
+        $('iframe').each(function () {
+            $(this.contentDocument).on('contextmenu', '.MathJax_CHTML', contextmenuFunc);
+            $(this.contentDocument).click(function () {
+                $('.kmath-contextmenu', $(this)).hide();
+            });
+        });
+    });
+    function contextmenuFunc(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $menu = $(this).closest('body').find('.kmath-contextmenu'),
+            latex = $(this).attr('data-latex');
+        if (!$menu.length) {
+            $menu = $('<ul class="kmath-contextmenu" style="display: none;"></ul>');
+            $menu.append('<li class="copylatex">Copy LaTex<li>');
+            $(this).closest('body').append($menu);
+            var copylatex = $('.copylatex', $menu);
+            var clipboard = new Clipboard(copylatex[0]);
+            clipboard.on('success', function (e) {
+                console.info(e);
+            });
+            clipboard.on('error', function (e) {
+                console.error(e);
+            });
+        }
+        latex = latex ? latex.substr(2, latex.length - 4) : '';        // 去掉latex前后$
+        $menu.find('li.copylatex').attr('data-clipboard-text', latex);
+        // e.pageX pageY 是鼠标位置。
+        $menu.css({ 'left': e.pageX, 'top': e.pageY });
+        $menu.show();
+    }

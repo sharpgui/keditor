@@ -65,12 +65,10 @@
                     editor = e.data.currentEditor;
                     $('.MathJax_CHTML', editor.body).removeClass('MathJax_CHTML_focused');
                     $(this).addClass('MathJax_CHTML_focused');
-                    e.stopPropagation();
                 });
                 $(editor.body).on('click', { currentEditor: editor }, function (e) {
                     editor = e.data.currentEditor;
                     $('.MathJax_CHTML', editor.body).removeClass('MathJax_CHTML_focused');
-                    e.stopPropagation();
                 });
 
                 MathJax.Hub.Config({
@@ -160,7 +158,7 @@
                     $kmath_window.find('.math-insert').attr('disabled', false);
                     $kmath_window.data("kendoWindow").close();
                     editor.focus();
-                    if(editor.options.onInsertMath){
+                    if (editor.options.onInsertMath) {
                         editor.options.onInsertMath();
                     }
                 });
