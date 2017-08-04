@@ -101,8 +101,7 @@
                 '</div>');
             $kmath_window = $("#kmath-wrapper-" + mathEditor.uuid);
             $kmath_window.kendoWindow({
-                minWidth: 810,
-                maxWidth: 875,
+                width: 850,
                 minHeight: 595,
                 maxHeight: 620,
                 visible: false,
