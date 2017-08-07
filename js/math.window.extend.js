@@ -89,10 +89,13 @@
         });
     });
     function contextmenuFunc(e) {
-        e.preventDefault();
-        e.stopPropagation();
         var $menu = $(this).closest('body').find('.kmath-contextmenu'),
             latex = $(this).attr('data-latex');
+        if (!latex) {
+            return;
+        }
+        e.preventDefault();
+        e.stopPropagation();
         if (!$menu.length) {
             $menu = $('<ul class="kmath-contextmenu" style="display: none;"></ul>');
             $menu.append('<li class="copylatex">Copy LaTex<li>');
