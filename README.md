@@ -22,6 +22,7 @@ extend kendo editor for edit &amp; review   math
 ## 效果图
 
 ![](pic/mathEditor.gif)
+![](pic/Copy.gif)
 
 ## Basic view 支持一些键盘操作
 - m^n  上标

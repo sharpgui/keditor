@@ -81,12 +81,14 @@
         $(document).on('click', function () {
             $('.kmath-contextmenu', $(this)).hide();
         });
-        $('iframe').each(function () {
-            $(this.contentDocument).on('contextmenu', '.MathJax_CHTML', contextmenuFunc);
-            $(this.contentDocument).click(function () {
-                $('.kmath-contextmenu', $(this)).hide();
+        setTimeout(function () {
+            $('iframe').each(function () {
+                $(this.contentDocument).on('contextmenu', '.MathJax_CHTML', contextmenuFunc);
+                $(this.contentDocument.body).on('click', function () {
+                    $('.kmath-contextmenu', $(this)).hide();
+                });
             });
-        });
+        }, 1000);
     });
     function contextmenuFunc(e) {
         var $menu = $(this).closest('body').find('.kmath-contextmenu'),
