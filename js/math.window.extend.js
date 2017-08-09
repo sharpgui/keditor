@@ -78,24 +78,27 @@
             return;
         }
         $(document).on('contextmenu', '.MathJax_CHTML', contextmenuFunc);
-        $(document).on('click', function () {
-            $('.kmath-contextmenu', $(this)).hide();
-        });
+        $(document).on('click', hideAllContextmenu);
         setTimeout(function () {
             $('iframe').each(function () {
                 $(this.contentDocument).on('contextmenu', '.MathJax_CHTML', contextmenuFunc);
-                $(this.contentDocument.body).on('click', function () {
-                    $('.kmath-contextmenu', $(this)).hide();
-                });
+                $(this.contentDocument.body).on('click', hideAllContextmenu);
             });
         }, 1000);
     });
+    function hideAllContextmenu() {
+        $('iframe').each(function () {
+            $('.kmath-contextmenu', $(this.contentDocument)).hide();
+        });
+        $('kmath-contextmenu', $(document)).hide();
+    }
     function contextmenuFunc(e) {
         var $menu = $(this).closest('body').find('.kmath-contextmenu'),
             latex = $(this).attr('data-latex');
         if (!latex) {
             return;
         }
+        hideAllContextmenu();
         e.preventDefault();
         e.stopPropagation();
         if (!$menu.length) {
