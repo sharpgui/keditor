@@ -324,30 +324,6 @@
 
             this.Basic = [
 
-                // new Symbol('\\overset{a}{\\rightarrow}', '\\overset{a}{\\rightarrow}', 'group5', '\\overset{a}{rightarrow}'),
-                // new Symbol('\\dot{o}', '\\dot{o}', 'group5', '\\dot{o}'),
-                // new Symbol('\\grave{o}', '\\grave{o}', 'group5', '\\grave{o}'),
-                new Symbol('\\overrightarrow', '\\overrightarrow{}', 'group10', '\\overrightarrow{abc}', '', '', 'fi-kmath-over-right-arrow-a'),
-                new Symbol('\\overleftarrow', '\\overleftarrow{}', 'group10', '\\overleftarrow{abc}', '', '', 'fi-kmath-over-left-arrow-a'),
-                new Symbol('\\overline', '\\overline{}', 'group10', '\\overline{abc}', '', '', 'fi-kmath-over-line-a'),
-                // new Symbol('\\bar', '\\bar{}', 'group10', '\\bar{abc}', 'font-size: 0.95em;'),
-                // new Symbol('\\widehat', '\\widehat{}', 'group10', '\\widehat', 'font-size: 0.95em;'),
-                // new Symbol('\\widetilde', '\\widetilde{}', 'group10', '\\widetilde', 'font-size: 0.95em;'),
-                // new Symbol('\\breve', '\\breve{}', 'group10', '\\breve{abc}'),
-
-                // new Symbol('∯', '∯', 'group5', '∯'),
-                // new Symbol('∰', '∰', 'group5', '∰'),
-                new Symbol('\\oint', '\\oint{x}', 'group16', '\\oint', '', '', 'fi-kmath-oint-a'),
-                new Symbol('\\oint _{} {x}', '\\oint _{a} {x}', 'group16', '\\oint_{a}', '', 'true', 'fi-kmath-oint-sub-a'),
-                new Symbol('\\bigcap', '\\bigcap{n}', 'group16', '\\bigcap', '', '', 'fi-kmath-bigcap-a'),
-                new Symbol('\\bigcap _{} {x}', '\\bigcap _{a} {x}', 'group16', '\\bigcap{a}', '', 'true', 'fi-kmath-bigcap-sub-a'),
-                new Symbol('\\bigcap _{}^{} {x}', '\\bigcap _{a}^{b} {x}', 'group16', '\\bigcap_{a}^{b}', '', 'true', 'fi-kmath-bigcap-sub-sup-a'),
-                new Symbol('\\bigcup', '\\bigcup{x}', 'group16', '\\bigcup', '', '', 'fi-kmath-bigcup-a'),
-                new Symbol('\\bigcup _{} {x}', '\\bigcup _{a} {x}', 'group16', '\\bigcup_{a}', '', 'true', 'fi-kmath-bigcup-sub-a'),
-                new Symbol('\\bigcup _{}^{} {x}', '\\bigcup _{a}^{b} {x}', 'group16', '\\bigcup_{a}^{b}', '', 'true', 'fi-kmath-bigcup-sub-sup-a'),
-
-                // new Symbol('\\overset{}{rightarrow}', '\\overset{}{\\rightarrow}', 'group16', '\\overset{\\rightarrow}'),
-
                 new Symbol('\\subscript', '_{sub}', 'group0', '_{sub}', 'font-size: 0.9em;'),
                 new Symbol('\\supscript', '\^{sup}', 'group0', '\^{sup}', 'font-size: 0.9em;'),
                 new Symbol('\\frac', '\\frac{n}{m}', 'group0', '\\frac{n}{m}', 'line-height: normal; '),
@@ -373,7 +349,34 @@
                 new Symbol('\\sum', '\\sum{n}', 'group2', '\\sum', '', '', 'fi-kmath-sum-a'),
                 new Symbol('\\prod', '\\prod{n}', 'group2', '\\prod', '', '', 'fi-kmath-prod-a'),
                 new Symbol('\\coprod', '\\coprod{n}', 'group2', '\\coprod', '', '', 'fi-kmath-co-prod-a'),
-                new Symbol('\\int', '\\int{x}', 'group2', '\\int'),
+                new Symbol('\\int', '\\int{x}', 'group2', '\\int', 'font-size: 1.2em;'),
+
+                // new Symbol('∯', '∯', 'group5', '∯'),
+                // new Symbol('∰', '∰', 'group5', '∰'),
+                new Symbol('\\oint', '\\oint{x}', 'group2', '\\oint', '', '', 'fi-kmath-oint-a'),
+                new Symbol('\\oint _{} {x}', '\\oint _{a} {x}', 'group2', '\\oint_{a}', '', 'true', 'fi-kmath-oint-sub-a'),
+                new Symbol('\\bigcap', '\\bigcap{n}', 'group2', '\\bigcap', '', '', 'fi-kmath-bigcap-a'),
+                new Symbol('\\bigcap _{} {x}', '\\bigcap _{a} {x}', 'group2', '\\bigcap{a}', '', 'true', 'fi-kmath-bigcap-sub-a'),
+                new Symbol('\\bigcap _{}^{} {x}', '\\bigcap _{a}^{b} {x}', 'group2', '\\bigcap_{a}^{b}', '', 'true', 'fi-kmath-bigcap-sub-sup-a'),
+                new Symbol('\\bigcup', '\\bigcup{x}', 'group2', '\\bigcup', '', '', 'fi-kmath-bigcup-a'),
+                new Symbol('\\bigcup _{} {x}', '\\bigcup _{a} {x}', 'group2', '\\bigcup_{a}', '', 'true', 'fi-kmath-bigcup-sub-a'),
+                new Symbol('\\bigcup _{}^{} {x}', '\\bigcup _{a}^{b} {x}', 'group2', '\\bigcup_{a}^{b}', '', 'true', 'fi-kmath-bigcup-sub-sup-a'),
+
+                // new Symbol('\\overset{}{rightarrow}', '\\overset{}{\\rightarrow}', 'group16', '\\overset{\\rightarrow}'),
+
+                new Symbol('\\lim_{x\\to\\infty}{}', '\\lim_{x\\to\\infty}{}', 'group6', 'lim'),
+                new Symbol('\\log_{}\\left(\\right)', '\\log_{}\\left(\\right)', 'group6', 'log'),
+                
+                // new Symbol('\\overset{a}{\\rightarrow}', '\\overset{a}{\\rightarrow}', 'group5', '\\overset{a}{rightarrow}'),
+                // new Symbol('\\dot{o}', '\\dot{o}', 'group5', '\\dot{o}'),
+                // new Symbol('\\grave{o}', '\\grave{o}', 'group5', '\\grave{o}'),
+                new Symbol('\\overrightarrow', '\\overrightarrow{}', 'group6', '\\overrightarrow{abc}', '', '', 'fi-kmath-over-right-arrow-a'),
+                new Symbol('\\overleftarrow', '\\overleftarrow{}', 'group6', '\\overleftarrow{abc}', '', '', 'fi-kmath-over-left-arrow-a'),
+                new Symbol('\\overline', '\\overline{}', 'group6', '\\overline{abc}', '', '', 'fi-kmath-over-line-a'),
+                // new Symbol('\\bar', '\\bar{}', 'group10', '\\bar{abc}', 'font-size: 0.95em;'),
+                // new Symbol('\\widehat', '\\widehat{}', 'group10', '\\widehat', 'font-size: 0.95em;'),
+                // new Symbol('\\widetilde', '\\widetilde{}', 'group10', '\\widetilde', 'font-size: 0.95em;'),
+                // new Symbol('\\breve', '\\breve{}', 'group10', '\\breve{abc}'),
 
                 new Symbol('\\N', '\\mathbb{N}', 'group3', '\\N', 'font-size: 1.3em'),
                 new Symbol('\\P', '\\mathbb{P}', 'group3', '\\P', 'font-size: 1.3em'),

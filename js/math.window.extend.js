@@ -72,19 +72,20 @@
 
 
     $(function () {
+        // catch error if Clipboard class doesn't exist
         try {
             new Clipboard('.test');
         } catch (e) {
             return;
         }
         $(document).on('contextmenu', '.MathJax_CHTML', contextmenuFunc);
-        // $(document).on('blur', '.MathJax_CHTML', hideAllContextmenu);
+        // $(document).on('blur', '.MathJax_CHTML', hideAllContextmenu);    blur事件在Copy LaTex的click事件之前发生。
         $(document).on('click', hideAllContextmenu);
         $(document).on('contextmenu', hideAllContextmenu);
+        // wait for iframe loading
         setTimeout(function () {
             $('iframe').each(function () {
                 $(this.contentDocument).on('contextmenu', '.MathJax_CHTML', contextmenuFunc);
-                // $(this.contentDocument).on('blur', '.MathJax_CHTML', hideAllContextmenu);
                 $(this.contentDocument.body).on('click', hideAllContextmenu);
                 $(this.contentDocument.body).on('contextmenu', hideAllContextmenu);
             });
