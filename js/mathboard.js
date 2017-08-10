@@ -100,7 +100,7 @@
 
                 $mathSymbol.on('click', 'li:not(.matrix)', function (e) {
                     if (self.isBasic) {
-                        $(this).attr('data-mq') ? self.mathField.write(this.title) : self.mathField.cmd(this.title);
+                        $(this).attr('data-mq') === ('true') ? self.mathField.write(this.title) : self.mathField.cmd(this.title);
                         self.mathField.focus();
                     } else {
                         var textarea, start, end, value;
