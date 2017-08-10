@@ -68,7 +68,9 @@
 .math-symbol .mq-empty{ display: none!important;}
 .math-symbol big{ font-size: 1.3em!important;}
 
-.kmath-contextmenu{ font-family: Verdana; font-size: 13px; position: absolute; margin: 0; padding: 0; list-style: none; background: #fff; border: 1px solid #ccc; z-index: 999999;}
+.kmath-contextmenu{ font-family: Verdana; font-size: 13px; position: absolute; margin: 0; padding: 0; 
+  user-select: none; -moz-user-select: none; -ms-user-select: none; -webkit-user-select: none;
+  list-style: none; background: #fff; border: 1px solid #ccc; z-index: 999999;}
 .kmath-contextmenu li{ padding: 0 13px; line-height: 40px; cursor: pointer;}
 .kmath-contextmenu li:hover{ background: #eefbee; }
 

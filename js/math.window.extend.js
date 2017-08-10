@@ -78,11 +78,15 @@
             return;
         }
         $(document).on('contextmenu', '.MathJax_CHTML', contextmenuFunc);
+        // $(document).on('blur', '.MathJax_CHTML', hideAllContextmenu);
         $(document).on('click', hideAllContextmenu);
+        $(document).on('contextmenu', hideAllContextmenu);
         setTimeout(function () {
             $('iframe').each(function () {
                 $(this.contentDocument).on('contextmenu', '.MathJax_CHTML', contextmenuFunc);
+                // $(this.contentDocument).on('blur', '.MathJax_CHTML', hideAllContextmenu);
                 $(this.contentDocument.body).on('click', hideAllContextmenu);
+                $(this.contentDocument.body).on('contextmenu', hideAllContextmenu);
             });
         }, 1000);
     });
@@ -104,6 +108,7 @@
         if (!$menu.length) {
             $menu = $('<ul class="kmath-contextmenu" style="display: none;"></ul>');
             $menu.append('<li class="copylatex">Copy LaTex<li>');
+            $menu.on('contextmenu', function(e){ e.preventDefault(); e.stopPropagation();});
             $(this).closest('body').append($menu);
             var copylatex = $('.copylatex', $menu);
             var clipboard = new Clipboard(copylatex[0]);
@@ -120,3 +125,8 @@
         $menu.css({ 'left': e.pageX, 'top': e.pageY });
         $menu.show();
     }
+
+
+//     MathJax.Hub.config.CommonHTML.scale=200;
+
+// MathJax.Hub.Queue(["Rerender",MathJax.Hub])
