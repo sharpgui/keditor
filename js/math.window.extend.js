@@ -95,7 +95,7 @@
         $('iframe').each(function () {
             $('.kmath-contextmenu', $(this.contentDocument)).hide();
         });
-        $('kmath-contextmenu', $(document)).hide();
+        $('.kmath-contextmenu', $(document)).hide();
     }
     function contextmenuFunc(e) {
         var $menu = $(this).closest('body').find('.kmath-contextmenu'),

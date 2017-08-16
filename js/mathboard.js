@@ -33,6 +33,7 @@
                 $matrixTable,
                 mathbbReg = /\\mathbb{([A-Z])}/g,
                 notinsetReg = /not\\(in|ni|subset|supset|subseteq|supseteq)/g,
+                supReg=/\^([^{])/g,
                 controlBox = new ControlBox(),
                 self = this,
                 defaultOptions = {
@@ -188,6 +189,7 @@
                         self.mathField.write(value);
                     });
                 } else {
+                    value = value.replace(supReg,'^{$1}');
                     value = value.trim();
                     // 由于IE不支持 startsWith / endsWith 方法、并且新逻辑下value一定是数学公式。所以此处不做判断，直接去掉首尾$$
                     // if(value.startsWith('$$') && value.endsWith('$$')){
@@ -215,7 +217,8 @@
                 // dom.attr('style', styles + '-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; ');
                 dom.attr("data-mathml", escape(dom.attr("data-mathml")));     // 保留MathML
                 dom.attr('data-latex', latex);
-                dom.attr("contenteditable", false);
+                dom.attr('hideFocus', 'true');
+                dom.attr("contentEditable", false);
                 dom.find(".MJX_Assistive_MathML").remove();
                 // 添加空格。会使光标明显，但在重复编辑的情况下，会出现多个空格。故注掉。
                 // dom = $('<span></span>').append(dom).append('<span>&nbsp;</span>');
@@ -348,8 +351,17 @@
 
                 new Symbol('\\sum', '\\sum{n}', 'group2', '\\sum', '', '', 'fi-kmath-sum-a'),
                 new Symbol('\\prod', '\\prod{n}', 'group2', '\\prod', '', '', 'fi-kmath-prod-a'),
+                new Symbol('\\prod_{}{}', '\\prod_{a}{n}', 'group2', '\\prod_{a}{n}', '', 'true', 'fi-kmath-prod-a'),
+                new Symbol('\\prod_{}^{}{}', '\\prod_{a}^{b}{n}', 'group2', '\\prod_{a}^{b}{n}', '', 'true', 'fi-kmath-prod-a'),
                 new Symbol('\\coprod', '\\coprod{n}', 'group2', '\\coprod', '', '', 'fi-kmath-co-prod-a'),
+                new Symbol('\\coprod_{}{}', '\\coprod_{a}{n}', 'group2', '\\coprod_{a}{n}', '', 'true', 'fi-kmath-co-prod-a'),
+                new Symbol('\\coprod_{}^{}{}', '\\coprod_{a}^{b}{n}', 'group2', '\\coprod_{a}^{b}{n}', '', 'true', 'fi-kmath-co-prod-a'),
                 new Symbol('\\int', '\\int{x}', 'group2', '\\int', 'font-size: 1.2em;'),
+                new Symbol('\\int_{}{x}', '\\int_{a}{x}', 'group2', '\\int_{a}{x}', '', 'true', 'fi-kmath-co-prod-a'),
+                new Symbol('\\int_{}^{}{x}', '\\int_{a}^{b}{x}', 'group2', '\\int_{a}^{b}{x}', '', 'true', 'fi-kmath-co-prod-a'),
+
+                // new Symbol('\\iint', '\\iint{x}', 'group2', '\\iint', 'font-size: 1.2em;'),      n a in basic
+                // new Symbol('\\iiint', '\\iiint{x}', 'group2', '\\iiint', 'font-size: 1.2em;'),   n a in basic
 
                 // new Symbol('∯', '∯', 'group5', '∯'),
                 // new Symbol('∰', '∰', 'group5', '∰'),
@@ -558,9 +570,9 @@
             ];
 
             this.Delimiters = [
-                new Symbol('\\left\\{\\right\\}', '\\left\\{\\right\\}', 'group1', '{}', '', '', 'fi-kmath-brace-a'),
-                new Symbol('\\left(\\right)', '\\left(\\right)', 'group1', '()'),
-                new Symbol('\\left[\\right]', '\\left[\\right]', 'group1', '[]'),
+                new Symbol('\\left\\{\\right\\}', '\\left\\{\\right\\}', 'group1', '{}', '', 'true', 'fi-kmath-brace-a'),
+                new Symbol('\\left(\\right)', '\\left(\\right)', 'group1', '()', '', 'true'),
+                new Symbol('\\left[\\right]', '\\left[\\right]', 'group1', '[]', '', 'true'),
                 new Symbol('\\lfloor', '\\lfloor', 'group1', '\\lfloor'),
                 new Symbol('\\rfloor', '\\rfloor', 'group1', '\\rfloor'),
                 new Symbol('\\lceil', '\\lceil', 'group1', '\\lceil'),
@@ -596,7 +608,10 @@
                 new Symbol('\\nabla', '\\nabla', 'group1', '\\nabla'),
                 new Symbol('\\hbar', '\\hbar', 'group1', '\\hbar'),
                 // new Symbol('\\AA', '\\AA', 'group1', '\\AA'),
-                new Symbol('A\^{\\circ}', 'A\^{\\circ}', 'group1', 'A\^{\\circ}', '', '', 'fi-kmath-sub-circ-a'),
+                new Symbol('A\^{\\circ}', 'A\^{\\circ}', 'group1', 'A\^{\\circ}', '', 'true', 'fi-kmath-sub-circ-a'),
+                new Symbol('A\^{\\prime}', 'A\^{\\prime}', 'group1', 'A\^{\\prime}', '', 'true', 'fi-kmath-sup-prime-a'),
+                new Symbol('A\^{\\prime\\prime}', 'A\^{\\prime\\prime}', 'group1', 'A\^{\\prime\\prime}', '', 'true', 'fi-kmath-sup-double-prime-a'),
+                new Symbol('A\^{\\prime\\prime\\prime}', 'A\^{\\prime\\prime\\prime}', 'group1', 'A\^{\\prime\\prime\\prime}', '', 'true', 'fi-kmath-sup-triple-prime-a'),
                 new Symbol('\\circ', '\\circ', 'group1', '\\circ'),
                 new Symbol('\\bullet', '\\bullet', 'group1', '\\bullet'),
                 new Symbol('\\setminus', '\\setminus', 'group1', '\\setminus'),
@@ -608,7 +623,8 @@
                 new Symbol('\\infty', '\\infty', 'group1', '\\infty'),
                 new Symbol('\\aleph', '\\aleph', 'group1', '\\aleph'),
                 new Symbol('\\deg', '\\deg', 'group1', '\\deg'),
-                new Symbol('\\angle', '\\angle', 'group1', '\\angle')
+                new Symbol('\\angle', '\\angle', 'group1', '\\angle'),
+                new Symbol('\\wp', '\\wp', 'group1', '\\wp')
             ];
             /**
              * render category
@@ -646,8 +662,8 @@
                 $matrixTable.on('mouseover', 'td', function () {
                     var x, y;
                     $matrixTable.find('td').removeClass('on');
-                    x = $(this).parent().find('td').index($(this)) + 1;
-                    y = $(this).closest('tbody').find('tr').index($(this).parent()) + 1;
+                    x = $(this).parent().find('td').index(this) + 1;
+                    y = $(this).closest('tbody').find('tr').index($(this).parent()[0]) + 1;
                     $matrixTable.data('x', x);
                     $matrixTable.data('y', y);
                     var trs = $('tr:nth-child(-n + ' + y + ')', $(this).closest('tbody'));
@@ -870,7 +886,7 @@
             }
             doc.getElementsByTagName("head")[0].appendChild(styleNode);
         }
-        var kmathcss = '.customMatrix{position:absolute;display:inline-block;padding:5px;background:#fff;border:1px solid #9c9a9a;border-radius:6px;z-index:99999;font-family:Segoe UI}.customMatrix .title{float:left;padding-bottom:2px}.closeCustomMatrix{float:right;cursor:pointer}.customMatrixTable{clear:both;border-right:1px solid #eee;border-bottom:1px solid #eee;border-spacing:0}.customMatrixTable td{height:20px;width:20px;border-top:1px solid #eee;border-left:1px solid #eee;cursor:pointer}.customMatrixTable td.on{background:darkgray}.icon{display:block;height:100%;width:100%;background:rgba(255,165,0,0.25);line-height:0}.math-insert.button,.math-cancel.button{float:right;margin-top:20px;margin-left:15px;box-sizing:border-box}#kmath,[data-role="kmath"]{padding:0 5px 6px;max-width:900px;min-width:720px;font-family:"Times New Roman",serif;border:1px solid #ccc}.math-category{padding:0;margin:0}.math-category>li{display:inline-block;padding:0 15px;line-height:44px;cursor:pointer;box-sizing:border-box}.math-category>li>span{padding-left:6px}.math-category>li.selected-category{border-bottom:2px solid #5FB554}.math-symbol{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;height:142px;padding:5px 5px 0;margin:0;border:1px solid #dbdbdb;border-top-color:#5FB554;box-sizing:border-box}.math-symbol>li{list-style:none;padding:0;overflow:hidden;margin-left:-1px;margin-bottom:5px;height:40px;width:40px;line-height:35px;text-align:center;color:#000;border:1px solid #dbdbdb;cursor:pointer;box-sizing:border-box}.advance-editarea{display:block;overflow:auto;width:98%;margin:0 auto;height:120px}.advance-view{overflow:auto;margin:0 auto;height:143px}.advance-editarea::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}.advance-editarea::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}.advance-view::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}.advance-view::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}.basic-editarea{clear:both;display:block;width:99%;margin:0 auto;height:267px}.kmath-message{position:absolute;bottom:0.1em;left:0.5em;font-size:0.9em;font-family:Verdana}.blue-link{margin:10px 0;float:right;border:none;background:none;color:#3a9be5;cursor:pointer}.blue-link:hover{text-decoration:underline}.math-symbol .mq-empty{display:none!important}.math-symbol big{font-size:1.3em!important}.math-symbol>li.directDisplay{font-size:2em;padding-top:4px}.kmath-contextmenu{position:absolute;margin:0;padding:0;list-style:none;background:#fff;border:1px solid #ccc;z-index:999999}.kmath-contextmenu li{padding:0 10px;line-height:2.3;cursor:pointer}.kmath-contextmenu li:hover{background:#eee}';
+        var kmathcss = '.customMatrix{position:absolute;display:inline-block;padding:5px;background:#fff;border:1px solid #9c9a9a;border-radius:6px;z-index:99999;font-family:Segoe UI}.customMatrix .title{float:left;padding-bottom:2px}.closeCustomMatrix{float:right;cursor:pointer}.customMatrixTable{clear:both;border-right:1px solid #eee;border-bottom:1px solid #eee;border-spacing:0}.customMatrixTable td{height:20px;width:20px;border-top:1px solid #eee;border-left:1px solid #eee;cursor:pointer}.customMatrixTable td.on{background:darkgray}.math-insert.button,.math-cancel.button{float:right;margin-top:20px;margin-left:15px;box-sizing:border-box}#kmath,[data-role="kmath"]{padding:0 5px 6px;max-width:900px;min-width:720px;font-family:"Times New Roman",serif;border:1px solid #ccc}.math-category{padding:0;margin:0}.math-category>li{display:inline-block;padding:0 15px;line-height:44px;cursor:pointer;box-sizing:border-box}.math-category>li>span{padding-left:6px}.math-category>li.selected-category{border-bottom:2px solid #5FB554}.math-symbol{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;height:142px;padding:5px 5px 0;margin:0;border:1px solid #dbdbdb;border-top-color:#5FB554;box-sizing:border-box}.math-symbol>li{list-style:none;padding:0;overflow:hidden;margin-left:-1px;margin-bottom:5px;height:40px;width:40px;line-height:35px;text-align:center;color:#000;border:1px solid #dbdbdb;cursor:pointer;box-sizing:border-box}.math-symbol>li.directDisplay{font-size:2em;padding-top:4px}.advance-editarea{display:block;overflow:auto;width:98%;margin:0 auto;height:120px}.advance-view{overflow:auto;margin:0 auto;height:143px}.advance-editarea::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}.advance-editarea::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}.advance-view::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}.advance-view::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}.basic-editarea{clear:both;overflow:auto;display:block;width:99%;margin:0 auto;height:267px}.kmath-message{position:absolute;bottom:0.1em;left:0.5em;font-size:0.9em;font-family:Verdana}.blue-link{margin:10px 0;float:right;border:none;background:none;color:#3a9be5;cursor:pointer}.blue-link:hover{text-decoration:underline}.math-symbol .mq-empty{display:none!important}.math-symbol big{font-size:1.3em!important}';
         var mathjaxcss = ".mjx-chtml{display:inline-block;line-height:0;text-indent:0;text-align:left;text-transform:none;font-style:normal;font-weight:normal;font-size:100%;font-size-adjust:none;letter-spacing:normal;word-wrap:normal;word-spacing:normal;white-space:nowrap;float:none;direction:ltr;max-width:none;max-height:none;min-width:0;min-height:0;border:0;margin:0;padding:1px 0}.MJXc-display{display:block;text-align:center;margin:1em 0;padding:0}.mjx-chtml[tabindex]:focus,body :focus .mjx-chtml[tabindex]{display:inline-table}.mjx-full-width{text-align:center;display:table-cell!important;width:10000em}.mjx-math{display:inline-block;border-collapse:separate;border-spacing:0}.mjx-math *{display:inline-block;-webkit-box-sizing:content-box!important;-moz-box-sizing:content-box!important;box-sizing:content-box!important;text-align:left}.mjx-numerator{display:block;text-align:center}.mjx-denominator{display:block;text-align:center}.MJXc-stacked{height:0;position:relative}.MJXc-stacked>*{position:absolute}.MJXc-bevelled>*{display:inline-block}" +
             ".mjx-stack{display:inline-block}.mjx-op{display:block}.mjx-under{display:table-cell}.mjx-over{display:block}.mjx-over>*{padding-left:0!important;padding-right:0!important}.mjx-under>*{padding-left:0!important;padding-right:0!important}.mjx-stack>.mjx-sup{display:block}.mjx-stack>.mjx-sub{display:block}.mjx-prestack>.mjx-presup{display:block}.mjx-prestack>.mjx-presub{display:block}.mjx-delim-h>.mjx-char{display:inline-block}.mjx-surd{vertical-align:top}.mjx-mphantom *{visibility:hidden}.mjx-merror{background-color:#ff8;color:#c00;border:1px solid #c00;padding:2px 3px;font-style:normal;font-size:90%}.mjx-annotation-xml{line-height:normal}.mjx-menclose>svg{fill:none;stroke:currentColor}.mjx-mtr{display:table-row}.mjx-mlabeledtr{display:table-row}.mjx-mtd{display:table-cell;text-align:center}.mjx-label{display:table-row}.mjx-box{display:inline-block}.mjx-block{display:block}.mjx-span{display:inline}.mjx-char{display:block;white-space:pre}.mjx-itable{display:inline-table;width:auto}.mjx-row{display:table-row}" +
             ".mjx-cell{display:table-cell}.mjx-table{display:table;width:100%}.mjx-line{display:block;height:0}.mjx-strut{width:0;padding-top:1em}.mjx-vsize{width:0}.MJXc-space1{margin-left:.167em}.MJXc-space2{margin-left:.222em}.MJXc-space3{margin-left:.278em}.mjx-chartest{display:block;visibility:hidden;position:absolute;top:0;line-height:normal;font-size:500%}.mjx-chartest .mjx-char{display:inline}.mjx-chartest .mjx-box{padding-top:1000px}.MJXc-processing{visibility:hidden;position:fixed;width:0;height:0;overflow:hidden}.MJXc-processed{display:none}.mjx-test{display:block;font-style:normal;font-weight:normal;font-size:100%;font-size-adjust:none;text-indent:0;text-transform:none;letter-spacing:normal;word-spacing:normal;overflow:hidden;height:1px}.mjx-ex-box-test{position:absolute;width:1px;height:60ex}.mjx-line-box-test{display:table!important}.mjx-line-box-test span{display:table-cell!important;width:10000em!important;min-width:0;max-width:none;padding:0;border:0;margin:0}#MathJax_CHTML_Tooltip{background-color:InfoBackground;color:InfoText;border:1px solid black;box-shadow:2px 2px 5px #aaa;-webkit-box-shadow:2px 2px 5px #aaa;-moz-box-shadow:2px 2px 5px #aaa;-khtml-box-shadow:2px 2px 5px #aaa;padding:3px 4px;z-index:401;position:absolute;left:0;top:0;width:auto;height:auto;display:none}" +
@@ -884,7 +900,7 @@
             "@font-face{font-family:MJXc-TeX-main-I;src:local('MathJax_Main Italic'),local('MathJax_Main-Italic')}@font-face{font-family:MJXc-TeX-main-Ix;src:local('MathJax_Main');font-style:italic}@font-face{font-family:MJXc-TeX-main-Iw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Main-Italic.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Italic.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Italic.otf') format('opentype')}@font-face{font-family:MJXc-TeX-main-R;src:local('MathJax_Main'),local('MathJax_Main-Regular')}@font-face{font-family:MJXc-TeX-main-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Main-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-math-I;src:local('MathJax_Math Italic'),local('MathJax_Math-Italic')}" +
             "@font-face{font-family:MJXc-TeX-math-Ix;src:local('MathJax_Math');font-style:italic}@font-face{font-family:MJXc-TeX-math-Iw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Math-Italic.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Math-Italic.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Math-Italic.otf') format('opentype')}@font-face{font-family:MJXc-TeX-size1-R;src:local('MathJax_Size1'),local('MathJax_Size1-Regular')}@font-face{font-family:MJXc-TeX-size1-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size1-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size1-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size1-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-size2-R;src:local('MathJax_Size2'),local('MathJax_Size2-Regular')}@font-face{font-family:MJXc-TeX-size2-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size2-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size2-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size2-Regular.otf') format('opentype')}" +
             "@font-face{font-family:MJXc-TeX-size3-R;src:local('MathJax_Size3'),local('MathJax_Size3-Regular')}@font-face{font-family:MJXc-TeX-size3-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size3-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size3-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size3-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-size4-R;src:local('MathJax_Size4'),local('MathJax_Size4-Regular')}@font-face{font-family:MJXc-TeX-size4-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size4-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size4-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size4-Regular.otf') format('opentype')}" +
-            ".kmath-contextmenu{font-family:Verdana;font-size:13px;position:absolute;margin:0;padding:0;user-select:none;-moz-user-select:none;-ms-user-select:none;-webkit-user-select:none;list-style:none;background:#fff;border:1px solid #ccc;z-index:999999}.kmath-contextmenu li{padding:0 13px;line-height:40px;cursor:pointer}.kmath-contextmenu li:hover{background:#eefbee}";
+            ".kmath-contextmenu{font-family:Verdana;font-size:13px;position:absolute;margin:0;padding:0;list-style:none;background:#fff;border:1px solid #ccc;z-index:999999}.kmath-contextmenu li{padding:0 13px;line-height:40px;cursor:pointer}.kmath-contextmenu li:hover{background:#eefbee}";
 
         //export KMath
         window.KMath = KMath;

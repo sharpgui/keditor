@@ -30,7 +30,8 @@
     "R": true,
     "UIElement": true,
     "DependencyObject": false,
-    "AUI": true
+    "AUI": true,
+    "MathJax":true
 
   },
   "rules": {
