@@ -1,5 +1,5 @@
 
-.customMatrix{ position: absolute; display: inline-block; padding: 5px; background: #fff; border: 1px solid #9c9a9a; border-radius: 6px; z-index: 99999; font-family: Segoe UI;}
+.customMatrix{ position: absolute; display: inline-block; min-width:230px; padding: 5px; background: #fff; border: 1px solid #9c9a9a; border-radius: 6px; z-index: 99999; font-family: Segoe UI;}
 .customMatrix .title{float: left; padding-bottom: 2px;}
 .closeCustomMatrix{float: right; cursor: pointer; }
 .customMatrixTable{ clear: both; border-right: 1px solid #eee; border-bottom: 1px solid #eee; border-spacing: 0;}
@@ -57,7 +57,23 @@
 	border:2px solid #fff;
 	background-color:rgba(0,0,0,.3)
 }
-.basic-editarea{ clear: both; overflow: auto; display: block; width: 99%; margin: 0 auto; height: 267px;}
+.basic-editarea, .basic-editarea .mq-root-block, .basic-editarea .mq-math-mode .mq-root-block{ overflow: auto; width: auto;}
+.basic-editarea{ clear: both; display: block; width: 99%; margin: 0 auto; height: 267px;}
+
+.basic-editarea::-webkit-scrollbar, 
+.basic-editarea .mq-root-block::-webkit-scrollbar, 
+.basic-editarea .mq-math-mode .mq-root-block::-webkit-scrollbar{
+    -webkit-appearance:none;
+	width:10px;
+	height:10px
+}
+.basic-editarea::-webkit-scrollbar-thumb, 
+.basic-editarea .mq-root-block::-webkit-scrollbar-thumb, 
+.basic-editarea .mq-math-mode .mq-root-block::-webkit-scrollbar-thumb{
+	border-radius:8px;
+	border:2px solid #fff;
+	background-color:rgba(0,0,0,.3)
+}
 
 .kmath-message{ position: absolute; bottom: 0.1em; left: 0.5em; font-size: 0.9em; font-family: Verdana;}
 /*height: 1.5em; line-height: 1.5em; padding-left: 5px; */
@@ -101,6 +117,36 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.fi-kmath-coprod-sub-a:before {
+  content: "\e917";
+}
+.fi-kmath-coprod-sub-sup-a:before {
+  content: "\e918";
+}
+.fi-kmath-int-a:before {
+  content: "\e919";
+}
+.fi-kmath-int-sub-a:before {
+  content: "\e91a";
+}
+.fi-kmath-int-sub-sup-a:before {
+  content: "\e91b";
+}
+.fi-kmath-prod-sub-a:before {
+  content: "\e91c";
+}
+.fi-kmath-prod-sub-sup-a:before {
+  content: "\e91d";
+}
+.fi-kmath-sup-double-prime-a:before {
+  content: "\e91e";
+}
+.fi-kmath-sup-prime-a:before {
+  content: "\e91f";
+}
+.fi-kmath-sup-triple-prime-a:before {
+  content: "\e920";
+}
 .fi-kmath-bb-matrix-a:before {
   content: "\e900";
 }

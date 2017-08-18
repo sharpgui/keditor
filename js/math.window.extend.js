@@ -79,38 +79,54 @@
             return;
         }
         $(document).on('contextmenu', '.MathJax_CHTML', contextmenuFunc);
-        // $(document).on('blur', '.MathJax_CHTML', hideAllContextmenu);    blur事件在Copy LaTex的click事件之前发生。
-        $(document).on('click', hideAllContextmenu);
-        $(document).on('contextmenu', hideAllContextmenu);
-        // wait for iframe loading
-        setTimeout(function () {
-            $('iframe').each(function () {
-                $(this.contentDocument).on('contextmenu', '.MathJax_CHTML', contextmenuFunc);
-                $(this.contentDocument.body).on('click', hideAllContextmenu);
-                $(this.contentDocument.body).on('contextmenu', hideAllContextmenu);
-            });
+        // $(document).on('blur', '.MathJax_CHTML', hideContextmenu);    blur事件在Copy LaTex的click事件之前发生。
+        $(document).on('click', hideContextmenu);
+        $(document).on('contextmenu', hideContextmenu);
+
+        var interval = setInterval(function(){
+            if(!$('.aui-loading').length || ($('.aui-loading').length && $('.aui-loading').css('display') === 'none')){
+                clearInterval(interval);
+                setTimeout(function () {
+                    $('iframe').each(function () {
+                        $(this.contentDocument).on('contextmenu', '.MathJax_CHTML', contextmenuFunc);
+                        $(this.contentDocument.body).on('click', hideContextmenu);
+                        $(this.contentDocument.body).on('contextmenu', hideContextmenu);
+                        // 在页面加载完成之后，将iframe存放在editor.body中。将在contextmenu中使用。
+                        this.contentDocument.body.parentFrame = $(this);
+                    });
+                    document.body.parentFrame = {
+                        offset: function () {
+                            return { left: 0, top: 0 };
+                        }
+                    }
+                }, 500);
+            }
         }, 1000);
+        
     });
-    function hideAllContextmenu() {
-        $('iframe').each(function () {
-            $('.kmath-contextmenu', $(this.contentDocument)).hide();
-        });
+    function hideContextmenu() {
+        // 
+        // $('iframe').each(function () {
+        //     $('.kmath-contextmenu', $(this.contentDocument)).hide();
+        // });
         $('.kmath-contextmenu', $(document)).hide();
     }
     function contextmenuFunc(e) {
-        var $menu = $(this).closest('body').find('.kmath-contextmenu'),
+        // var $menu = $(this).closest('body').find('.kmath-contextmenu'),
+        var $menu = $('.kmath-contextmenu'),
             latex = $(this).attr('data-latex');
         if (!latex) {
             return;
         }
-        hideAllContextmenu();
+        hideContextmenu();
         e.preventDefault();
         e.stopPropagation();
         if (!$menu.length) {
             $menu = $('<ul class="kmath-contextmenu" style="display: none;"></ul>');
             $menu.append('<li class="copylatex">Copy LaTex<li>');
             $menu.on('contextmenu', function(e){ e.preventDefault(); e.stopPropagation();});
-            $(this).closest('body').append($menu);
+            // $(this).closest('body').append($menu);
+            $(document.body).append($menu);
             var copylatex = $('.copylatex', $menu);
             var clipboard = new Clipboard(copylatex[0]);
             clipboard.on('success', function (e) {
@@ -122,8 +138,12 @@
         }
         latex = latex ? latex.substr(2, latex.length - 4) : '';        // 去掉latex前后$
         $menu.find('li.copylatex').attr('data-clipboard-text', latex);
+
+        // 当前元素所在的iframe的offset
+        // var parentFrameOffset = e.target.closest('body').parentFrame.offset();       // IE不能支持element.closest。改为JQueryElement.closest方式    
+        var parentFrameOffset = $(e.target).closest('body').get(0).parentFrame.offset();
         // e.pageX pageY 是鼠标位置。
-        $menu.css({ 'left': e.pageX, 'top': e.pageY });
+        $menu.css({ 'left': e.pageX + parentFrameOffset.left, 'top': e.pageY + parentFrameOffset.top });
         $menu.show();
     }
 
