@@ -70,8 +70,7 @@
 
     }();
 
-
-    $(function () {
+        $(function () {
         // catch error if Clipboard class doesn't exist
         try {
             new Clipboard('.test');
@@ -83,8 +82,8 @@
         $(document).on('click', hideContextmenu);
         $(document).on('contextmenu', hideContextmenu);
 
-        var interval = setInterval(function(){
-            if(!$('.aui-loading').length || ($('.aui-loading').length && $('.aui-loading').css('display') === 'none')){
+        var interval = setInterval(function () {
+            if (!$('.aui-loading').length || ($('.aui-loading').length && $('.aui-loading').css('display') === 'none')) {
                 clearInterval(interval);
                 setTimeout(function () {
                     $('iframe').each(function () {
@@ -99,13 +98,12 @@
                             return { left: 0, top: 0 };
                         }
                     }
+                    $('.k-editor-toolbar').on('click', '.k-tool-group *', hideContextmenu);
                 }, 500);
             }
         }, 1000);
-        
     });
     function hideContextmenu() {
-        // 
         // $('iframe').each(function () {
         //     $('.kmath-contextmenu', $(this.contentDocument)).hide();
         // });
@@ -124,7 +122,7 @@
         if (!$menu.length) {
             $menu = $('<ul class="kmath-contextmenu" style="display: none;"></ul>');
             $menu.append('<li class="copylatex">Copy LaTex<li>');
-            $menu.on('contextmenu', function(e){ e.preventDefault(); e.stopPropagation();});
+            $menu.on('contextmenu', function (e) { e.preventDefault(); e.stopPropagation(); });
             // $(this).closest('body').append($menu);
             $(document.body).append($menu);
             var copylatex = $('.copylatex', $menu);
@@ -146,8 +144,3 @@
         $menu.css({ 'left': e.pageX + parentFrameOffset.left, 'top': e.pageY + parentFrameOffset.top });
         $menu.show();
     }
-
-
-//     MathJax.Hub.config.CommonHTML.scale=200;
-
-// MathJax.Hub.Queue(["Rerender",MathJax.Hub])

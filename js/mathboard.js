@@ -33,7 +33,7 @@
                 $matrixTable,
                 mathbbReg = /\\mathbb{([A-Z])}/g,
                 notinsetReg = /not\\(in|ni|subset|supset|subseteq|supseteq)/g,
-                supReg=/\^([^{])/g,
+                supReg = /\^([^{])/g,
                 controlBox = new ControlBox(),
                 self = this,
                 defaultOptions = {
@@ -189,7 +189,7 @@
                         self.mathField.write(value);
                     });
                 } else {
-                    value = value.replace(supReg,'^{$1}');
+                    value = value.replace(supReg, '^{$1}');
                     value = value.trim();
                     // 由于IE不支持 startsWith / endsWith 方法、并且新逻辑下value一定是数学公式。所以此处不做判断，直接去掉首尾$$
                     // if(value.startsWith('$$') && value.endsWith('$$')){
@@ -217,8 +217,7 @@
                 // dom.attr('style', styles + '-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; ');
                 dom.attr("data-mathml", escape(dom.attr("data-mathml")));     // 保留MathML
                 dom.attr('data-latex', latex);
-                dom.attr('hideFocus', 'true');
-                dom.attr("contentEditable", false);
+                dom.attr("contenteditable", false);
                 dom.find(".MJX_Assistive_MathML").remove();
                 // 添加空格。会使光标明显，但在重复编辑的情况下，会出现多个空格。故注掉。
                 // dom = $('<span></span>').append(dom).append('<span>&nbsp;</span>');
