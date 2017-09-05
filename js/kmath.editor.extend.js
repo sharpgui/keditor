@@ -150,7 +150,8 @@
                     id = result.id;
                     if (id) {
                         // span contentEditable="false" 去掉IE浏览器中显示在公式周围的虚线框。
-                        needSpace ? result = $('<span></span>').append($('<span contentEditable="false"></span>').append(result)).append('<span>&nbsp;</span>')[0] : '';
+                        // 添加一个空格，在公式之前。则能将光标放置在公式之前。
+                        needSpace ? result = $('<span></span>').append('<span>&nbsp;</span>').append($('<span contentEditable="false"></span>').append(result)).append('<span>&nbsp;</span>')[0] : '';
                         fragement.appendChild(result);
                         range.insertNode(fragement);
                         node = needSpace ? $('#' + id, editor.body).parent().parent()[0] : $('#' + id, editor.body)[0];
