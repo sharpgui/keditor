@@ -54,24 +54,19 @@
                 $(editor.body).on('dblclick', '.MathJax_CHTML', { currentEditor: editor }, function (e) {
                     mathEditor.setFormula($(this).attr("data-latex"));
                     editor = e.data.currentEditor;
-                    var n = $(this)[0];
                     // 设置range
-                    range.setStartBefore(n);
-                    range.setEndAfter(n);
+                    range.setStartBefore(this);
+                    range.setEndAfter(this);
                     // range.selectNode(n);
                     $kmath_window.data("kendoWindow").center().open();
                 });
-                $(editor.body).on('click', '.MathJax_CHTML', { currentEditor: editor }, function (e) {
+                $(editor.body).on('focus', '.MathJax_CHTML', { currentEditor: editor }, function (e) {
                     editor = e.data.currentEditor;
-                    $('.MathJax_CHTML', editor.body).removeClass('MathJax_CHTML_focused');
                     $(this).addClass('MathJax_CHTML_focused');
-                    e.stopPropagation();
                 });
-                $(editor.body).on('click', { currentEditor: editor }, function (e) {
-                    editor = e.data.currentEditor;
-                    $('.MathJax_CHTML', editor.body).removeClass('MathJax_CHTML_focused');
+                $(editor.body).on('blur', '.MathJax_CHTML', function (e) {
+                    $(this).removeClass('MathJax_CHTML_focused');
                 });
-
                 MathJax.Hub.Config({
                     menuSettings: { context: "Browser" }    // hide right-clicking menu
                 });
@@ -81,6 +76,7 @@
             equation_dom = $('.MathJax_CHTML_focused', editor.body);
             if (equation_dom.length) {
                 mathEditor.setFormula(equation_dom.attr("data-latex"));
+                document.body.kmath_equation = equation_dom[0];         // 若带有focus标记，将equation缓存在body元素上。
             } else {
                 mathEditor.setFormula('');
             }
@@ -120,10 +116,17 @@
                 // IE：此时editor已经失去焦点，所以不能得到range。
                 // var range = editor.getRange();
                 // range.deleteContents();
+
+                // 取出focus的数学表达式。使用后remove
+                if(document.body.kmath_equation){
+                    range.setStartBefore(document.body.kmath_equation);
+                    range.setEndAfter(document.body.kmath_equation);
+                    document.body.kmath_equation = undefined;
+                }
                 var ele = range.extractContents();
                 var needSpace = true;
                 if (ele.childElementCount) {
-                    needSpace = !$(ele.firstElementChild).hasClass('MathJax_CHTML_focused')
+                    needSpace = !$(ele.firstElementChild).hasClass('MathJax_CHTML')
                 }
                 // range.insertNode(mathEditor.getFormula());
                 // editor.paste(mathEditor.getFormula().outerHTML);
@@ -134,7 +137,6 @@
                     }
                 });
                 MathJax.Hub.Queue(function () {
-                    $('.MathJax_CHTML_focused', editor.body).remove();
                     var fragement = editor.document.createDocumentFragment(),
                         result = mathEditor.getFormula(),
                         id,
@@ -147,10 +149,11 @@
                     }
                     id = result.id;
                     if (id) {
-                        needSpace ? result = $('<span></span>').append(result).append('<span>&nbsp;</span>')[0] : '';
+                        // span contentEditable="false" 去掉IE浏览器中显示在公式周围的虚线框。
+                        needSpace ? result = $('<span></span>').append($('<span contentEditable="false"></span>').append(result)).append('<span>&nbsp;</span>')[0] : '';
                         fragement.appendChild(result);
                         range.insertNode(fragement);
-                        node = needSpace ? $('#' + id, editor.body).parent('span')[0] : $('#' + id, editor.body)[0];
+                        node = needSpace ? $('#' + id, editor.body).parent().parent()[0] : $('#' + id, editor.body)[0];
                         range.setStartAfter(node);
                         range.collapse(true);
                         editor.selectRange(range);

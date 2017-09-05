@@ -121,7 +121,7 @@
         e.stopPropagation();
         if (!$menu.length) {
             $menu = $('<ul class="kmath-contextmenu" style="display: none;"></ul>');
-            $menu.append('<li class="copylatex">Copy LaTex<li>');
+            $menu.append('<li class="copylatex">'+ $$.GCI18N.kMath.CopyLaTeX +'<li>');
             $menu.on('contextmenu', function (e) { e.preventDefault(); e.stopPropagation(); });
             // $(this).closest('body').append($menu);
             $(document.body).append($menu);

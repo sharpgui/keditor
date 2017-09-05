@@ -214,7 +214,7 @@
                 dom.css('font-size', '125%');
                 styles = dom.attr('style');
                 // 阻止选中
-                // dom.attr('style', styles + '-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; ');
+                dom.attr('style', styles + '-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; ');
                 dom.attr("data-mathml", escape(dom.attr("data-mathml")));     // 保留MathML
                 dom.attr('data-latex', latex);
                 dom.attr("contenteditable", false);
@@ -329,6 +329,7 @@
                 new Symbol('\\subscript', '_{sub}', 'group0', '_{sub}', 'font-size: 0.9em;'),
                 new Symbol('\\supscript', '\^{sup}', 'group0', '\^{sup}', 'font-size: 0.9em;'),
                 new Symbol('\\frac', '\\frac{n}{m}', 'group0', '\\frac{n}{m}', 'line-height: normal; '),
+                new AdvancedSymbol('\\tfrac{n}{m}','group20', '\\tfrac{n}{m}'),
                 new Symbol('\\sqrt', '\\sqrt{x}', 'group0', '\\sqrt{x}', 'line-height: normal; padding-top: 5px;'),
                 new Symbol('\\nthroot', '\\sqrt[n]{x}', 'group0', '\\sqrt[n]{x}', 'line-height: normal; text-align: left'),
                 new Symbol('\\binomial', '\\binom{n}{m}', 'group0', '\\binom{n}{m}', 'line-height: normal; text-align: left; font-size: 1em; padding-left: 3px;'),
@@ -341,6 +342,8 @@
                 new Symbol('\\mp', '\\mp', 'group1', '\\mp', 'font-size: 1.5em'),
                 new Symbol('\\cdot', '\\cdot', 'group1', '\\cdot', 'font-size: 1.5em'),
                 new Symbol('=', '=', 'group1', '=', 'font-size: 1.5em'),
+                new Symbol('\\doteq', '\\doteq', 'group1', '\\doteq', 'font-size: 1.5em'),
+                
                 new Symbol('\\times', '\\times', 'group1', '\\times', 'font-size: 1.5em'),
                 new Symbol('\\div', '\\div', 'group1', '\\div', 'font-size: 1.5em'),
                 new Symbol('\\ast', '\\ast', 'group1', '\\ast', 'font-size: 1.5em'),
@@ -356,46 +359,23 @@
                 new Symbol('\\coprod_{}{}', '\\coprod_{a}{n}', 'group2', '\\coprod_{a}{n}', '', 'true', 'fi-kmath-coprod-sub-a'),
                 new Symbol('\\coprod_{}^{}{}', '\\coprod_{a}^{b}{n}', 'group2', '\\coprod_{a}^{b}{n}', '', 'true', 'fi-kmath-coprod-sub-sup-a'),
                 new Symbol('\\int', '\\int{x}', 'group2', '\\int', '', '', 'fi-kmath-int-a'),
+                new AdvancedSymbol('\\int\\limits_{a}{x}','group2', '\\int\\limits_{a}{x}'),
+                new AdvancedSymbol('\\int\\limits_{a}^{b}{x}','group2', '\\int\\limits_{a}^{b}{x}'),
+                
                 new Symbol('\\int_{}{x}', '\\int_{a}{x}', 'group2', '\\int_{a}{x}', '', 'true', 'fi-kmath-int-sub-a'),
                 new Symbol('\\int_{}^{}{x}', '\\int_{a}^{b}{x}', 'group2', '\\int_{a}^{b}{x}', '', 'true', 'fi-kmath-int-sub-sup-a'),
 
-                // new Symbol('\\iint', '\\iint{x}', 'group2', '\\iint', 'font-size: 1.2em;'),      n a in basic
-                // new Symbol('\\iiint', '\\iiint{x}', 'group2', '\\iiint', 'font-size: 1.2em;'),   n a in basic
+                new AdvancedSymbol('\\iint','group2', '\\iint'),
+                new AdvancedSymbol('\\iint_{a}','group2', '\\iint_{a}'),
+                new AdvancedSymbol('\\iint\\limits_{a}','group2', '\\iint\\limits_{a}'),
+                new AdvancedSymbol('\\iiint','group2', '\\iiint'),
+                new AdvancedSymbol('\\iiint_{a}','group2', '\\iiint_{a}'),
+                new AdvancedSymbol('\\iiint\\limits_{a}','group2', '\\iiint\\limits_{a}'),
 
-                // new Symbol('∯', '∯', 'group5', '∯'),
-                // new Symbol('∰', '∰', 'group5', '∰'),
                 new Symbol('\\oint', '\\oint{x}', 'group2', '\\oint', '', '', 'fi-kmath-oint-a'),
+                new AdvancedSymbol('\\oint\\limits_{a}{x}','group2', '\\oint\\limits_{a}{x}'),
                 new Symbol('\\oint _{} {x}', '\\oint _{a} {x}', 'group2', '\\oint_{a}', '', 'true', 'fi-kmath-oint-sub-a'),
-                new Symbol('\\bigcap', '\\bigcap{n}', 'group2', '\\bigcap', '', '', 'fi-kmath-bigcap-a'),
-                new Symbol('\\bigcap _{} {x}', '\\bigcap _{a} {x}', 'group2', '\\bigcap{a}', '', 'true', 'fi-kmath-bigcap-sub-a'),
-                new Symbol('\\bigcap _{}^{} {x}', '\\bigcap _{a}^{b} {x}', 'group2', '\\bigcap_{a}^{b}', '', 'true', 'fi-kmath-bigcap-sub-sup-a'),
-                new Symbol('\\bigcup', '\\bigcup{x}', 'group2', '\\bigcup', '', '', 'fi-kmath-bigcup-a'),
-                new Symbol('\\bigcup _{} {x}', '\\bigcup _{a} {x}', 'group2', '\\bigcup_{a}', '', 'true', 'fi-kmath-bigcup-sub-a'),
-                new Symbol('\\bigcup _{}^{} {x}', '\\bigcup _{a}^{b} {x}', 'group2', '\\bigcup_{a}^{b}', '', 'true', 'fi-kmath-bigcup-sub-sup-a'),
-
-                // new Symbol('\\overset{}{rightarrow}', '\\overset{}{\\rightarrow}', 'group16', '\\overset{\\rightarrow}'),
-
-                new Symbol('\\lim_{x\\to\\infty}{}', '\\lim_{x\\to\\infty}{}', 'group6', 'lim', '', 'true'),
-                new Symbol('\\log_{}\\left(\\right)', '\\log_{}\\left(\\right)', 'group6', 'log', '', 'true'),
-                
-                // new Symbol('\\overset{a}{\\rightarrow}', '\\overset{a}{\\rightarrow}', 'group5', '\\overset{a}{rightarrow}'),
-                // new Symbol('\\dot{o}', '\\dot{o}', 'group5', '\\dot{o}'),
-                // new Symbol('\\grave{o}', '\\grave{o}', 'group5', '\\grave{o}'),
-                new Symbol('\\overrightarrow', '\\overrightarrow{}', 'group6', '\\overrightarrow{abc}', '', '', 'fi-kmath-over-right-arrow-a'),
-                new Symbol('\\overleftarrow', '\\overleftarrow{}', 'group6', '\\overleftarrow{abc}', '', '', 'fi-kmath-over-left-arrow-a'),
-                new Symbol('\\overline', '\\overline{}', 'group6', '\\overline{abc}', '', '', 'fi-kmath-over-line-a'),
-                // new Symbol('\\bar', '\\bar{}', 'group10', '\\bar{abc}', 'font-size: 0.95em;'),
-                // new Symbol('\\widehat', '\\widehat{}', 'group10', '\\widehat', 'font-size: 0.95em;'),
-                // new Symbol('\\widetilde', '\\widetilde{}', 'group10', '\\widetilde', 'font-size: 0.95em;'),
-                // new Symbol('\\breve', '\\breve{}', 'group10', '\\breve{abc}'),
-
-                new Symbol('\\N', '\\mathbb{N}', 'group3', '\\N', 'font-size: 1.3em'),
-                new Symbol('\\P', '\\mathbb{P}', 'group3', '\\P', 'font-size: 1.3em'),
-                new Symbol('\\Q', '\\mathbb{Q}', 'group3', '\\Q', 'font-size: 1.3em'),
-                new Symbol('\\R', '\\mathbb{R}', 'group3', '\\R', 'font-size: 1.3em'),
-                new Symbol('\\C', '\\mathbb{C}', 'group3', '\\C', 'font-size: 1.3em'),
-                new Symbol('\\H', '\\mathbb{H}', 'group3', '\\H', 'font-size: 1.3em'),
-
+               
                 new Matrix('matrix', 'fi-kmath-matrix-a', 'group4'),
                 new Matrix('bmatrix', 'fi-kmath-b-matrix-a', 'group4'),
                 new Matrix('pmatrix', 'fi-kmath-p-matrix-a', 'group4'),
@@ -403,6 +383,21 @@
                 new Matrix('smallmatrix', 'fi-kmath-small-matrix-a', 'group4'),
                 new Matrix('vmatrix', 'fi-kmath-v-matrix-a', 'group4'),
                 new Matrix('Vmatrix', 'fi-kmath-vv-matrix-a', 'group4'),
+
+                new AdvancedSymbol('\\dot{a}', 'group20', '\\dot{a}'),
+                new AdvancedSymbol('\\ddot{a}', 'group20', '\\ddot{a}'),
+                new AdvancedSymbol('\\dddot{a}', 'group20', '\\dddot{a}'),
+                new AdvancedSymbol('\\widehat{a}', 'group20', '\\widehat{a}'),
+                new AdvancedSymbol('\\tilde{a}', 'group20', '\\tilde{a}'),
+                new AdvancedSymbol('\\widetilde{a}', 'group20', '\\widetilde{a}'),
+                new AdvancedSymbol('\\breve{a}', 'group20', '\\breve{a}'),
+                new AdvancedSymbol('\\grave{a}', 'group20', '\\grave{a}'),
+                new AdvancedSymbol('\\vec{x}', 'group20', '\\vec{x}'),      // Symbols 
+
+                // new AdvancedSymbol('\\bar{abc}', 'group20', '\\bar{abc}'),  // switch后，变成overline
+                
+                // new Symbol('\\iint', '\\iint{x}', 'group2', '\\iint', 'font-size: 1.2em;'),      n a in basic
+                // new Symbol('\\iiint', '\\iiint{x}', 'group2', '\\iiint', 'font-size: 1.2em;'),   n a in basic
 
             ];
 
@@ -533,7 +528,15 @@
                 new Symbol('\\vdash', '\\vdash', 'group1', '\\vdash'),
                 new Symbol('\\dashv', '\\dashv', 'group1', '\\dashv'),
                 new Symbol('\\exists', '\\exists', 'group1', '\\exists'),
-                new Symbol('\\varnothing', '\\varnothing', 'group1', '\\varnothing')
+                new Symbol('\\varnothing', '\\varnothing', 'group1', '\\varnothing'),
+
+                new Symbol('\\bigcap', '\\bigcap{n}', 'group2', '\\bigcap', '', '', 'fi-kmath-bigcap-a'),
+                new Symbol('\\bigcap _{} {x}', '\\bigcap _{a} {x}', 'group2', '\\bigcap{a}', '', 'true', 'fi-kmath-bigcap-sub-a'),
+                new Symbol('\\bigcap _{}^{} {x}', '\\bigcap _{a}^{b} {x}', 'group2', '\\bigcap_{a}^{b}', '', 'true', 'fi-kmath-bigcap-sub-sup-a'),
+                new Symbol('\\bigcup', '\\bigcup{x}', 'group2', '\\bigcup', '', '', 'fi-kmath-bigcup-a'),
+                new Symbol('\\bigcup _{} {x}', '\\bigcup _{a} {x}', 'group2', '\\bigcup_{a}', '', 'true', 'fi-kmath-bigcup-sub-a'),
+                new Symbol('\\bigcup _{}^{} {x}', '\\bigcup _{a}^{b} {x}', 'group2', '\\bigcup_{a}^{b}', '', 'true', 'fi-kmath-bigcup-sub-sup-a'),
+
             ];
 
             this.Arrows = [
@@ -565,7 +568,29 @@
                 new Symbol('\\leftarrow', '\\leftarrow', 'group1', '\\leftarrow'),
                 new Symbol('\\Leftarrow', '\\Leftarrow', 'group1', '\\Leftarrow'),
                 new Symbol('\\leftrightarrow', '\\leftrightarrow', 'group1', '\\leftrightarrow'),
-                new Symbol('\\Leftrightarrow', '\\Leftrightarrow', 'group1', '\\Leftrightarrow')
+                new Symbol('\\Leftrightarrow', '\\Leftrightarrow', 'group1', '\\Leftrightarrow'),
+                new AdvancedSymbol('\\leadsto', 'group1', '\\leadsto'),
+                new AdvancedSymbol('\\xleftarrow{}', 'group1', '\\xleftarrow{}'),
+                new AdvancedSymbol('\\xleftarrow[]{}', 'group1', '\\xleftarrow[]{}'),
+                new AdvancedSymbol('\\xrightarrow{}', 'group1', '\\xrightarrow{}'),
+                new AdvancedSymbol('\\xrightarrow[]{}', 'group1', '\\xrightarrow[]{}'),
+                new AdvancedSymbol('\\circlearrowleft', 'group1', '\\circlearrowleft'),
+
+                new AdvancedSymbol('\\overset{}{}', 'group1', '\\overset{}{}'),
+                new AdvancedSymbol('\\underset{}{}', 'group1', '\\underset{}{}'),
+
+                new Symbol('\\overrightarrow', '\\overrightarrow{}', 'group6', '\\overrightarrow{abc}', '', '', 'fi-kmath-over-right-arrow-a'),
+                new Symbol('\\overleftarrow', '\\overleftarrow{}', 'group6', '\\overleftarrow{abc}', '', '', 'fi-kmath-over-left-arrow-a'),
+                new Symbol('\\overline', '\\overline{}', 'group6', '\\overline{abc}', '', '', 'fi-kmath-over-line-a'),
+
+
+                new AdvancedSymbol('\\overset{abc}{\\rightarrow}', 'group20', '\\overset{abc}{\\rightarrow}'), 
+                new AdvancedSymbol('\\overset{abc}{\\leftarrow}', 'group20', '\\overset{abc}{\\leftarrow}'), 
+                new AdvancedSymbol('\\overset{abc}{\\leftrightarrow}', 'group20', '\\overset{abc}{\\leftrightarrow}'), 
+                new AdvancedSymbol('\\underset{abc}{\\rightarrow}', 'group20', '\\underset{abc}{\\rightarrow}'), 
+                new AdvancedSymbol('\\underset{abc}{\\leftarrow}', 'group20', '\\underset{abc}{\\leftarrow}'), 
+                new AdvancedSymbol('\\underset{abc}{\\leftrightarrow}', 'group20', '\\underset{abc}{\\leftrightarrow}'), 
+                
             ];
 
             this.Delimiters = [
@@ -578,7 +603,14 @@
                 new Symbol('\\rceil', '\\rceil', 'group1', '\\rceil'),
                 new Symbol('\\slash', '\/', 'group1', '\\slash'),
                 new Symbol('\\lbrace', '\\lbrace', 'group1', '\\lbrace'),
-                new Symbol('\\rbrace', '\\rbrace', 'group1', '\\rbrace')
+                new Symbol('\\rbrace', '\\rbrace', 'group1', '\\rbrace'),
+                new AdvancedSymbol('\\langle', 'group2', '\\langle'),
+                new AdvancedSymbol('\\rangle', 'group2', '\\rangle'),
+                new AdvancedSymbol('\\overbrace{}', 'group2', '\\overbrace{}'),
+                new AdvancedSymbol('\\underbrace{}', 'group2', '\\underbrace{}'),
+
+               
+                
             ];
 
             this.Misc = [
@@ -611,6 +643,7 @@
                 new Symbol('A\^{\\prime}', 'A\^{\\prime}', 'group1', 'A\^{\\prime}', '', 'true', 'fi-kmath-sup-prime-a'),
                 new Symbol('A\^{\\prime\\prime}', 'A\^{\\prime\\prime}', 'group1', 'A\^{\\prime\\prime}', '', 'true', 'fi-kmath-sup-double-prime-a'),
                 new Symbol('A\^{\\prime\\prime\\prime}', 'A\^{\\prime\\prime\\prime}', 'group1', 'A\^{\\prime\\prime\\prime}', '', 'true', 'fi-kmath-sup-triple-prime-a'),
+                
                 new Symbol('\\circ', '\\circ', 'group1', '\\circ'),
                 new Symbol('\\bullet', '\\bullet', 'group1', '\\bullet'),
                 new Symbol('\\setminus', '\\setminus', 'group1', '\\setminus'),
@@ -620,13 +653,41 @@
                 new Symbol('\\Im', '\\Im', 'group1', '\\Im'),
                 new Symbol('\\partial', '\\partial', 'group1', '\\partial'),
                 new Symbol('\\infty', '\\infty', 'group1', '\\infty'),
+                new Symbol('\\&', '\\&', 'group1', '\\&', '', 'true'),
                 new Symbol('\\aleph', '\\aleph', 'group1', '\\aleph'),
                 new Symbol('\\deg', '\\deg', 'group1', '\\deg'),
+                
+                new Symbol('\\lim_{x\\to\\infty}{}', '\\lim_{x\\to\\infty}{}', 'group6', 'lim', '', 'true'),
+                new Symbol('\\log_{}\\left(\\right)', '\\log_{}\\left(\\right)', 'group6', 'log', '', 'true'),
+                
                 new Symbol('\\angle', '\\angle', 'group1', '\\angle'),
-                new Symbol('\\wp', '\\wp', 'group1', '\\wp')
+                new Symbol('\\wp', '\\wp', 'group1', '\\wp'),
+                new AdvancedSymbol('\\Join', 'group1', '\\Join'),
+                new AdvancedSymbol('\\S', 'group1', '\\S'),
+                new AdvancedSymbol('^{\\backprime}A', 'group1', '^{\\backprime}A'),
+                new AdvancedSymbol('\\maltese', 'group1', '\\maltese'),
+
+                new AdvancedSymbol('\\mathring{a}', 'group20', '\\mathring{a}'),
+
+
+                new Symbol('\\N', '\\mathbb{N}', 'group3', '\\N', 'font-size: 1.3em'),
+                new Symbol('\\P', '\\mathbb{P}', 'group3', '\\P', 'font-size: 1.3em'),
+                new Symbol('\\Q', '\\mathbb{Q}', 'group3', '\\Q', 'font-size: 1.3em'),
+                new Symbol('\\R', '\\mathbb{R}', 'group3', '\\R', 'font-size: 1.3em'),
+                new Symbol('\\C', '\\mathbb{C}', 'group3', '\\C', 'font-size: 1.3em'),
+                new Symbol('\\H', '\\mathbb{H}', 'group3', '\\H', 'font-size: 1.3em'),
+
+                new AdvancedSymbol('\\,', 'group2', '\\,'),
+                new AdvancedSymbol('\\:', 'group2', '\\:'),
+                new AdvancedSymbol('\\!', 'group2', '\\!'),
+                new AdvancedSymbol('\\ ', 'group2', '\\ '),
+                new Symbol('\\quad', '\\quad', 'group2', '\\quad'),
+                new Symbol('\\qquad', '\\qquad', 'group2', '\\qquad'),
             ];
             /**
              * render category
+             * @param {String} $category - eeeeeeeeeeeeeeeeee
+             * @return \{{{type}}\} {{description}}{{}}
              */
             this.init = function ($category) {
                 var str = '',
@@ -842,6 +903,32 @@
             this.iconClass = iconClass;
             this.createTemplate = function (isBasic) {
                 var tit = isBasic ? this.latex : this.advance;
+                var text, clazz, style = '';
+                if (this.iconClass) {
+                    text = '<span class="' + this.iconClass + '"></span>';
+                    clazz = 'directDisplay ' + this.group;
+                } else {
+                    text = this.text;
+                    clazz = this.group;
+                }
+                style = this.style ? this.style : ''
+
+                // var result = this.style ?
+                //     '<li class="' + clazz + '" title="' + tit + '" style="' + this.style + '" data-mq="' + this.needUseWrite + '">' + text + '</li>' :
+                //     '<li class="' + clazz + '" title="' + tit + '" data-mq="' + this.needUseWrite + '">' + text + '</li>';
+                // var result = '<li class="'+ this.group +'" title="'+ tit +'">' + this.advance + '</li>';
+
+                var result = '<li class="' + clazz + '" title="' + tit + '" style="' + style + '" data-mq="' + this.needUseWrite + '">' + text + '</li>';
+                return result;
+            }
+        }
+
+        function AdvancedSymbol(advance, group, text, iconClass) {
+            this.text = text;
+            this.advance = advance;
+            this.group = group;
+            this.iconClass = iconClass;
+            this.createTemplate = function (isBasic) {
                 var text, clazz = '';
                 if (this.iconClass) {
                     text = '<span class="' + this.iconClass + '"></span>';
@@ -850,11 +937,8 @@
                     text = this.text;
                     clazz = this.group;
                 }
-                var result = this.style ?
-                    '<li class="' + clazz + '" title="' + tit + '" style="' + this.style + '" data-mq="' + this.needUseWrite + '">' + text + '</li>' :
-                    '<li class="' + clazz + '" title="' + tit + '" data-mq="' + this.needUseWrite + '">' + text + '</li>';
-                // var result = '<li class="'+ this.group +'" title="'+ tit +'">' + this.advance + '</li>';
-                return result;
+                var result = '<li class="' + clazz + '" title="' + advance + '">' + text + '</li>';
+                return isBasic ? "" : result;
             }
         }
 
@@ -899,7 +983,7 @@
             "@font-face{font-family:MJXc-TeX-main-I;src:local('MathJax_Main Italic'),local('MathJax_Main-Italic')}@font-face{font-family:MJXc-TeX-main-Ix;src:local('MathJax_Main');font-style:italic}@font-face{font-family:MJXc-TeX-main-Iw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Main-Italic.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Italic.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Italic.otf') format('opentype')}@font-face{font-family:MJXc-TeX-main-R;src:local('MathJax_Main'),local('MathJax_Main-Regular')}@font-face{font-family:MJXc-TeX-main-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Main-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-math-I;src:local('MathJax_Math Italic'),local('MathJax_Math-Italic')}" +
             "@font-face{font-family:MJXc-TeX-math-Ix;src:local('MathJax_Math');font-style:italic}@font-face{font-family:MJXc-TeX-math-Iw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Math-Italic.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Math-Italic.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Math-Italic.otf') format('opentype')}@font-face{font-family:MJXc-TeX-size1-R;src:local('MathJax_Size1'),local('MathJax_Size1-Regular')}@font-face{font-family:MJXc-TeX-size1-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size1-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size1-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size1-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-size2-R;src:local('MathJax_Size2'),local('MathJax_Size2-Regular')}@font-face{font-family:MJXc-TeX-size2-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size2-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size2-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size2-Regular.otf') format('opentype')}" +
             "@font-face{font-family:MJXc-TeX-size3-R;src:local('MathJax_Size3'),local('MathJax_Size3-Regular')}@font-face{font-family:MJXc-TeX-size3-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size3-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size3-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size3-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-size4-R;src:local('MathJax_Size4'),local('MathJax_Size4-Regular')}@font-face{font-family:MJXc-TeX-size4-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size4-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size4-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size4-Regular.otf') format('opentype')}" +
-            ".kmath-contextmenu{font-family:Verdana;font-size:13px;position:absolute;margin:0;padding:0;list-style:none;background:#fff;border:1px solid #ccc;z-index:999999}.kmath-contextmenu li{padding:0 13px;line-height:40px;cursor:pointer}.kmath-contextmenu li:hover{background:#eefbee}";
+            ".mjx-chtml{border:1px solid rgba(255,255,255,0)}.mjx-chtml:focus{outline:0}.MathJax_CHTML_focused{border:1px solid rgba(77,144,254,0.9);border-radius:2px}.kmath-contextmenu{font-family:Verdana;font-size:13px;position:absolute;margin:0;padding:0;list-style:none;background:#fff;border:1px solid #ccc;z-index:999999}.kmath-contextmenu li{padding:0 13px;line-height:40px;cursor:pointer}.kmath-contextmenu li:hover{background:#eefbee}";
 
         //export KMath
         window.KMath = KMath;
@@ -923,7 +1007,8 @@ window.$$ = {
             Delimiters: "Delimiters",
             Misc: "Miscellaneous",
             CannotRenderinMQ: "This equation is not available in the Basic View.",
-            TypesetFailed: "Failed to typeset the entered equations. Try again later."
+            TypesetFailed: "Failed to typeset the entered equations. Try again later.",
+            CopyLaTeX: "Copy LaTeX"
         }
     }
 };
