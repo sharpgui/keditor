@@ -1,4 +1,65 @@
 
+.kmath-select {
+  position: relative;
+  z-index: 0;
+  margin: 4px 0 0 5px;
+  max-width: 160px;
+}
+.kmath-select-menu {
+  display: none;
+  padding: 0px;
+  margin: 0px;
+  min-width: 155px;
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  left: 0;
+  border: 1px solid #ccc;
+  z-index: 99999;
+}
+.open .kmath-select-menu {
+  display: inline-block;
+}
+.kmath-select-menuitem {
+  list-style: none;
+  border: 0;
+  padding: 0 6px;
+  margin-top: 1px;
+  margin-bottom: 2px;
+  line-height: 2;
+}
+.kmath-select-menuitem:hover {
+  background-color: #eefbee;
+}
+.kmath-select-menuitem.select {
+  background-color: #eefbee;
+}
+.kmath-select-input {
+  border: 1px solid #a9a9a9;
+  background-color: transparent;
+  width: 100%;
+  line-height: 2;
+  padding: 0 6px;
+  cursor: default;
+  box-sizing: border-box;
+}
+.kmath-select-div:after {
+  content: "";
+  border-width: 5px;
+  border-bottom-width: 0px;
+  border-color: transparent;
+  border-top-color: #000;
+  border-style: solid;
+  position: absolute;
+  top: 13px;
+  right: 10px;
+  z-index: -1;
+}
+.none {
+  display: none;
+}
+
+
 .customMatrix{ position: absolute; display: inline-block; min-width:230px; padding: 5px; background: #fff; border: 1px solid #9c9a9a; border-radius: 6px; z-index: 99999; font-family: Segoe UI;}
 .customMatrix .title{float: left; padding-bottom: 2px;}
 .closeCustomMatrix{float: right; cursor: pointer; }
@@ -74,6 +135,13 @@
 	border:2px solid #fff;
 	background-color:rgba(0,0,0,.3)
 }
+
+/* .kmath-fontsize select{ height: 26px; margin: 5px 0 0 5px; padding: 0 4px; line-height: 26px;  }
+.kmath-fontsize option{ height: 26px; padding: 0 4px; line-height: 26px;  }
+
+.kmath-fontsize span{ float: left; padding: 8px 0 0 2px;}
+.kmath-fontsize input.fontsize { float: left; width: 60px; height: 24px; line-height: 26px;}
+.kmath-fontsize button.plus, .kmath-fontsize button.minus { float: left; height: 26px; width: 24px; margin: 0 3px; line-height: 26px; text-align: center; font-size: 24px;} */
 
 .kmath-message{ position: absolute; bottom: 0.1em; left: 0.5em; font-size: 0.9em; font-family: Verdana;}
 /*height: 1.5em; line-height: 1.5em; padding-left: 5px; */

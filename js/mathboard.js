@@ -31,6 +31,7 @@
                 $mathEditor,
                 $mathSymbol,
                 $matrixTable,
+                $fontsize,
                 mathbbReg = /\\mathbb{([A-Z])}/g,
                 notinsetReg = /not\\(in|ni|subset|supset|subseteq|supseteq)/g,
                 supReg = /\^([^{])/g,
@@ -38,7 +39,13 @@
                 self = this,
                 defaultOptions = {
                     // message: ".kmath-message-" + uuid, 
-                    element: "#kmath-" + uuid
+                    element: "#kmath-" + uuid,
+                    fontsizeOptions: [
+                        {value: 100, key: 'initial size'},
+                        {value: 150, key: '1pt'},
+                        {value: 200, key: '2pt'},
+                        {value: 250, key: '3pt'}
+                    ]
                 };
             this.uuid = uuid++;
             this.mathField = null;//之后赋值因为现在DOM对象还没有生成
@@ -70,7 +77,10 @@
                 $basic_editarea = $(".basic-editarea", this.element);
                 $tobasic_btn = $(".tobasic", this.element);
                 $toadvance_btn = $(".toadvance", this.element);
+                $fontsize = $(".kmath-fontsize", this.element)
                 this.$message = $('.kmath-message', this.element);
+
+                this._initFontsize($fontsize);
 
                 // Switch basic \ advance view 
                 this.element.on("click", '.tobasic', function () {
@@ -211,7 +221,7 @@
                 latex = "$$" + latex + "$$";
                 dom = dom.find(".MathJax_CHTML");
                 // temporary enlarge the font size;
-                dom.css('font-size', '125%');
+                // dom.css('font-size', '125%');
                 styles = dom.attr('style');
                 // 阻止选中
                 dom.attr('style', styles + '-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; ');
@@ -236,12 +246,14 @@
                     $advance_editarea.hide(0);
                     $advance_view.hide(0);
                     $tobasic_btn.hide(0);
+                    $fontsize.hide(0);
                 } else {
                     $basic_editarea.hide(0);
                     $toadvance_btn.hide(0);
                     $advance_editarea.show(0);
                     $advance_view.show(0);
                     $tobasic_btn.show(0);
+                    $fontsize.show(0);
                 }
             }
 
@@ -271,6 +283,7 @@
                     '<button class="blue-link tobasic">' + $$.GCI18N.kMath.SwitchtoBasic + '</button>' +
                     '<button class="blue-link toadvance">' + $$.GCI18N.kMath.SwitchtoAdvance + '</button>' +
                     '<textarea class="advance-editarea"></textarea>' +          // S_N = \\displaystyle\\sqrt{ \\frac{1}{N} \\sum\^N_{i=1}{(x_i - \\bar{x})\^2} }
+                    '<div class="kmath-fontsize"></div>'+
                     '<div class="advance-view"></div>' +
                     // '<textarea id="basic-editarea"></textarea>'+
                     '<span class="basic-editarea"></span>' +
@@ -278,8 +291,61 @@
                     '</div>');
 
                 $mathEditor.html($view);
-
             }
+
+            this._initFontsize = function($ele){
+                $ele.kmathselect({
+                    selectedIndex: 0,
+                    items: this.options.fontsizeOptions,
+                    onchange: this.updateFontSize
+                });
+            }
+
+            this.updateFontSize = function(selection){
+                // console.log(selection);
+                MathJax.Hub.config.CommonHTML.scale = selection.value;
+                MathJax.Hub.Queue(["Rerender",MathJax.Hub])
+            }
+
+            // this._initFontsize01 = function($ele){
+            //     var $select = $('<select></select>');
+            //     this.options.fontsizeOptions.map(function(item){
+            //         if(item.scale && item.text.length){
+            //             $select.append('<option value="'+ item.value +'">'+ item.key +'</option>');
+            //         }
+            //     });
+
+            //     $ele.append($select);
+
+            //     $select.change(function(){
+            //         MathJax.Hub.config.CommonHTML.scale = this.value;
+            //         MathJax.Hub.Queue(["Rerender",MathJax.Hub])
+            //     });
+                
+            // }
+
+            // this._initFontsize00 = function($ele){
+            //     var str = '<span>Font Size: </span>'
+            //     str += '<button class="plus">+</button>';
+            //     str += '<input class="fontsize" value="1"/>';
+            //     str += '<button class="minus">-</button>';
+            //     $ele.append(str);
+
+            //     var input = $('.fontsize', $ele)[0];
+            //     $ele.on('click', '.plus', function(){
+            //         input.value = input.value < 20 ? Number(input.value) + 1 : input.value;
+            //         MathJax.Hub.config.CommonHTML.scale = input.value * 30;
+            //         MathJax.Hub.Queue(["Rerender",MathJax.Hub])
+            //     });
+            //     $ele.on('click', '.minus', function(){
+            //         input.value = Number(input.value) > 1 ? Number(input.value) - 1 : input.value;
+            //         MathJax.Hub.config.CommonHTML.scale = input.value * 30;
+            //         MathJax.Hub.Queue(["Rerender",MathJax.Hub])
+            //     });
+
+
+            // }
+
             this._typesetView = function (e) {
                 // $advance_view.html(checkBreaks($advance_editarea.val()));
                 if (e && e.type == 'paste') {
