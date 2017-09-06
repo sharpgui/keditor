@@ -40,16 +40,25 @@
                 defaultOptions = {
                     // message: ".kmath-message-" + uuid, 
                     element: "#kmath-" + uuid,
-                    fontsizeOptions: [
-                        {value: 100, key: 'initial size'},
-                        {value: 60, key: '60%'},
-                        {value: 80, key: '80%'},
-                        {value: 100, key: '100%'},
-                        {value: 120, key: '120%'},
-                        {value: 140, key: '140%'},
-                        {value: 160, key: '160%'},
-                        {value: 180, key: '180%'},
-                        {value: 200, key: '200%'}
+                    // fontsizeOptions: [
+                    //     {value: 100, key: 'initial size'},
+                    //     {value: 60, key: '60%'},
+                    //     {value: 80, key: '80%'},
+                    //     {value: 100, key: '100%'},
+                    //     {value: 120, key: '120%'},
+                    //     {value: 140, key: '140%'},
+                    //     {value: 160, key: '160%'},
+                    //     {value: 180, key: '180%'},
+                    //     {value: 200, key: '200%'}
+                    // ],
+                    fsoptions: [
+                        {value: 'xx-small', key: '1 (8pt)'},
+                        {value: 'x-small', key: '2 (10pt)'},
+                        {value: 'small', key: '3 (12pt)'},
+                        {value: 'medium', key: '4 (14pt)'},
+                        {value: 'large', key: '5 (18pt)'},
+                        {value: 'x-large', key: '6 (24pt)'},
+                        {value: 'xx-large', key: '7 (36pt)'},
                     ]
                 };
             this.uuid = uuid++;
@@ -227,6 +236,7 @@
                 dom = dom.find(".MathJax_CHTML");
                 // temporary enlarge the font size;
                 // dom.css('font-size', '125%');
+                dom.css('font-size', $advance_view.css('font-size'));
                 styles = dom.attr('style');
                 // 阻止选中
                 dom.attr('style', styles + '-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; ');
@@ -300,17 +310,26 @@
 
             this._initFontsize = function($ele){
                 $ele.kmathselect({
-                    selectedIndex: 0,
-                    items: this.options.fontsizeOptions,
-                    onchange: this.updateFontSize
+                    items: this.options.fsoptions,
+                    onchange: function(selection){
+                        $advance_view.css('font-size', selection.value);
+                    }
                 });
             }
 
-            this.updateFontSize = function(selection){
-                // console.log(selection);
-                MathJax.Hub.config.CommonHTML.scale = selection.value;
-                MathJax.Hub.Queue(["Rerender",MathJax.Hub])
-            }
+            // this._initFontsize01 = function($ele){
+            //     $ele.kmathselect({
+            //         selectedIndex: 0,
+            //         items: this.options.fontsizeOptions,
+            //         onchange: this.updateFontSize
+            //     });
+            // }
+
+            // this.updateFontSize01 = function(selection){
+            //     // console.log(selection);
+            //     MathJax.Hub.config.CommonHTML.scale = selection.value;
+            //     MathJax.Hub.Queue(["Rerender",MathJax.Hub])
+            // }
 
             // this._initFontsize01 = function($ele){
             //     var $select = $('<select></select>');
