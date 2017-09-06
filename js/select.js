@@ -1,3 +1,4 @@
+//+++++Select widget
     $.widget("aui.kmathselect", {
         version: "1.0",
         options: {
@@ -169,4 +170,3 @@
 
         }
     })
-
