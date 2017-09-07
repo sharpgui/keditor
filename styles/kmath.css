@@ -189,6 +189,150 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.fi-kmath-breve-a:before {
+  content: "\e921";
+}
+.fi-kmath-circle-arrow-left-a:before {
+  content: "\e922";
+}
+.fi-kmath-dddot-a:before {
+  content: "\e923";
+}
+.fi-kmath-ddot-a:before {
+  content: "\e924";
+}
+.fi-kmath-dot-a:before {
+  content: "\e925";
+}
+.fi-kmath-double-s-a:before {
+  content: "\e926";
+}
+.fi-kmath-grave-a:before {
+  content: "\e927";
+}
+.fi-kmath-iiint-a:before {
+  content: "\e928";
+}
+.fi-kmath-iiint-limits-sub-a:before {
+  content: "\e929";
+}
+.fi-kmath-iiint-sub-a:before {
+  content: "\e92a";
+}
+.fi-kmath-iint-a:before {
+  content: "\e92b";
+}
+.fi-kmath-iint-limits-sub-a:before {
+  content: "\e92c";
+}
+.fi-kmath-iint-sub-a:before {
+  content: "\e92d";
+}
+.fi-kmath-int-limits-sub-a:before {
+  content: "\e92e";
+}
+.fi-kmath-int-limits-sub-sup-a:before {
+  content: "\e92f";
+}
+.fi-kmath-join-a:before {
+  content: "\e930";
+}
+.fi-kmath-langle-a:before {
+  content: "\e931";
+}
+.fi-kmath-leadsto-a:before {
+  content: "\e932";
+}
+.fi-kmath-maltese-a:before {
+  content: "\e933";
+}
+.fi-kmath-mathring-a:before {
+  content: "\e934";
+}
+.fi-kmath-oint-limits-sub-a:before {
+  content: "\e935";
+}
+.fi-kmath-over-brace-a:before {
+  content: "\e936";
+}
+.fi-kmath-overset-a:before {
+  content: "\e937";
+}
+.fi-kmath-overset-left-arrow-a:before {
+  content: "\e938";
+}
+.fi-kmath-overset-left-right-arrow-a:before {
+  content: "\e93c";
+}
+.fi-kmath-overset-right-arrow-a:before {
+  content: "\e93d";
+}
+.fi-kmath-rangle-a:before {
+  content: "\e93e";
+}
+.fi-kmath-spacing3-a:before {
+  content: "\e93f";
+}
+.fi-kmath-spacing4-a:before {
+  content: "\e940";
+}
+.fi-kmath-spacing5-a:before {
+  content: "\e941";
+}
+.fi-kmath-spacing-minus3-a:before {
+  content: "\e942";
+}
+.fi-kmath-spacing-normal-a:before {
+  content: "\e943";
+}
+.fi-kmath-spacing-qquad-a:before {
+  content: "\e944";
+}
+.fi-kmath-spacing-quad-a:before {
+  content: "\e945";
+}
+.fi-kmath-sup-back-prime-a:before {
+  content: "\e946";
+}
+.fi-kmath-tilde-a:before {
+  content: "\e947";
+}
+.fi-kmath-under-brace-a:before {
+  content: "\e949";
+}
+.fi-kmath-underset-a:before {
+  content: "\e94a";
+}
+.fi-kmath-underset-left-arrow-a:before {
+  content: "\e94b";
+}
+.fi-kmath-underset-left-right-arrow-a:before {
+  content: "\e94c";
+}
+.fi-kmath-underset-right-arrow-a:before {
+  content: "\e94d";
+}
+.fi-kmath-vec-a:before {
+  content: "\e94e";
+}
+.fi-kmath-wide-hat-a:before {
+  content: "\e94f";
+}
+.fi-kmath-wide-tilde-a:before {
+  content: "\e950";
+}
+.fi-kmath-xleft-arrow-overset-a:before {
+  content: "\e951";
+}
+.fi-kmath-xleft-arrow-underset-a:before {
+  content: "\e952";
+}
+.fi-kmath-xright-arrow-overset-a:before {
+  content: "\e953";
+}
+.fi-kmath-xright-arrow-underset-a:before {
+  content: "\e954";
+}
 .fi-kmath-coprod-sub-a:before {
   content: "\e917";
 }

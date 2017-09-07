@@ -458,21 +458,21 @@
                 new Symbol('\\coprod_{}{}', '\\coprod_{a}{n}', 'group2', '\\coprod_{a}{n}', '', 'true', 'fi-kmath-coprod-sub-a'),
                 new Symbol('\\coprod_{}^{}{}', '\\coprod_{a}^{b}{n}', 'group2', '\\coprod_{a}^{b}{n}', '', 'true', 'fi-kmath-coprod-sub-sup-a'),
                 new Symbol('\\int', '\\int{x}', 'group2', '\\int', '', '', 'fi-kmath-int-a'),
-                new AdvancedSymbol('\\int\\limits_{a}{x}','group2', '\\int\\limits_{a}{x}'),
-                new AdvancedSymbol('\\int\\limits_{a}^{b}{x}','group2', '\\int\\limits_{a}^{b}{x}'),
+                new AdvancedSymbol('\\int\\limits_{a}{x}','group2', 'fi-kmath-int-limits-sub-a'),
+                new AdvancedSymbol('\\int\\limits_{a}^{b}{x}','group2', 'fi-kmath-int-limits-sub-sup-a'),
                 
                 new Symbol('\\int_{}{x}', '\\int_{a}{x}', 'group2', '\\int_{a}{x}', '', 'true', 'fi-kmath-int-sub-a'),
                 new Symbol('\\int_{}^{}{x}', '\\int_{a}^{b}{x}', 'group2', '\\int_{a}^{b}{x}', '', 'true', 'fi-kmath-int-sub-sup-a'),
 
-                new AdvancedSymbol('\\iint','group2', '\\iint'),
-                new AdvancedSymbol('\\iint_{a}','group2', '\\iint_{a}'),
-                new AdvancedSymbol('\\iint\\limits_{a}','group2', '\\iint\\limits_{a}'),
-                new AdvancedSymbol('\\iiint','group2', '\\iiint'),
-                new AdvancedSymbol('\\iiint_{a}','group2', '\\iiint_{a}'),
-                new AdvancedSymbol('\\iiint\\limits_{a}','group2', '\\iiint\\limits_{a}'),
+                new AdvancedSymbol('\\iint','group2', 'fi-kmath-iint-a'),
+                new AdvancedSymbol('\\iint_{a}','group2', 'fi-kmath-iint-sub-a'),
+                new AdvancedSymbol('\\iint\\limits_{a}','group2', 'fi-kmath-iint-limits-sub-a'),
+                new AdvancedSymbol('\\iiint','group2', 'fi-kmath-iiint-a'),
+                new AdvancedSymbol('\\iiint_{a}','group2', 'fi-kmath-iiint-sub-a'),
+                new AdvancedSymbol('\\iiint\\limits_{a}','group2', 'fi-kmath-iiint-limits-sub-a'),
 
                 new Symbol('\\oint', '\\oint{x}', 'group2', '\\oint', '', '', 'fi-kmath-oint-a'),
-                new AdvancedSymbol('\\oint\\limits_{a}{x}','group2', '\\oint\\limits_{a}{x}'),
+                new AdvancedSymbol('\\oint\\limits_{a}{x}','group2', 'fi-kmath-oint-limits-sub-a'),
                 new Symbol('\\oint _{} {x}', '\\oint _{a} {x}', 'group2', '\\oint_{a}', '', 'true', 'fi-kmath-oint-sub-a'),
                
                 new Matrix('matrix', 'fi-kmath-matrix-a', 'group4'),
@@ -483,15 +483,17 @@
                 new Matrix('vmatrix', 'fi-kmath-v-matrix-a', 'group4'),
                 new Matrix('Vmatrix', 'fi-kmath-vv-matrix-a', 'group4'),
 
-                new AdvancedSymbol('\\dot{a}', 'group20', '\\dot{a}'),
-                new AdvancedSymbol('\\ddot{a}', 'group20', '\\ddot{a}'),
-                new AdvancedSymbol('\\dddot{a}', 'group20', '\\dddot{a}'),
-                new AdvancedSymbol('\\widehat{a}', 'group20', '\\widehat{a}'),
-                new AdvancedSymbol('\\tilde{a}', 'group20', '\\tilde{a}'),
-                new AdvancedSymbol('\\widetilde{a}', 'group20', '\\widetilde{a}'),
-                new AdvancedSymbol('\\breve{a}', 'group20', '\\breve{a}'),
-                new AdvancedSymbol('\\grave{a}', 'group20', '\\grave{a}'),
-                new AdvancedSymbol('\\vec{x}', 'group20', '\\vec{x}'),      // Symbols 
+                new AdvancedSymbol('\\dot{a}', 'group20', 'fi-kmath-dot-a'),
+                new AdvancedSymbol('\\ddot{a}', 'group20', 'fi-kmath-ddot-a'),
+                new AdvancedSymbol('\\dddot{a}', 'group20', 'fi-kmath-dddot-a'),
+                new AdvancedSymbol('\\widehat{a}', 'group20', 'fi-kmath-wide-hat-a'),
+                new AdvancedSymbol('\\tilde{a}', 'group20', 'fi-kmath-tilde-a'),
+                new AdvancedSymbol('\\widetilde{a}', 'group20', 'fi-kmath-wide-tilde-a'),
+                new AdvancedSymbol('\\breve{a}', 'group20', 'fi-kmath-breve-a'),
+                new AdvancedSymbol('\\grave{a}', 'group20', 'fi-kmath-grave-a'),
+                new AdvancedSymbol('\\vec{a}', 'group20', 'fi-kmath-vec-a'),      // Symbols 
+                new AdvancedSymbol('\\mathring{a}', 'group20', 'fi-kmath-mathring-a'),
+                
 
                 // new AdvancedSymbol('\\bar{abc}', 'group20', '\\bar{abc}'),  // switch后，变成overline
                 
@@ -668,27 +670,27 @@
                 new Symbol('\\Leftarrow', '\\Leftarrow', 'group1', '\\Leftarrow'),
                 new Symbol('\\leftrightarrow', '\\leftrightarrow', 'group1', '\\leftrightarrow'),
                 new Symbol('\\Leftrightarrow', '\\Leftrightarrow', 'group1', '\\Leftrightarrow'),
-                new AdvancedSymbol('\\leadsto', 'group1', '\\leadsto'),
-                new AdvancedSymbol('\\xleftarrow{}', 'group1', '\\xleftarrow{}'),
-                new AdvancedSymbol('\\xleftarrow[]{}', 'group1', '\\xleftarrow[]{}'),
-                new AdvancedSymbol('\\xrightarrow{}', 'group1', '\\xrightarrow{}'),
-                new AdvancedSymbol('\\xrightarrow[]{}', 'group1', '\\xrightarrow[]{}'),
-                new AdvancedSymbol('\\circlearrowleft', 'group1', '\\circlearrowleft'),
+                new AdvancedSymbol('\\leadsto', 'group1', 'fi-kmath-leadsto-a'),
+                new AdvancedSymbol('\\xleftarrow{}', 'group1', 'fi-kmath-xleft-arrow-overset-a'),
+                new AdvancedSymbol('\\xleftarrow[]{}', 'group1', 'fi-kmath-xleft-arrow-underset-a'),
+                new AdvancedSymbol('\\xrightarrow{}', 'group1', 'fi-kmath-xright-arrow-overset-a'),
+                new AdvancedSymbol('\\xrightarrow[]{}', 'group1', 'fi-kmath-xright-arrow-underset-a'),
+                new AdvancedSymbol('\\circlearrowleft', 'group1', 'fi-kmath-circle-arrow-left-a'),
 
-                new AdvancedSymbol('\\overset{}{}', 'group1', '\\overset{}{}'),
-                new AdvancedSymbol('\\underset{}{}', 'group1', '\\underset{}{}'),
+                new AdvancedSymbol('\\overset{}{}', 'group1', 'fi-kmath-overset-a'),
+                new AdvancedSymbol('\\underset{}{}', 'group1', 'fi-kmath-underset-a'),
 
                 new Symbol('\\overrightarrow', '\\overrightarrow{}', 'group6', '\\overrightarrow{abc}', '', '', 'fi-kmath-over-right-arrow-a'),
                 new Symbol('\\overleftarrow', '\\overleftarrow{}', 'group6', '\\overleftarrow{abc}', '', '', 'fi-kmath-over-left-arrow-a'),
                 new Symbol('\\overline', '\\overline{}', 'group6', '\\overline{abc}', '', '', 'fi-kmath-over-line-a'),
 
 
-                new AdvancedSymbol('\\overset{abc}{\\rightarrow}', 'group20', '\\overset{abc}{\\rightarrow}'), 
-                new AdvancedSymbol('\\overset{abc}{\\leftarrow}', 'group20', '\\overset{abc}{\\leftarrow}'), 
-                new AdvancedSymbol('\\overset{abc}{\\leftrightarrow}', 'group20', '\\overset{abc}{\\leftrightarrow}'), 
-                new AdvancedSymbol('\\underset{abc}{\\rightarrow}', 'group20', '\\underset{abc}{\\rightarrow}'), 
-                new AdvancedSymbol('\\underset{abc}{\\leftarrow}', 'group20', '\\underset{abc}{\\leftarrow}'), 
-                new AdvancedSymbol('\\underset{abc}{\\leftrightarrow}', 'group20', '\\underset{abc}{\\leftrightarrow}'), 
+                new AdvancedSymbol('\\overset{abc}{\\rightarrow}', 'group20', 'fi-kmath-overset-right-arrow-a'), 
+                new AdvancedSymbol('\\overset{abc}{\\leftarrow}', 'group20', 'fi-kmath-overset-left-arrow-a'), 
+                new AdvancedSymbol('\\overset{abc}{\\leftrightarrow}', 'group20', 'fi-kmath-overset-left-right-arrow-a'), 
+                new AdvancedSymbol('\\underset{abc}{\\rightarrow}', 'group20', 'fi-kmath-underset-right-arrow-a'), 
+                new AdvancedSymbol('\\underset{abc}{\\leftarrow}', 'group20', 'fi-kmath-underset-left-arrow-a'), 
+                new AdvancedSymbol('\\underset{abc}{\\leftrightarrow}', 'group20', 'fi-kmath-underset-left-right-arrow-a'), 
                 
             ];
 
@@ -703,10 +705,10 @@
                 new Symbol('\\slash', '\/', 'group1', '\\slash'),
                 new Symbol('\\lbrace', '\\lbrace', 'group1', '\\lbrace'),
                 new Symbol('\\rbrace', '\\rbrace', 'group1', '\\rbrace'),
-                new AdvancedSymbol('\\langle', 'group2', '\\langle'),
-                new AdvancedSymbol('\\rangle', 'group2', '\\rangle'),
-                new AdvancedSymbol('\\overbrace{}', 'group2', '\\overbrace{}'),
-                new AdvancedSymbol('\\underbrace{}', 'group2', '\\underbrace{}'),
+                new AdvancedSymbol('\\langle', 'group2', 'fi-kmath-langle-a'),
+                new AdvancedSymbol('\\rangle', 'group2', 'fi-kmath-rangle-a'),
+                new AdvancedSymbol('\\overbrace{}', 'group2', 'fi-kmath-over-brace-a'),
+                new AdvancedSymbol('\\underbrace{}', 'group2', 'fi-kmath-under-brace-a'),
 
                
                 
@@ -761,12 +763,11 @@
                 
                 new Symbol('\\angle', '\\angle', 'group1', '\\angle'),
                 new Symbol('\\wp', '\\wp', 'group1', '\\wp'),
-                new AdvancedSymbol('\\Join', 'group1', '\\Join'),
-                new AdvancedSymbol('\\S', 'group1', '\\S'),
-                new AdvancedSymbol('^{\\backprime}A', 'group1', '^{\\backprime}A'),
-                new AdvancedSymbol('\\maltese', 'group1', '\\maltese'),
+                new AdvancedSymbol('\\Join', 'group1', 'fi-kmath-join-a'),
+                new AdvancedSymbol('\\S', 'group1', 'fi-kmath-double-s-a'),
+                new AdvancedSymbol('^{\\backprime}A', 'group1', 'fi-kmath-sup-back-prime-a'),
+                new AdvancedSymbol('\\maltese', 'group1', 'fi-kmath-maltese-a'),
 
-                new AdvancedSymbol('\\mathring{a}', 'group20', '\\mathring{a}'),
 
 
                 new Symbol('\\N', '\\mathbb{N}', 'group3', '\\N', 'font-size: 1.3em'),
@@ -776,12 +777,13 @@
                 new Symbol('\\C', '\\mathbb{C}', 'group3', '\\C', 'font-size: 1.3em'),
                 new Symbol('\\H', '\\mathbb{H}', 'group3', '\\H', 'font-size: 1.3em'),
 
-                new AdvancedSymbol('\\,', 'group2', '\\,'),
-                new AdvancedSymbol('\\:', 'group2', '\\:'),
-                new AdvancedSymbol('\\!', 'group2', '\\!'),
-                new AdvancedSymbol('\\ ', 'group2', '\\ '),
-                new Symbol('\\quad', '\\quad', 'group2', '\\quad'),
-                new Symbol('\\qquad', '\\qquad', 'group2', '\\qquad'),
+                new AdvancedSymbol('\\,', 'group2', 'fi-kmath-spacing3-a'),
+                new AdvancedSymbol('\\:', 'group2', 'fi-kmath-spacing4-a'),
+                new AdvancedSymbol('\\;', 'group2', 'fi-kmath-spacing5-a'),
+                new AdvancedSymbol('\\!', 'group2', 'fi-kmath-spacing-minus3-a'),
+                new AdvancedSymbol('\\ ', 'group2', 'fi-kmath-spacing-normal-a'),
+                new Symbol('\\quad', '\\quad', 'group2', '\\quad', '', '', 'fi-kmath-spacing-quad-a'),
+                new Symbol('\\qquad', '\\qquad', 'group2', '\\qquad', '', '', 'fi-kmath-spacing-qquad-a'),
             ];
             /**
              * render category
@@ -1020,21 +1022,12 @@
             }
         }
 
-        function AdvancedSymbol(advance, group, text, iconClass) {
-            this.text = text;
+        function AdvancedSymbol(advance, group, iconClass) {
             this.advance = advance;
             this.group = group;
             this.iconClass = iconClass;
             this.createTemplate = function (isBasic) {
-                var text, clazz = '';
-                if (this.iconClass) {
-                    text = '<span class="' + this.iconClass + '"></span>';
-                    clazz = 'directDisplay ' + this.group;
-                } else {
-                    text = this.text;
-                    clazz = this.group;
-                }
-                var result = '<li class="' + clazz + '" title="' + advance + '">' + text + '</li>';
+                var result = '<li class="directDisplay ' + this.group + '" title="' + advance + '"><span class="' + this.iconClass + '"></span></li>';
                 return isBasic ? "" : result;
             }
         }
