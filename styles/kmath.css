@@ -189,6 +189,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.fi-kmath-frac-a:before {
+  content: "\e939";
+}
+.fi-kmath-tiny-frac-a:before {
+  content: "\e93a";
+}
 .fi-kmath-breve-a:before {
   content: "\e921";
 }

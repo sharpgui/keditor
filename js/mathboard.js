@@ -427,8 +427,8 @@
 
                 new Symbol('\\subscript', '_{sub}', 'group0', '_{sub}', 'font-size: 0.9em;'),
                 new Symbol('\\supscript', '\^{sup}', 'group0', '\^{sup}', 'font-size: 0.9em;'),
-                new Symbol('\\frac', '\\frac{n}{m}', 'group0', '\\frac{n}{m}', 'line-height: normal; '),
-                new AdvancedSymbol('\\tfrac{n}{m}','group20', '\\tfrac{n}{m}'),
+                new Symbol('\\frac', '\\frac{n}{m}', 'group0', '\\frac{n}{m}', '', '', 'fi-kmath-frac-a'),
+                new AdvancedSymbol('\\tfrac{n}{m}','group0', 'fi-kmath-tiny-frac-a'),
                 new Symbol('\\sqrt', '\\sqrt{x}', 'group0', '\\sqrt{x}', 'line-height: normal; padding-top: 5px;'),
                 new Symbol('\\nthroot', '\\sqrt[n]{x}', 'group0', '\\sqrt[n]{x}', 'line-height: normal; text-align: left'),
                 new Symbol('\\binomial', '\\binom{n}{m}', 'group0', '\\binom{n}{m}', 'line-height: normal; text-align: left; font-size: 1em; padding-left: 3px;'),
