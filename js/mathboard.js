@@ -52,7 +52,7 @@
                     //     {value: 200, key: '200%'}
                     // ],
                     fsoptions: [
-                        {value: '', key: '(inherited size)'},
+                        {value: '125%', key: '(inherited size)'},
                         {value: 'xx-small', key: '1 (8pt)'},
                         {value: 'x-small', key: '2 (10pt)'},
                         {value: 'small', key: '3 (12pt)'},
