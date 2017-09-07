@@ -381,6 +381,7 @@
 
             this._typesetView = function (e) {
                 // $advance_view.html(checkBreaks($advance_editarea.val()));
+                self.$message && self.$message.hide();
                 if (e && e.type == 'paste') {
                     setTimeout(self._typesetView, 100);
                 }
@@ -395,7 +396,6 @@
                     $advance_view.css('visibility', 'visible');
                 });
                 // MathJax.Hub.Typeset($advance_view[0]);
-                self.$message && self.$message.hide();
             }
         }
 
