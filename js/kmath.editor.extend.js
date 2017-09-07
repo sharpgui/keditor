@@ -44,7 +44,7 @@
                 flag = false;
             }
             if (!editor.flag) {
-                KMath.addStyleNode(KMath.mathjaxcss, editor.document)
+                // KMath.addStyleNode(KMath.mathjaxcss, editor.document)
 
                 editor.flag = true;
 
@@ -99,8 +99,7 @@
             $kmath_window = $("#kmath-wrapper-" + mathEditor.uuid);
             $kmath_window.kendoWindow({
                 width: 850,
-                minHeight: 595,
-                maxHeight: 620,
+                height: 635,
                 visible: false,
                 actions: ['close'],
                 title: $$.GCI18N.kMath.Formulas,

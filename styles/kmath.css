@@ -98,7 +98,7 @@
 
 /* Edit Area */
 .advance-editarea{ display: block; overflow: auto; width: 98%; margin: 0 auto; height: 120px; }
-.advance-view{ overflow: auto; margin: 0 auto; height: 143px; }
+.advance-view{ overflow: auto; margin: 0 auto; height: 144px; }
 .advance-editarea::-webkit-scrollbar{
     -webkit-appearance:none;
 	width:10px;
@@ -120,7 +120,7 @@
 	background-color:rgba(0,0,0,.3)
 }
 .basic-editarea, .basic-editarea .mq-root-block, .basic-editarea .mq-math-mode .mq-root-block{ overflow: auto; width: auto;}
-.basic-editarea{ clear: both; display: block; width: 99%; margin: 0 auto; height: 267px;}
+.basic-editarea{ clear: both; display: block; width: 99%; margin: 0 auto; height: 315px;}
 
 .basic-editarea::-webkit-scrollbar, 
 .basic-editarea .mq-root-block::-webkit-scrollbar, 
@@ -144,7 +144,7 @@
 .kmath-fontsize input.fontsize { float: left; width: 60px; height: 24px; line-height: 26px;}
 .kmath-fontsize button.plus, .kmath-fontsize button.minus { float: left; height: 26px; width: 24px; margin: 0 3px; line-height: 26px; text-align: center; font-size: 24px;} */
 
-.kmath-message{ position: absolute; bottom: 0.1em; left: 0.5em; font-size: 0.9em; font-family: Verdana;}
+.kmath-message{margin: 0 0 10px 5px; font-size: 0.9em; font-family: Verdana;}
 /*height: 1.5em; line-height: 1.5em; padding-left: 5px; */
 .blue-link{ margin: 10px 0; float: right; border: none; background: none; color: #3a9be5; cursor: pointer;}
 .blue-link:hover{ text-decoration: underline;}
