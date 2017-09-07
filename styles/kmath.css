@@ -153,8 +153,8 @@
 .math-symbol .mq-empty{ display: none!important;}
 .math-symbol big{ font-size: 1.3em!important;}
 
-.mjx-chtml{border: 1px solid rgba(255, 255, 255, 0);} .mjx-chtml:focus{outline: 0;} 
-.MathJax_CHTML_focused{ border: 1px solid rgba(77, 144, 254, 0.9); border-radius: 2px;} 
+.mjx-chtml.MathJax_CHTML{border: 1px solid rgba(255, 255, 255, 0);} .mjx-chtml:focus{outline: 0;} 
+.mjx-chtml.MathJax_CHTML_focused{ border: 1px solid rgba(77, 144, 254, 0.9); border-radius: 2px;} 
 
 .kmath-contextmenu{ font-family: Verdana; font-size: 13px; position: absolute; margin: 0; padding: 0; 
   /* user-select: none; -moz-user-select: none; -ms-user-select: none; -webkit-user-select: none; */
