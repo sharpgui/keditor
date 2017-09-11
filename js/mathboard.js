@@ -40,17 +40,6 @@
                 defaultOptions = {
                     // message: ".kmath-message-" + uuid, 
                     element: "#kmath-" + uuid,
-                    // fontsizeOptions: [
-                    //     {value: 100, key: 'initial size'},
-                    //     {value: 60, key: '60%'},
-                    //     {value: 80, key: '80%'},
-                    //     {value: 100, key: '100%'},
-                    //     {value: 120, key: '120%'},
-                    //     {value: 140, key: '140%'},
-                    //     {value: 160, key: '160%'},
-                    //     {value: 180, key: '180%'},
-                    //     {value: 200, key: '200%'}
-                    // ],
                     fsoptions: [
                         {value: '125%', key: '(inherited size)'},
                         {value: 'xx-small', key: '1 (8pt)'},
@@ -94,7 +83,7 @@
                 $basic_editarea = $(".basic-editarea", this.element);
                 $tobasic_btn = $(".tobasic", this.element);
                 $toadvance_btn = $(".toadvance", this.element);
-                $fontsize = $(".kmath-fontsize", this.element)
+                $fontsize = $(".kmath-fontsize", this.element);
                 this.$message = $('.kmath-message', $(this.element).parent());
 
                 this._initFontsize($fontsize);
@@ -305,6 +294,7 @@
                     '<div style="padding-bottom: 3px; height: 2.2em; border-bottom: 1px solid rgb(222, 222, 222);">'+
                         '<div style="line-height: 2.2em; padding-left: 5px; float: left;">Formula: </div>'+
                         '<div style="float: right;" class="kmath-fontsize"></div>'+
+                        // '<div style="float: right;" class="kmath-alignright kmath-btn">left</div>'+
                     '</div>'+
                     '<div class="advance-view" style="visibility: visible;"></div>' +
                     '</div>'+

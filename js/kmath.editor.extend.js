@@ -48,6 +48,15 @@
 
                 editor.flag = true;
 
+                // remove event handler before register new one 
+                $(editor.body).off('dblclick', '.MathJax_CHTML');
+                $(editor.body).off('focus', '.MathJax_CHTML');
+                $(editor.body).off('blur', '.MathJax_CHTML');
+
+// MathJax.Hub.Config({
+//     displayAlign: "left"
+// });
+
                 // 双击 .MathJax_CHTML 进入公式编辑
                 // 通过 .MathJax_CHTML_focused 标记选中的公式
                 // e.data.currentEditor 为双击事件中更新全局变量 editor
