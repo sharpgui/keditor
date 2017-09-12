@@ -242,6 +242,14 @@
                 return dom[0];
                 // }
             }
+            this.checkEquation = function(){
+                var tag = $advance_view.children('script');
+                if(tag.length && tag.get(0).MathJax.elementJax.texError){
+                    self.$message.text($$.GCI18N.kMath.CannotRenderinMQ + ' textError');
+                    self.$message.show(100);
+                    return true;
+                }
+            }
             /**
              * 唯一改变this.isBasic的method
              */

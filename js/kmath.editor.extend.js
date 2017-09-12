@@ -121,6 +121,11 @@
                 $kmath_window.data("kendoWindow").close();
             });
             $kmath_window.find('.math-insert').click(function () {
+
+                if(mathEditor.checkEquation()){
+                    return;
+                }
+
                 // IE：此时editor已经失去焦点，所以不能得到range。
                 // var range = editor.getRange();
                 // range.deleteContents();
