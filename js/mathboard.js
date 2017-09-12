@@ -41,14 +41,14 @@
                     // message: ".kmath-message-" + uuid, 
                     element: "#kmath-" + uuid,
                     fsoptions: [
-                        {value: '125%', key: '(inherited size)'},
-                        {value: 'xx-small', key: '1 (8pt)'},
-                        {value: 'x-small', key: '2 (10pt)'},
-                        {value: 'small', key: '3 (12pt)'},
-                        {value: 'medium', key: '4 (14pt)'},
-                        {value: 'large', key: '5 (18pt)'},
-                        {value: 'x-large', key: '6 (24pt)'},
-                        {value: 'xx-large', key: '7 (36pt)'},
+                        { value: '125%', key: '(inherited size)' },
+                        { value: 'xx-small', key: '1 (8pt)' },
+                        { value: 'x-small', key: '2 (10pt)' },
+                        { value: 'small', key: '3 (12pt)' },
+                        { value: 'medium', key: '4 (14pt)' },
+                        { value: 'large', key: '5 (18pt)' },
+                        { value: 'x-large', key: '6 (24pt)' },
+                        { value: 'xx-large', key: '7 (36pt)' },
                     ]
                 };
             this.uuid = uuid++;
@@ -66,7 +66,7 @@
                 this.element.html('<ul class="math-category"></ul>' +
                     '<ul class="math-symbol"></ul>' +
                     '<div class="math-editor"></div>');
-                    
+
                 $(this.element).parent().append('<div class="kmath-message"></div>');
                 // this.$message = $(this.options.message);
 
@@ -228,7 +228,7 @@
                 dom = dom.find(".MathJax_CHTML");
                 // temporary enlarge the font size;
                 // dom.css('font-size', '125%');
-                dom.css('font-size',  $advance_view[0].style.fontSize);
+                dom.css('font-size', $advance_view[0].style.fontSize);
                 styles = dom.attr('style');
                 // 阻止选中
                 dom.attr('style', styles + '-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; ');
@@ -290,14 +290,13 @@
                     '<button class="blue-link tobasic">' + $$.GCI18N.kMath.SwitchtoBasic + '</button>' +
                     '<button class="blue-link toadvance">' + $$.GCI18N.kMath.SwitchtoAdvance + '</button>' +
                     '<textarea class="advance-editarea"></textarea>' +          // S_N = \\displaystyle\\sqrt{ \\frac{1}{N} \\sum\^N_{i=1}{(x_i - \\bar{x})\^2} }
-                    '<div style="background: #f3f3f3; padding-right: 5px; margin: 6px 5px 0; box-sizing: border-box; border: 1px solid rgb(222, 222, 222); ">'+
-                    '<div style="padding-bottom: 3px; height: 2.2em; border-bottom: 1px solid rgb(222, 222, 222);">'+
-                        '<div style="line-height: 2.2em; padding-left: 5px; float: left;">Formula: </div>'+
-                        '<div style="float: right;" class="kmath-fontsize"></div>'+
-                        // '<div style="float: right;" class="kmath-alignright kmath-btn">left</div>'+
-                    '</div>'+
+                    '<div style="background: #f3f3f3; padding-right: 5px; margin: 6px 2px 0; box-sizing: border-box; border: 1px solid rgb(222, 222, 222); ">' +
+                    '<div style="padding-bottom: 3px; height: 2.2em; border-bottom: 1px solid rgb(222, 222, 222);">' +
+                        '<div style="line-height: 2.2em; padding-left: 5px; float: left;">Formula: </div>' +
+                        '<div style="float: right;" class="kmath-fontsize"></div>' +
+                    '</div>' +
                     '<div class="advance-view" style="visibility: visible;"></div>' +
-                    '</div>'+
+                    '</div>' +
                     // '<textarea id="basic-editarea"></textarea>'+
                     '<span class="basic-editarea"></span>' +
                     // '<div class="kmath-message"></div>' +
@@ -306,11 +305,11 @@
                 $mathEditor.html($view);
             }
 
-            this._initFontsize = function($ele){
+            this._initFontsize = function ($ele) {
                 $ele.kmathselect({
                     selectedIndex: 0,
                     items: this.options.fsoptions,
-                    onchange: function(selection){
+                    onchange: function (selection) {
                         $advance_view.css('font-size', selection.value);
                     }
                 });
@@ -344,7 +343,7 @@
             //         MathJax.Hub.config.CommonHTML.scale = this.value;
             //         MathJax.Hub.Queue(["Rerender",MathJax.Hub])
             //     });
-                
+
             // }
 
             // this._initFontsize00 = function($ele){
@@ -418,9 +417,9 @@
                 new Symbol('\\subscript', '_{sub}', 'group0', '_{sub}', 'font-size: 0.9em;'),
                 new Symbol('\\supscript', '\^{sup}', 'group0', '\^{sup}', 'font-size: 0.9em;'),
                 new Symbol('\\frac', '\\frac{n}{m}', 'group0', '\\frac{n}{m}', '', '', 'fi-kmath-frac-a'),
-                new AdvancedSymbol('\\tfrac{n}{m}','group0', 'fi-kmath-tiny-frac-a'),
-                new AdvancedSymbol('{n}/{m}','group0', 'fi-kmath-tilted-frac-a'),
-                new AdvancedSymbol('\\small{{n}/{m}}\\normalsize','group0', 'fi-kmath-tiny-tilted-frac-a'),
+                new AdvancedSymbol('\\tfrac{n}{m}', 'group0', 'fi-kmath-tiny-frac-a'),
+                new AdvancedSymbol('{n}/{m}', 'group0', 'fi-kmath-tilted-frac-a'),
+                new AdvancedSymbol('\\small{{n}/{m}}\\normalsize', 'group0', 'fi-kmath-tiny-tilted-frac-a'),
                 new Symbol('\\sqrt', '\\sqrt{x}', 'group0', '\\sqrt{x}', 'line-height: normal; padding-top: 5px;'),
                 new Symbol('\\nthroot', '\\sqrt[n]{x}', 'group0', '\\sqrt[n]{x}', 'line-height: normal; text-align: left'),
                 new Symbol('\\binomial', '\\binom{n}{m}', 'group0', '\\binom{n}{m}', 'line-height: normal; text-align: left; font-size: 1em; padding-left: 3px;'),
@@ -434,7 +433,7 @@
                 new Symbol('\\cdot', '\\cdot', 'group1', '\\cdot', 'font-size: 1.5em'),
                 new Symbol('=', '=', 'group1', '=', 'font-size: 1.5em'),
                 new Symbol('\\doteq', '\\doteq', 'group1', '\\doteq', 'font-size: 1.5em'),
-                
+
                 new Symbol('\\times', '\\times', 'group1', '\\times', 'font-size: 1.5em'),
                 new Symbol('\\div', '\\div', 'group1', '\\div', 'font-size: 1.5em'),
                 new Symbol('\\ast', '\\ast', 'group1', '\\ast', 'font-size: 1.5em'),
@@ -450,23 +449,23 @@
                 new Symbol('\\coprod_{}{}', '\\coprod_{a}{n}', 'group2', '\\coprod_{a}{n}', '', 'true', 'fi-kmath-coprod-sub-a'),
                 new Symbol('\\coprod_{}^{}{}', '\\coprod_{a}^{b}{n}', 'group2', '\\coprod_{a}^{b}{n}', '', 'true', 'fi-kmath-coprod-sub-sup-a'),
                 new Symbol('\\int', '\\int{x}', 'group2', '\\int', '', '', 'fi-kmath-int-a'),
-                new AdvancedSymbol('\\int\\limits_{a}{x}','group2', 'fi-kmath-int-limits-sub-a'),
-                new AdvancedSymbol('\\int\\limits_{a}^{b}{x}','group2', 'fi-kmath-int-limits-sub-sup-a'),
-                
+                new AdvancedSymbol('\\int\\limits_{a}{x}', 'group2', 'fi-kmath-int-limits-sub-a'),
+                new AdvancedSymbol('\\int\\limits_{a}^{b}{x}', 'group2', 'fi-kmath-int-limits-sub-sup-a'),
+
                 new Symbol('\\int_{}{x}', '\\int_{a}{x}', 'group2', '\\int_{a}{x}', '', 'true', 'fi-kmath-int-sub-a'),
                 new Symbol('\\int_{}^{}{x}', '\\int_{a}^{b}{x}', 'group2', '\\int_{a}^{b}{x}', '', 'true', 'fi-kmath-int-sub-sup-a'),
 
-                new AdvancedSymbol('\\iint','group2', 'fi-kmath-iint-a'),
-                new AdvancedSymbol('\\iint_{a}','group2', 'fi-kmath-iint-sub-a'),
-                new AdvancedSymbol('\\iint\\limits_{a}','group2', 'fi-kmath-iint-limits-sub-a'),
-                new AdvancedSymbol('\\iiint','group2', 'fi-kmath-iiint-a'),
-                new AdvancedSymbol('\\iiint_{a}','group2', 'fi-kmath-iiint-sub-a'),
-                new AdvancedSymbol('\\iiint\\limits_{a}','group2', 'fi-kmath-iiint-limits-sub-a'),
+                new AdvancedSymbol('\\iint', 'group2', 'fi-kmath-iint-a'),
+                new AdvancedSymbol('\\iint_{a}', 'group2', 'fi-kmath-iint-sub-a'),
+                new AdvancedSymbol('\\iint\\limits_{a}', 'group2', 'fi-kmath-iint-limits-sub-a'),
+                new AdvancedSymbol('\\iiint', 'group2', 'fi-kmath-iiint-a'),
+                new AdvancedSymbol('\\iiint_{a}', 'group2', 'fi-kmath-iiint-sub-a'),
+                new AdvancedSymbol('\\iiint\\limits_{a}', 'group2', 'fi-kmath-iiint-limits-sub-a'),
 
                 new Symbol('\\oint', '\\oint{x}', 'group2', '\\oint', '', '', 'fi-kmath-oint-a'),
-                new AdvancedSymbol('\\oint\\limits_{a}{x}','group2', 'fi-kmath-oint-limits-sub-a'),
+                new AdvancedSymbol('\\oint\\limits_{a}{x}', 'group2', 'fi-kmath-oint-limits-sub-a'),
                 new Symbol('\\oint _{} {x}', '\\oint _{a} {x}', 'group2', '\\oint_{a}', '', 'true', 'fi-kmath-oint-sub-a'),
-               
+
                 new Matrix('matrix', 'fi-kmath-matrix-a', 'group4'),
                 new Matrix('bmatrix', 'fi-kmath-b-matrix-a', 'group4'),
                 new Matrix('pmatrix', 'fi-kmath-p-matrix-a', 'group4'),
@@ -485,10 +484,10 @@
                 new AdvancedSymbol('\\grave{a}', 'group20', 'fi-kmath-grave-a'),
                 new AdvancedSymbol('\\vec{a}', 'group20', 'fi-kmath-vec-a'),      // Symbols 
                 new AdvancedSymbol('\\mathring{a}', 'group20', 'fi-kmath-mathring-a'),
-                
+
 
                 // new AdvancedSymbol('\\bar{abc}', 'group20', '\\bar{abc}'),  // switch后，变成overline
-                
+
                 // new Symbol('\\iint', '\\iint{x}', 'group2', '\\iint', 'font-size: 1.2em;'),      n a in basic
                 // new Symbol('\\iiint', '\\iiint{x}', 'group2', '\\iiint', 'font-size: 1.2em;'),   n a in basic
 
@@ -678,13 +677,13 @@
                 new Symbol('\\overline', '\\overline{}', 'group6', '\\overline{abc}', '', '', 'fi-kmath-over-line-a'),
 
 
-                new AdvancedSymbol('\\overset{abc}{\\rightarrow}', 'group20', 'fi-kmath-overset-right-arrow-a'), 
-                new AdvancedSymbol('\\overset{abc}{\\leftarrow}', 'group20', 'fi-kmath-overset-left-arrow-a'), 
-                new AdvancedSymbol('\\overset{abc}{\\leftrightarrow}', 'group20', 'fi-kmath-overset-left-right-arrow-a'), 
-                new AdvancedSymbol('\\underset{abc}{\\rightarrow}', 'group20', 'fi-kmath-underset-right-arrow-a'), 
-                new AdvancedSymbol('\\underset{abc}{\\leftarrow}', 'group20', 'fi-kmath-underset-left-arrow-a'), 
-                new AdvancedSymbol('\\underset{abc}{\\leftrightarrow}', 'group20', 'fi-kmath-underset-left-right-arrow-a'), 
-                
+                new AdvancedSymbol('\\overset{abc}{\\rightarrow}', 'group20', 'fi-kmath-overset-right-arrow-a'),
+                new AdvancedSymbol('\\overset{abc}{\\leftarrow}', 'group20', 'fi-kmath-overset-left-arrow-a'),
+                new AdvancedSymbol('\\overset{abc}{\\leftrightarrow}', 'group20', 'fi-kmath-overset-left-right-arrow-a'),
+                new AdvancedSymbol('\\underset{abc}{\\rightarrow}', 'group20', 'fi-kmath-underset-right-arrow-a'),
+                new AdvancedSymbol('\\underset{abc}{\\leftarrow}', 'group20', 'fi-kmath-underset-left-arrow-a'),
+                new AdvancedSymbol('\\underset{abc}{\\leftrightarrow}', 'group20', 'fi-kmath-underset-left-right-arrow-a'),
+
             ];
 
             this.Delimiters = [
@@ -703,8 +702,8 @@
                 new AdvancedSymbol('\\overbrace{}', 'group2', 'fi-kmath-over-brace-a'),
                 new AdvancedSymbol('\\underbrace{}', 'group2', 'fi-kmath-under-brace-a'),
 
-               
-                
+
+
             ];
 
             this.Misc = [
@@ -737,7 +736,7 @@
                 new Symbol('A\^{\\prime}', 'A\^{\\prime}', 'group1', 'A\^{\\prime}', '', 'true', 'fi-kmath-sup-prime-a'),
                 new Symbol('A\^{\\prime\\prime}', 'A\^{\\prime\\prime}', 'group1', 'A\^{\\prime\\prime}', '', 'true', 'fi-kmath-sup-double-prime-a'),
                 new Symbol('A\^{\\prime\\prime\\prime}', 'A\^{\\prime\\prime\\prime}', 'group1', 'A\^{\\prime\\prime\\prime}', '', 'true', 'fi-kmath-sup-triple-prime-a'),
-                
+
                 new Symbol('\\circ', '\\circ', 'group1', '\\circ'),
                 new Symbol('\\bullet', '\\bullet', 'group1', '\\bullet'),
                 new Symbol('\\setminus', '\\setminus', 'group1', '\\setminus'),
@@ -750,10 +749,10 @@
                 new Symbol('\\&', '\\&', 'group1', '\\&', '', 'true'),
                 new Symbol('\\aleph', '\\aleph', 'group1', '\\aleph'),
                 new Symbol('\\deg', '\\deg', 'group1', '\\deg'),
-                
+
                 new Symbol('\\lim_{x\\to\\infty}{}', '\\lim_{x\\to\\infty}{}', 'group6', 'lim', '', 'true'),
                 new Symbol('\\log_{}\\left(\\right)', '\\log_{}\\left(\\right)', 'group6', 'log', '', 'true'),
-                
+
                 new Symbol('\\angle', '\\angle', 'group1', '\\angle'),
                 new Symbol('\\wp', '\\wp', 'group1', '\\wp'),
                 new AdvancedSymbol('\\Join', 'group1', 'fi-kmath-join-a'),

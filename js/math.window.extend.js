@@ -20,8 +20,7 @@
             $kmath_window = $("#kmath-wrapper-" + this.uuid);
             $kmath_window.kendoWindow({
                 width: 875,
-                minHeight: 595,
-                maxHeight: 620,
+                height: 635,
                 visible: false,
                 actions: ['close'],
                 title: $$.GCI18N.kMath.Formulas,

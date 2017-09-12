@@ -126,7 +126,7 @@
                 // range.deleteContents();
 
                 // 取出focus的数学表达式。使用后remove
-                if(document.body.kmath_equation){
+                if (document.body.kmath_equation) {
                     range.setStartBefore(document.body.kmath_equation);
                     range.setEndAfter(document.body.kmath_equation);
                     document.body.kmath_equation = undefined;

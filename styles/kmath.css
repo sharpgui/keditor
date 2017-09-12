@@ -42,7 +42,7 @@
   line-height: 2;
   padding: 0 6px;
   cursor: default;
-  box-sizing: border-box;
+  box-sizing: border-box!important;
 }
 .kmath-select-div:after {
   content: "";
@@ -136,14 +136,7 @@
 	background-color:rgba(0,0,0,.3)
 }
 
-/* .kmath-fontsize select{ height: 26px; margin: 5px 0 0 5px; padding: 0 4px; line-height: 26px;  }
-.kmath-fontsize option{ height: 26px; padding: 0 4px; line-height: 26px;  }
-
-.kmath-fontsize span{ float: left; padding: 8px 0 0 2px;}
-.kmath-fontsize input.fontsize { float: left; width: 60px; height: 24px; line-height: 26px;}
-.kmath-fontsize button.plus, .kmath-fontsize button.minus { float: left; height: 26px; width: 24px; margin: 0 3px; line-height: 26px; text-align: center; font-size: 24px;} */
-
-.kmath-message{margin: 0 0 10px 5px; font-size: 0.9em; font-family: Verdana;}
+.kmath-message{margin: 10px 0 0 3px; float: left; font-size: 0.9em; font-family: Verdana;}
 /*height: 1.5em; line-height: 1.5em; padding-left: 5px; */
 .blue-link{ margin: 10px 0; float: right; border: none; background: none; color: #3a9be5; cursor: pointer;}
 .blue-link:hover{ text-decoration: underline;}
