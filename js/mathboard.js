@@ -374,6 +374,10 @@
                 if (e && e.type == 'paste') {
                     setTimeout(self._typesetView, 100);
                 }
+                if(e && e.type == 'keyup' && !checkKeycode(e.keyCode)){
+                    return;
+                }
+
                 if (!$advance_editarea.val().trim().length) {
                     $advance_view.html('');
                     return;
@@ -385,6 +389,27 @@
                     $advance_view.css('visibility', 'visible');
                 });
                 // MathJax.Hub.Typeset($advance_view[0]);
+            }
+
+            // 判断keycode是否为用户输入。若为功能键/控制键 return false.
+            var checkKeycode = function(keycode){
+                if(keycode > 111 && keycode < 124){
+                    // F1 - F12
+                    return false;
+                }
+                if(keycode > 15 && keycode < 21){
+                    // shift ctrl alt Capelock
+                    return false;
+                }
+                if(keycode > 32 && keycode < 41){
+                    // pageup pagedown end home arrows
+                    return false;
+                }
+                if(keycode >= 170 || keycode == 144){
+                    // Media || Number lock
+                    return false;
+                }
+                return true;
             }
         }
 
