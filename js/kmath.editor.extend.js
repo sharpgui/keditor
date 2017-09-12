@@ -107,7 +107,7 @@
                 '</div>');
             $kmath_window = $("#kmath-wrapper-" + mathEditor.uuid);
             $kmath_window.kendoWindow({
-                width: 850,
+                width: 875,
                 height: 635,
                 visible: false,
                 actions: ['close'],

@@ -11,12 +11,11 @@
   margin: 0px;
   min-width: 155px;
   position: absolute;
-  top: 100%;
+  bottom: 100%;
   width: 100%;
   left: 0;
   background: #fff; 
   border: 1px solid #ccc;
-  max-height: 150px;
   overflow: auto;
 }
 .open .kmath-select-menu {
@@ -189,6 +188,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.fi-kmath-overset-frown-a:before {
+  content: "\e93b";
+}
+.fi-kmath-overset-underset-a:before {
+  content: "\e948";
+}
+.fi-kmath-tilted-frac-a:before {
+  content: "\e955";
+}
+.fi-kmath-tiny-tilted-frac-a:before {
+  content: "\e956";
+}
 .fi-kmath-frac-a:before {
   content: "\e939";
 }
