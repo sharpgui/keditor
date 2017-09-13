@@ -245,7 +245,7 @@
             this.checkEquation = function(){
                 var tag = $advance_view.children('script');
                 if(tag.length && tag.get(0).MathJax.elementJax.texError){
-                    self.$message.text($$.GCI18N.kMath.CannotRenderinMQ + ' textError');
+                    self.$message.text($$.GCI18N.kMath.InvalidFormula);
                     self.$message.show(100);
                     return true;
                 }
@@ -1126,7 +1126,8 @@ window.$$ = {
             Misc: "Miscellaneous",
             CannotRenderinMQ: "This equation is not available in the Basic View.",
             TypesetFailed: "Failed to typeset the entered equations. Try again later.",
-            CopyLaTeX: "Copy LaTeX"
+            CopyLaTeX: "Copy LaTeX",
+            InvalidFormula: "The formula you insert is invalid"
         }
     }
 };

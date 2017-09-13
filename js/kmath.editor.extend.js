@@ -121,11 +121,6 @@
                 $kmath_window.data("kendoWindow").close();
             });
             $kmath_window.find('.math-insert').click(function () {
-
-                if(mathEditor.checkEquation()){
-                    return;
-                }
-
                 // IE：此时editor已经失去焦点，所以不能得到range。
                 // var range = editor.getRange();
                 // range.deleteContents();
@@ -150,6 +145,10 @@
                     }
                 });
                 MathJax.Hub.Queue(function () {
+                    if(mathEditor.checkEquation()){
+                        $kmath_window.find('.math-insert').attr('disabled', false);
+                        return;
+                    }
                     var fragement = editor.document.createDocumentFragment(),
                         result = mathEditor.getFormula(),
                         id,

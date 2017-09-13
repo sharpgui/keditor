@@ -40,6 +40,10 @@
                     self.setFormula('$$' + self.options.mathField.latex() + '$$', true);
                 }
                 MathJax.Hub.Queue(function () {
+                    if(self.checkEquation()){
+                        $kmath_window.find('.math-insert').attr('disabled', false);
+                        return;
+                    }
                     var result = self.getFormula();
 
                     if (self.options.$message && !result) {
