@@ -252,6 +252,9 @@
                 }
             }
             this.toggleView = function(status){
+                if(this.isBasic == !!status){
+                    return;
+                }
                 this._toggleView(!!status);
                 controlBox.switchSymbols($('.selected-category', $category).attr('data-title'), !!status, $mathSymbol);
             }

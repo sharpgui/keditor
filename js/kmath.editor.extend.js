@@ -169,9 +169,13 @@
                         fragement.appendChild(result);
                         range.insertNode(fragement);
                         node = needSpace ? $('#' + id, editor.body).parent().parent()[0] : $('#' + id, editor.body)[0];
-                        range.setStartAfter(node);
-                        range.collapse(true);
-                        editor.selectRange(range);
+                        try {
+                            range.setStartAfter(node);
+                            range.collapse(true);
+                            editor.selectRange(range);
+                        } catch (e) {
+                            console.error(e, node);
+                        }
                     }
                     $kmath_window.find('.math-insert').attr('disabled', false);
                     $kmath_window.data("kendoWindow").close();
