@@ -61,6 +61,7 @@
                 // 通过 .MathJax_CHTML_focused 标记选中的公式
                 // e.data.currentEditor 为双击事件中更新全局变量 editor
                 $(editor.body).on('dblclick', '.MathJax_CHTML', { currentEditor: editor }, function (e) {
+                    mathEditor.toggleView(false);
                     mathEditor.setFormula($(this).attr("data-latex"));
                     editor = e.data.currentEditor;
                     // 设置range
@@ -90,6 +91,7 @@
                 mathEditor.setFormula('');
             }
             mathEditor.$message && mathEditor.$message.hide();
+            mathEditor.toggleView(false);
             $kmath_window.data("kendoWindow").center().open();
         }
 

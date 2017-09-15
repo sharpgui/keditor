@@ -251,6 +251,10 @@
                     return true;
                 }
             }
+            this.toggleView = function(status){
+                this._toggleView(!!status);
+                controlBox.switchSymbols($('.selected-category', $category).attr('data-title'), !!status, $mathSymbol);
+            }
             /**
              * 唯一改变this.isBasic的method
              */
