@@ -228,7 +228,8 @@
                 dom = dom.find(".MathJax_CHTML");
                 // temporary enlarge the font size;
                 // dom.css('font-size', '125%');
-                dom.css('font-size', $advance_view[0].style.fontSize);
+                var fs = $advance_view[0].style.fontSize;
+                dom.css('font-size', fs == '110%' ? '130%' : fs);
                 styles = dom.attr('style');
                 // 阻止选中
                 dom.attr('style', styles + '-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; ');
@@ -303,7 +304,7 @@
                         '<div style="line-height: 2.2em; padding-left: 5px; float: left;">Formula: </div>' +
                         '<div style="float: right;" class="kmath-fontsize"></div>' +
                     '</div>' +
-                    '<div class="advance-view" style="visibility: visible;"></div>' +
+                    '<div class="advance-view" style="visibility: visible; font-size: 110%;"></div>' +
                     '</div>' +
                     // '<textarea id="basic-editarea"></textarea>'+
                     '<span class="basic-editarea"></span>' +
@@ -322,60 +323,7 @@
                     }
                 });
             }
-
-            // this._initFontsize01 = function($ele){
-            //     $ele.kmathselect({
-            //         selectedIndex: 0,
-            //         items: this.options.fontsizeOptions,
-            //         onchange: this.updateFontSize
-            //     });
-            // }
-
-            // this.updateFontSize01 = function(selection){
-            //     // console.log(selection);
-            //     MathJax.Hub.config.CommonHTML.scale = selection.value;
-            //     MathJax.Hub.Queue(["Rerender",MathJax.Hub])
-            // }
-
-            // this._initFontsize01 = function($ele){
-            //     var $select = $('<select></select>');
-            //     this.options.fontsizeOptions.map(function(item){
-            //         if(item.scale && item.text.length){
-            //             $select.append('<option value="'+ item.value +'">'+ item.key +'</option>');
-            //         }
-            //     });
-
-            //     $ele.append($select);
-
-            //     $select.change(function(){
-            //         MathJax.Hub.config.CommonHTML.scale = this.value;
-            //         MathJax.Hub.Queue(["Rerender",MathJax.Hub])
-            //     });
-
-            // }
-
-            // this._initFontsize00 = function($ele){
-            //     var str = '<span>Font Size: </span>'
-            //     str += '<button class="plus">+</button>';
-            //     str += '<input class="fontsize" value="1"/>';
-            //     str += '<button class="minus">-</button>';
-            //     $ele.append(str);
-
-            //     var input = $('.fontsize', $ele)[0];
-            //     $ele.on('click', '.plus', function(){
-            //         input.value = input.value < 20 ? Number(input.value) + 1 : input.value;
-            //         MathJax.Hub.config.CommonHTML.scale = input.value * 30;
-            //         MathJax.Hub.Queue(["Rerender",MathJax.Hub])
-            //     });
-            //     $ele.on('click', '.minus', function(){
-            //         input.value = Number(input.value) > 1 ? Number(input.value) - 1 : input.value;
-            //         MathJax.Hub.config.CommonHTML.scale = input.value * 30;
-            //         MathJax.Hub.Queue(["Rerender",MathJax.Hub])
-            //     });
-
-
-            // }
-
+            
             this._typesetView = function (e) {
                 // $advance_view.html(checkBreaks($advance_editarea.val()));
                 self.$message && self.$message.hide();
@@ -413,8 +361,12 @@
                     // pageup pagedown end home arrows
                     return false;
                 }
-                if(keycode >= 170 || keycode == 144){
-                    // Media || Number lock
+                if(keycode >= 170 && keycode < 181) {
+                    // Media
+                    return false;
+                }
+                if(keycode == 144){
+                    // Number lock
                     return false;
                 }
                 return true;
@@ -478,9 +430,15 @@
                 new Symbol('\\prod', '\\prod{n}', 'group2', '\\prod', '', '', 'fi-kmath-prod-a'),
                 new Symbol('\\prod_{}{}', '\\prod_{a}{n}', 'group2', '\\prod_{a}{n}', '', 'true', 'fi-kmath-prod-sub-a'),
                 new Symbol('\\prod_{}^{}{}', '\\prod_{a}^{b}{n}', 'group2', '\\prod_{a}^{b}{n}', '', 'true', 'fi-kmath-prod-sub-sup-a'),
+                new AdvancedSymbol('\\prod\\nolimits_{a}{n}', 'group2', 'fi-kmath-prod-nolimits-sub-a'),
+                new AdvancedSymbol('\\prod\\nolimits_{a}^{b}{n}', 'group2', 'fi-kmath-prod-nolimits-sub-sup-a'),
+                
                 new Symbol('\\coprod', '\\coprod{n}', 'group2', '\\coprod', '', '', 'fi-kmath-co-prod-a'),
                 new Symbol('\\coprod_{}{}', '\\coprod_{a}{n}', 'group2', '\\coprod_{a}{n}', '', 'true', 'fi-kmath-coprod-sub-a'),
                 new Symbol('\\coprod_{}^{}{}', '\\coprod_{a}^{b}{n}', 'group2', '\\coprod_{a}^{b}{n}', '', 'true', 'fi-kmath-coprod-sub-sup-a'),
+                new AdvancedSymbol('\\coprod\\nolimits_{a}{n}', 'group2', 'fi-kmath-coprod-nolimits-sub-a'),
+                new AdvancedSymbol('\\coprod\\nolimits_{a}^{b}{n}', 'group2', 'fi-kmath-coprod-nolimits-sub-sup-a'),
+
                 new Symbol('\\int', '\\int{x}', 'group2', '\\int', '', '', 'fi-kmath-int-a'),
                 new AdvancedSymbol('\\int\\limits_{a}{x}', 'group2', 'fi-kmath-int-limits-sub-a'),
                 new AdvancedSymbol('\\int\\limits_{a}^{b}{x}', 'group2', 'fi-kmath-int-limits-sub-sup-a'),
@@ -498,14 +456,6 @@
                 new Symbol('\\oint', '\\oint{x}', 'group2', '\\oint', '', '', 'fi-kmath-oint-a'),
                 new AdvancedSymbol('\\oint\\limits_{a}{x}', 'group2', 'fi-kmath-oint-limits-sub-a'),
                 new Symbol('\\oint _{} {x}', '\\oint _{a} {x}', 'group2', '\\oint_{a}', '', 'true', 'fi-kmath-oint-sub-a'),
-
-                new Matrix('matrix', 'fi-kmath-matrix-a', 'group4'),
-                new Matrix('bmatrix', 'fi-kmath-b-matrix-a', 'group4'),
-                new Matrix('pmatrix', 'fi-kmath-p-matrix-a', 'group4'),
-                new Matrix('Bmatrix', 'fi-kmath-bb-matrix-a', 'group4'),
-                new Matrix('smallmatrix', 'fi-kmath-small-matrix-a', 'group4'),
-                new Matrix('vmatrix', 'fi-kmath-v-matrix-a', 'group4'),
-                new Matrix('Vmatrix', 'fi-kmath-vv-matrix-a', 'group4'),
 
                 new AdvancedSymbol('\\dot{a}', 'group20', 'fi-kmath-dot-a'),
                 new AdvancedSymbol('\\ddot{a}', 'group20', 'fi-kmath-ddot-a'),
@@ -541,6 +491,7 @@
                 new Symbol('\\mu', '\\mu', 'group3', '\\mu'),
                 new Symbol('\\nu', '\\nu', 'group3', '\\nu'),
                 new Symbol('\\xi', '\\xi', 'group3', '\\xi'),
+                new Symbol('o', 'o', 'group3', 'o'),
                 new Symbol('\\pi', '\\pi', 'group3', '\\pi'),
                 new Symbol('\\rho', '\\rho', 'group3', '\\rho'),
                 new Symbol('\\sigma', '\\sigma', 'group3', '\\sigma'),
@@ -566,6 +517,7 @@
                 new Symbol('\\Delta', '\\Delta', 'group5', '\\Delta'),
                 new Symbol('E', 'E', 'group5', 'E'),
                 new Symbol('Z', 'Z', 'group5', 'Z'),
+                new Symbol('H', 'H', 'group5', 'H'),
                 new Symbol('\\Theta', '\\Theta', 'group5', '\\Theta'),
                 new Symbol('I', 'I', 'group5', 'I'),
                 new Symbol('K', 'K', 'group5', 'K'),
@@ -579,10 +531,13 @@
                 new Symbol('\\Sigma', '\\Sigma', 'group5', '\\Sigma'),
                 new Symbol('T', 'T', 'group5', 'T'),
                 new Symbol('\\Upsilon', '\\Upsilon', 'group5', '\\Upsilon'),
-                new Symbol('\\Phi', '\\Phi', 'group5', '\\Phi'),
+                new Symbol('\\Phi', '\\Phi', 'group5', '\\Phi'), 
                 new Symbol('X', 'X', 'group5', 'X'),
                 new Symbol('\\Psi', '\\Psi', 'group5', '\\Psi'),
-                new Symbol('\\Omega', '\\Omega', 'group5', '\\Omega')
+                new Symbol('\\Omega', '\\Omega', 'group5', '\\Omega'),
+                new Symbol('\\amalg', '\\amalg', 'group5', '\\amalg', 'font-size: 0.95em;'),
+                new AdvancedSymbol('\\smallint', 'group5', 'fi-kmath-small-int-a'),
+                
             ];
 
             this.Operators = [
@@ -606,7 +561,6 @@
                 new Symbol('\\dagger', '\\dagger', 'group1', '\\dagger'),
                 new Symbol('\\ddagger', '\\ddagger', 'group1', '\\ddagger'),
                 new Symbol('\\wr', '\\wr', 'group1', '\\wr'),
-                new Symbol('\\amalg', '\\amalg', 'group1', '\\amalg', 'font-size: 0.9em;')
             ];
 
             this.Relationships = [
@@ -658,9 +612,15 @@
                 new Symbol('\\bigcap', '\\bigcap{n}', 'group2', '\\bigcap', '', '', 'fi-kmath-bigcap-a'),
                 new Symbol('\\bigcap _{} {x}', '\\bigcap _{a} {x}', 'group2', '\\bigcap{a}', '', 'true', 'fi-kmath-bigcap-sub-a'),
                 new Symbol('\\bigcap _{}^{} {x}', '\\bigcap _{a}^{b} {x}', 'group2', '\\bigcap_{a}^{b}', '', 'true', 'fi-kmath-bigcap-sub-sup-a'),
+                new AdvancedSymbol('\\bigcap\\nolimits_{a}{x}', 'group1', 'fi-kmath-bigcap-nolimits-sub-a'),
+                new AdvancedSymbol('\\bigcap\\nolimits_{a}^{b}{x}', 'group1', 'fi-kmath-bigcap-nolimits-sub-sup-a'),
+
+
                 new Symbol('\\bigcup', '\\bigcup{x}', 'group2', '\\bigcup', '', '', 'fi-kmath-bigcup-a'),
                 new Symbol('\\bigcup _{} {x}', '\\bigcup _{a} {x}', 'group2', '\\bigcup_{a}', '', 'true', 'fi-kmath-bigcup-sub-a'),
                 new Symbol('\\bigcup _{}^{} {x}', '\\bigcup _{a}^{b} {x}', 'group2', '\\bigcup_{a}^{b}', '', 'true', 'fi-kmath-bigcup-sub-sup-a'),
+                new AdvancedSymbol('\\bigcup\\nolimits_{a}{x}', 'group1', 'fi-kmath-bigcup-nolimits-sub-a'),
+                new AdvancedSymbol('\\bigcup\\nolimits_{a}^{b}{x}', 'group1', 'fi-kmath-bigcup-nolimits-sub-sup-a'),
 
             ];
 
@@ -699,6 +659,8 @@
                 new AdvancedSymbol('\\xleftarrow[]{}', 'group1', 'fi-kmath-xleft-arrow-underset-a'),
                 new AdvancedSymbol('\\xrightarrow{}', 'group1', 'fi-kmath-xright-arrow-overset-a'),
                 new AdvancedSymbol('\\xrightarrow[]{}', 'group1', 'fi-kmath-xright-arrow-underset-a'),
+                // new AdvancedSymbol('\\underleftrightarrow{}', 'group1', 'fi-kmath-under-left-right-arrow-a'),
+                // new AdvancedSymbol('\\overleftrightarrow{}', 'group1', 'fi-kmath-over-left-right-arrow-a'),
                 new AdvancedSymbol('\\circlearrowleft', 'group1', 'fi-kmath-circle-arrow-left-a'),
 
                 new AdvancedSymbol('\\overset{}{}', 'group1', 'fi-kmath-overset-a'),
@@ -716,6 +678,8 @@
                 new AdvancedSymbol('\\underset{abc}{\\rightarrow}', 'group20', 'fi-kmath-underset-right-arrow-a'),
                 new AdvancedSymbol('\\underset{abc}{\\leftarrow}', 'group20', 'fi-kmath-underset-left-arrow-a'),
                 new AdvancedSymbol('\\underset{abc}{\\leftrightarrow}', 'group20', 'fi-kmath-underset-left-right-arrow-a'),
+
+                new AdvancedSymbol('\\overset{\\leftrightarrow}{} ', 'group20', 'fi-kmath-overset-short-left-right-arrow-a'),
 
             ];
 
@@ -736,6 +700,14 @@
                 new AdvancedSymbol('\\underbrace{}', 'group2', 'fi-kmath-under-brace-a'),
 
 
+                new Matrix('matrix', 'fi-kmath-matrix-a', 'group4'),
+                new Matrix('bmatrix', 'fi-kmath-b-matrix-a', 'group4'),
+                new Matrix('pmatrix', 'fi-kmath-p-matrix-a', 'group4'),
+                new Matrix('Bmatrix', 'fi-kmath-bb-matrix-a', 'group4'),
+                new Matrix('smallmatrix', 'fi-kmath-small-matrix-a', 'group4'),
+                new Matrix('vmatrix', 'fi-kmath-v-matrix-a', 'group4'),
+                new Matrix('Vmatrix', 'fi-kmath-vv-matrix-a', 'group4'),
+                // new Matrix('eqnarray', 'fi-kmath-eqnarray-a', 'group4'),
 
             ];
 
@@ -764,6 +736,7 @@
                 new Symbol('\\perp', '\\perp', 'group1', '\\perp'),
                 new Symbol('\\nabla', '\\nabla', 'group1', '\\nabla'),
                 new Symbol('\\hbar', '\\hbar', 'group1', '\\hbar'),
+                new AdvancedSymbol('\\hslash', 'group1', 'fi-kmath-hslash-a'),
                 // new Symbol('\\AA', '\\AA', 'group1', '\\AA'),
                 new Symbol('A\^{\\circ}', 'A\^{\\circ}', 'group1', 'A\^{\\circ}', '', 'true', 'fi-kmath-sub-circ-a'),
                 new Symbol('A\^{\\prime}', 'A\^{\\prime}', 'group1', 'A\^{\\prime}', '', 'true', 'fi-kmath-sup-prime-a'),
@@ -787,10 +760,11 @@
                 new Symbol('\\log_{}\\left(\\right)', '\\log_{}\\left(\\right)', 'group6', 'log', '', 'true'),
 
                 new Symbol('\\angle', '\\angle', 'group1', '\\angle'),
-                new Symbol('\\wp', '\\wp', 'group1', '\\wp'),
                 new AdvancedSymbol('\\Join', 'group1', 'fi-kmath-join-a'),
                 new AdvancedSymbol('\\S', 'group1', 'fi-kmath-double-s-a'),
                 new AdvancedSymbol('^{\\backprime}A', 'group1', 'fi-kmath-sup-back-prime-a'),
+                new AdvancedSymbol('\\overset{\\smile}{A}', 'group1', 'fi-kmath-overset-smile-a'),
+                 
                 new AdvancedSymbol('\\overset{\\frown}{A} ', 'group1', 'fi-kmath-overset-frown-a'),
                 new AdvancedSymbol('\\maltese', 'group1', 'fi-kmath-maltese-a'),
 
@@ -991,14 +965,25 @@
                         begintxt = "\\begin{Vmatrix}\n";
                         endtxt = "\n\\end{Vmatrix}";
                         break;
+                    case 'eqnarray':
+                        begintxt = "\\begin{eqnarray*}\n";
+                        endtxt = "\n\\end{eqnarray*}";
+                        break;
                     default:
                         console.log('no match.');
                         return '';
                 }
 
                 for (var c = 0; c < datas.y; c++) {
+                    if(datas.title == 'eqnarray'){
+                        result += " & = & "
+                    }
                     for (var a = 0; a < datas.x - 1; a++) {
-                        result += " & "
+                        if(datas.title == 'eqnarray'){
+                            result += " & = & "
+                        }else{
+                            result += " & "
+                        }
                     }
                     if (c < datas.y - 1) {
                         result += "\\\\\n"

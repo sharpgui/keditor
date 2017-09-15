@@ -144,6 +144,6 @@
         // var parentFrameOffset = e.target.closest('body').parentFrame.offset();       // IE不能支持element.closest。改为JQueryElement.closest方式    
         var parentFrameOffset = $(e.target).closest('body').get(0).parentFrame.offset();
         // e.pageX pageY 是鼠标位置。
-        $menu.css({ 'left': e.pageX + parentFrameOffset.left, 'top': e.pageY + parentFrameOffset.top });
+        $menu.css({ 'left': e.clientX + parentFrameOffset.left, 'top': e.clientY + parentFrameOffset.top });
         $menu.show();
     }
