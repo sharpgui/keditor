@@ -185,6 +185,27 @@
             // reader.readAsDataURL(document.querySelector("input[type=file]").files[0]);
 
         })
+
+        $(editor.body).on('paste', function (e) {
+            e.preventDefault();
+            debugger;
+            var items = e.originalEvent.clipboardData.items;
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf("image") != -1) {
+                    var image = _getImage(items[i]);
+                    //if (image) //paste the image
+                }
+            }
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                var html = kendo.format('<img src="{0}"/>', event.target.result);
+
+                editor.paste(html);
+            }
+            reader.readAsDataURL(files[0]);
+            // reader.readAsDataURL(document.querySelector("input[type=file]").files[0]);
+
+        })
     </script>
     <!--<script type="text/javascript" async src="mathjax/MathJax.js?config=TeX-MML-AM_CHTML"></script>-->
 
