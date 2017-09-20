@@ -21,5 +21,13 @@
     </div>
 
 </body>
+<script>
+  function doUndo() {
+    document.execCommand('undo', false, null);
+}
 
+function doRedo() {
+    document.execCommand('redo', false, null);
+}  
+</script>
 </html>
