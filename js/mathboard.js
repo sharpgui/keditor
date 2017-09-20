@@ -41,7 +41,7 @@
                     // message: ".kmath-message-" + uuid, 
                     element: "#kmath-" + uuid,
                     fsoptions: [
-                        { value: '125%', key: '(inherited size)' },
+                        { value: '130%', key: '(inherited size)' },
                         { value: 'xx-small', key: '1 (8pt)' },
                         { value: 'x-small', key: '2 (10pt)' },
                         { value: 'small', key: '3 (12pt)' },
@@ -243,16 +243,16 @@
                 return dom[0];
                 // }
             }
-            this.checkEquation = function(){
+            this.checkEquation = function () {
                 var tag = $advance_view.children('script');
-                if(tag.length && tag.get(0).MathJax.elementJax.texError){
+                if (tag.length && tag.get(0).MathJax.elementJax.texError) {
                     self.$message.text($$.GCI18N.kMath.InvalidFormula);
                     self.$message.show(100);
                     return true;
                 }
             }
-            this.toggleView = function(status){
-                if(this.isBasic == !!status){
+            this.toggleView = function (status) {
+                if (this.isBasic == !!status) {
                     return;
                 }
                 this._toggleView(!!status);
@@ -330,14 +330,14 @@
                     }
                 });
             }
-            
+
             this._typesetView = function (e) {
                 // $advance_view.html(checkBreaks($advance_editarea.val()));
                 self.$message && self.$message.hide();
                 if (e && e.type == 'paste') {
                     setTimeout(self._typesetView, 100);
                 }
-                if(e && e.type == 'keyup' && !checkKeycode(e.keyCode)){
+                if (e && e.type == 'keyup' && !checkKeycode(e.keyCode)) {
                     return;
                 }
 
@@ -355,24 +355,24 @@
             }
 
             // 判断keycode是否为用户输入。若为功能键/控制键 return false.
-            var checkKeycode = function(keycode){
-                if(keycode > 111 && keycode < 124){
+            var checkKeycode = function (keycode) {
+                if (keycode > 111 && keycode < 124) {
                     // F1 - F12
                     return false;
                 }
-                if(keycode > 15 && keycode < 21){
+                if (keycode > 15 && keycode < 21) {
                     // shift ctrl alt Capelock
                     return false;
                 }
-                if(keycode > 32 && keycode < 41){
+                if (keycode > 32 && keycode < 41) {
                     // pageup pagedown end home arrows
                     return false;
                 }
-                if(keycode >= 170 && keycode < 181) {
+                if (keycode >= 170 && keycode < 181) {
                     // Media
                     return false;
                 }
-                if(keycode == 144){
+                if (keycode == 144) {
                     // Number lock
                     return false;
                 }
@@ -439,7 +439,7 @@
                 new Symbol('\\prod_{}^{}{}', '\\prod_{a}^{b}{n}', 'group2', '\\prod_{a}^{b}{n}', '', 'true', 'fi-kmath-prod-sub-sup-a'),
                 new AdvancedSymbol('\\prod\\nolimits_{a}{n}', 'group2', 'fi-kmath-prod-nolimits-sub-a'),
                 new AdvancedSymbol('\\prod\\nolimits_{a}^{b}{n}', 'group2', 'fi-kmath-prod-nolimits-sub-sup-a'),
-                
+
                 new Symbol('\\coprod', '\\coprod{n}', 'group2', '\\coprod', '', '', 'fi-kmath-co-prod-a'),
                 new Symbol('\\coprod_{}{}', '\\coprod_{a}{n}', 'group2', '\\coprod_{a}{n}', '', 'true', 'fi-kmath-coprod-sub-a'),
                 new Symbol('\\coprod_{}^{}{}', '\\coprod_{a}^{b}{n}', 'group2', '\\coprod_{a}^{b}{n}', '', 'true', 'fi-kmath-coprod-sub-sup-a'),
@@ -480,7 +480,7 @@
 
                 // new Symbol('\\iint', '\\iint{x}', 'group2', '\\iint', 'font-size: 1.2em;'),      n a in basic
                 // new Symbol('\\iiint', '\\iiint{x}', 'group2', '\\iiint', 'font-size: 1.2em;'),   n a in basic
-
+                new AdvancedSymbol('\\\\', 'group22', 'fi-kmath-break-line-a'),
             ];
 
             this.Greek = [
@@ -538,13 +538,13 @@
                 new Symbol('\\Sigma', '\\Sigma', 'group5', '\\Sigma'),
                 new Symbol('T', 'T', 'group5', 'T'),
                 new Symbol('\\Upsilon', '\\Upsilon', 'group5', '\\Upsilon'),
-                new Symbol('\\Phi', '\\Phi', 'group5', '\\Phi'), 
+                new Symbol('\\Phi', '\\Phi', 'group5', '\\Phi'),
                 new Symbol('X', 'X', 'group5', 'X'),
                 new Symbol('\\Psi', '\\Psi', 'group5', '\\Psi'),
                 new Symbol('\\Omega', '\\Omega', 'group5', '\\Omega'),
                 new Symbol('\\amalg', '\\amalg', 'group5', '\\amalg', 'font-size: 0.95em;'),
                 new AdvancedSymbol('\\smallint', 'group5', 'fi-kmath-small-int-a'),
-                
+
             ];
 
             this.Operators = [
@@ -687,9 +687,9 @@
                 new AdvancedSymbol('\\underset{abc}{\\leftrightarrow}', 'group20', 'fi-kmath-underset-left-right-arrow-a'),
 
                 new AdvancedSymbol('\\overset{\\leftrightarrow}{} ', 'group20', 'fi-kmath-overset-short-left-right-arrow-a'),
-
                 new AdvancedSymbol('\\overset{\\rightharpoonup}{} ', 'group20', 'fi-kmath-overset-right-harpoonup-a'),
                 new AdvancedSymbol('\\overset{\\leftharpoonup}{} ', 'group20', 'fi-kmath-overset-left-harpoonup-a'),
+
             ];
 
             this.Delimiters = [
@@ -716,7 +716,7 @@
                 new Matrix('smallmatrix', 'fi-kmath-small-matrix-a', 'group4'),
                 new Matrix('vmatrix', 'fi-kmath-v-matrix-a', 'group4'),
                 new Matrix('Vmatrix', 'fi-kmath-vv-matrix-a', 'group4'),
-                new Matrix('eqnarray', 'fi-kmath-eqnarray-a', 'group4'),
+                new Matrix('eqnarray', 'fi-kmath-eqn-array-a', 'group4'),
 
             ];
 
@@ -773,7 +773,7 @@
                 new AdvancedSymbol('\\S', 'group1', 'fi-kmath-double-s-a'),
                 new AdvancedSymbol('^{\\backprime}A', 'group1', 'fi-kmath-sup-back-prime-a'),
                 new AdvancedSymbol('\\overset{\\smile}{A}', 'group1', 'fi-kmath-overset-smile-a'),
-                 
+
                 new AdvancedSymbol('\\overset{\\frown}{A} ', 'group1', 'fi-kmath-overset-frown-a'),
                 new AdvancedSymbol('\\maltese', 'group1', 'fi-kmath-maltese-a'),
 
@@ -984,13 +984,13 @@
                 }
 
                 for (var c = 0; c < datas.y; c++) {
-                    if(datas.title == 'eqnarray'){
+                    if (datas.title == 'eqnarray') {
                         result += " & = & "
                     }
                     for (var a = 0; a < datas.x - 1; a++) {
-                        if(datas.title == 'eqnarray'){
+                        if (datas.title == 'eqnarray') {
                             result += " & = & "
-                        }else{
+                        } else {
                             result += " & "
                         }
                     }

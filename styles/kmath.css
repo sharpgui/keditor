@@ -183,7 +183,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-
+.fi-kmath-eqn-array-a:before {
+  content: "\e965";
+}
+.fi-kmath-break-line-a:before {
+  content: "\e966";
+}
 .fi-kmath-overset-left-harpoonup-a:before {
   content: "\e963";
 }
