@@ -44,34 +44,39 @@
                 flag = false;
             }
             if (!editor.flag) {
-                KMath.addStyleNode(KMath.mathjaxcss, editor.document)
+                // KMath.addStyleNode(KMath.mathjaxcss, editor.document)
 
                 editor.flag = true;
+
+                // remove event handler before register new one 
+                $(editor.body).off('dblclick', '.MathJax_CHTML');
+                $(editor.body).off('focus', '.MathJax_CHTML');
+                $(editor.body).off('blur', '.MathJax_CHTML');
+
+// MathJax.Hub.Config({
+//     displayAlign: "left"
+// });
 
                 // 双击 .MathJax_CHTML 进入公式编辑
                 // 通过 .MathJax_CHTML_focused 标记选中的公式
                 // e.data.currentEditor 为双击事件中更新全局变量 editor
                 $(editor.body).on('dblclick', '.MathJax_CHTML', { currentEditor: editor }, function (e) {
+                    mathEditor.toggleView(false);
                     mathEditor.setFormula($(this).attr("data-latex"));
                     editor = e.data.currentEditor;
-                    var n = $(this)[0];
                     // 设置range
-                    range.setStartBefore(n);
-                    range.setEndAfter(n);
+                    range.setStartBefore(this);
+                    range.setEndAfter(this);
                     // range.selectNode(n);
                     $kmath_window.data("kendoWindow").center().open();
                 });
-                $(editor.body).on('click', '.MathJax_CHTML', { currentEditor: editor }, function (e) {
+                $(editor.body).on('focus', '.MathJax_CHTML', { currentEditor: editor }, function (e) {
                     editor = e.data.currentEditor;
-                    $('.MathJax_CHTML', editor.body).removeClass('MathJax_CHTML_focused');
                     $(this).addClass('MathJax_CHTML_focused');
-                    e.stopPropagation();
                 });
-                $(editor.body).on('click', { currentEditor: editor }, function (e) {
-                    editor = e.data.currentEditor;
-                    $('.MathJax_CHTML', editor.body).removeClass('MathJax_CHTML_focused');
+                $(editor.body).on('blur', '.MathJax_CHTML', function (e) {
+                    $(this).removeClass('MathJax_CHTML_focused');
                 });
-
                 MathJax.Hub.Config({
                     menuSettings: { context: "Browser" }    // hide right-clicking menu
                 });
@@ -81,10 +86,12 @@
             equation_dom = $('.MathJax_CHTML_focused', editor.body);
             if (equation_dom.length) {
                 mathEditor.setFormula(equation_dom.attr("data-latex"));
+                document.body.kmath_equation = equation_dom[0];         // 若带有focus标记，将equation缓存在body元素上。
             } else {
                 mathEditor.setFormula('');
             }
             mathEditor.$message && mathEditor.$message.hide();
+            mathEditor.toggleView(false);
             $kmath_window.data("kendoWindow").center().open();
         }
 
@@ -102,9 +109,8 @@
                 '</div>');
             $kmath_window = $("#kmath-wrapper-" + mathEditor.uuid);
             $kmath_window.kendoWindow({
-                width: 850,
-                minHeight: 595,
-                maxHeight: 620,
+                width: 875,
+                height: 635,
                 visible: false,
                 actions: ['close'],
                 title: $$.GCI18N.kMath.Formulas,
@@ -120,10 +126,17 @@
                 // IE：此时editor已经失去焦点，所以不能得到range。
                 // var range = editor.getRange();
                 // range.deleteContents();
+
+                // 取出focus的数学表达式。使用后remove
+                if (document.body.kmath_equation) {
+                    range.setStartBefore(document.body.kmath_equation);
+                    range.setEndAfter(document.body.kmath_equation);
+                    document.body.kmath_equation = undefined;
+                }
                 var ele = range.extractContents();
                 var needSpace = true;
                 if (ele.childElementCount) {
-                    needSpace = !$(ele.firstElementChild).hasClass('MathJax_CHTML_focused')
+                    needSpace = !$(ele.firstElementChild).hasClass('MathJax_CHTML')
                 }
                 // range.insertNode(mathEditor.getFormula());
                 // editor.paste(mathEditor.getFormula().outerHTML);
@@ -134,7 +147,10 @@
                     }
                 });
                 MathJax.Hub.Queue(function () {
-                    $('.MathJax_CHTML_focused', editor.body).remove();
+                    if(mathEditor.checkEquation()){
+                        $kmath_window.find('.math-insert').attr('disabled', false);
+                        return;
+                    }
                     var fragement = editor.document.createDocumentFragment(),
                         result = mathEditor.getFormula(),
                         id,
@@ -147,10 +163,12 @@
                     }
                     id = result.id;
                     if (id) {
-                        needSpace ? result = $('<span></span>').append(result).append('<span>&nbsp;</span>')[0] : '';
+                        // span contentEditable="false" 去掉IE浏览器中显示在公式周围的虚线框。
+                        // 添加一个空格，在公式之前。则能将光标放置在公式之前。
+                        needSpace ? result = $('<span></span>').append('<span>&nbsp;</span>').append($('<span contentEditable="false"></span>').append(result)).append('<span>&nbsp;</span>')[0] : '';
                         fragement.appendChild(result);
                         range.insertNode(fragement);
-                        node = needSpace ? $('#' + id, editor.body).parent('span')[0] : $('#' + id, editor.body)[0];
+                        node = needSpace ? $('#' + id, editor.body).parent().parent()[0] : $('#' + id, editor.body)[0];
                         range.setStartAfter(node);
                         range.collapse(true);
                         editor.selectRange(range);

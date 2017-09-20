@@ -19,9 +19,8 @@
                 '</div>');
             $kmath_window = $("#kmath-wrapper-" + this.uuid);
             $kmath_window.kendoWindow({
-                width: 850,
-                minHeight: 595,
-                maxHeight: 620,
+                width: 875,
+                height: 635,
                 visible: false,
                 actions: ['close'],
                 title: $$.GCI18N.kMath.Formulas,
@@ -41,6 +40,10 @@
                     self.setFormula('$$' + self.options.mathField.latex() + '$$', true);
                 }
                 MathJax.Hub.Queue(function () {
+                    if(self.checkEquation()){
+                        $kmath_window.find('.math-insert').attr('disabled', false);
+                        return;
+                    }
                     var result = self.getFormula();
 
                     if (self.options.$message && !result) {
@@ -121,7 +124,7 @@
         e.stopPropagation();
         if (!$menu.length) {
             $menu = $('<ul class="kmath-contextmenu" style="display: none;"></ul>');
-            $menu.append('<li class="copylatex">Copy LaTex<li>');
+            $menu.append('<li class="copylatex">'+ $$.GCI18N.kMath.CopyLaTeX +'<li>');
             $menu.on('contextmenu', function (e) { e.preventDefault(); e.stopPropagation(); });
             // $(this).closest('body').append($menu);
             $(document.body).append($menu);
@@ -141,6 +144,6 @@
         // var parentFrameOffset = e.target.closest('body').parentFrame.offset();       // IE不能支持element.closest。改为JQueryElement.closest方式    
         var parentFrameOffset = $(e.target).closest('body').get(0).parentFrame.offset();
         // e.pageX pageY 是鼠标位置。
-        $menu.css({ 'left': e.pageX + parentFrameOffset.left, 'top': e.pageY + parentFrameOffset.top });
+        $menu.css({ 'left': e.clientX + parentFrameOffset.left, 'top': e.clientY + parentFrameOffset.top });
         $menu.show();
     }

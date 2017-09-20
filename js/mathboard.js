@@ -31,6 +31,7 @@
                 $mathEditor,
                 $mathSymbol,
                 $matrixTable,
+                $fontsize,
                 mathbbReg = /\\mathbb{([A-Z])}/g,
                 notinsetReg = /not\\(in|ni|subset|supset|subseteq|supseteq)/g,
                 supReg = /\^([^{])/g,
@@ -38,7 +39,17 @@
                 self = this,
                 defaultOptions = {
                     // message: ".kmath-message-" + uuid, 
-                    element: "#kmath-" + uuid
+                    element: "#kmath-" + uuid,
+                    fsoptions: [
+                        { value: '125%', key: '(inherited size)' },
+                        { value: 'xx-small', key: '1 (8pt)' },
+                        { value: 'x-small', key: '2 (10pt)' },
+                        { value: 'small', key: '3 (12pt)' },
+                        { value: 'medium', key: '4 (14pt)' },
+                        { value: 'large', key: '5 (18pt)' },
+                        { value: 'x-large', key: '6 (24pt)' },
+                        { value: 'xx-large', key: '7 (36pt)' },
+                    ]
                 };
             this.uuid = uuid++;
             this.mathField = null;//之后赋值因为现在DOM对象还没有生成
@@ -55,6 +66,8 @@
                 this.element.html('<ul class="math-category"></ul>' +
                     '<ul class="math-symbol"></ul>' +
                     '<div class="math-editor"></div>');
+
+                $(this.element).parent().append('<div class="kmath-message"></div>');
                 // this.$message = $(this.options.message);
 
                 $category = $(".math-category", this.element);
@@ -63,14 +76,17 @@
                 controlBox.init($category);
                 $matrixTable = $('.customMatrix');  //controlBox init完成之后生成
                 this._initialView();
-                addStyleNode(kmathcss);
+                // addStyleNode(kmathcss);
                 //下面这几个DOM元素只有this._initialView 完成之后才有值
                 $advance_editarea = $(".advance-editarea", this.element);
                 $advance_view = $(".advance-view", this.element);
                 $basic_editarea = $(".basic-editarea", this.element);
                 $tobasic_btn = $(".tobasic", this.element);
                 $toadvance_btn = $(".toadvance", this.element);
-                this.$message = $('.kmath-message', this.element);
+                $fontsize = $(".kmath-fontsize", this.element);
+                this.$message = $('.kmath-message', $(this.element).parent());
+
+                this._initFontsize($fontsize);
 
                 // Switch basic \ advance view 
                 this.element.on("click", '.tobasic', function () {
@@ -211,10 +227,12 @@
                 latex = "$$" + latex + "$$";
                 dom = dom.find(".MathJax_CHTML");
                 // temporary enlarge the font size;
-                dom.css('font-size', '125%');
+                // dom.css('font-size', '125%');
+                var fs = $advance_view[0].style.fontSize;
+                dom.css('font-size', fs == '110%' ? '130%' : fs);
                 styles = dom.attr('style');
                 // 阻止选中
-                // dom.attr('style', styles + '-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; ');
+                dom.attr('style', styles + '-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; ');
                 dom.attr("data-mathml", escape(dom.attr("data-mathml")));     // 保留MathML
                 dom.attr('data-latex', latex);
                 dom.attr("contenteditable", false);
@@ -225,6 +243,18 @@
                 return dom[0];
                 // }
             }
+            this.checkEquation = function(){
+                var tag = $advance_view.children('script');
+                if(tag.length && tag.get(0).MathJax.elementJax.texError){
+                    self.$message.text($$.GCI18N.kMath.InvalidFormula);
+                    self.$message.show(100);
+                    return true;
+                }
+            }
+            this.toggleView = function(status){
+                this._toggleView(!!status);
+                controlBox.switchSymbols($('.selected-category', $category).attr('data-title'), !!status, $mathSymbol);
+            }
             /**
              * 唯一改变this.isBasic的method
              */
@@ -234,14 +264,16 @@
                     $basic_editarea.show(0);
                     $toadvance_btn.show(0);
                     $advance_editarea.hide(0);
-                    $advance_view.hide(0);
+                    $advance_view.parent().hide(0);
                     $tobasic_btn.hide(0);
+                    // $fontsize.hide(0);
                 } else {
                     $basic_editarea.hide(0);
                     $toadvance_btn.hide(0);
                     $advance_editarea.show(0);
-                    $advance_view.show(0);
+                    $advance_view.parent().show(0);
                     $tobasic_btn.show(0);
+                    // $fontsize.show(0);
                 }
             }
 
@@ -267,24 +299,45 @@
             }
 
             this._initialView = function () {
-                var $view = $('<div style="padding-bottom: 1.5em; position: relative">' +
+                var $view = $('<div>' +
                     '<button class="blue-link tobasic">' + $$.GCI18N.kMath.SwitchtoBasic + '</button>' +
                     '<button class="blue-link toadvance">' + $$.GCI18N.kMath.SwitchtoAdvance + '</button>' +
                     '<textarea class="advance-editarea"></textarea>' +          // S_N = \\displaystyle\\sqrt{ \\frac{1}{N} \\sum\^N_{i=1}{(x_i - \\bar{x})\^2} }
-                    '<div class="advance-view"></div>' +
+                    '<div style="background: #f3f3f3; padding-right: 5px; margin: 6px 2px 0; box-sizing: border-box; border: 1px solid rgb(222, 222, 222); ">' +
+                    '<div style="padding-bottom: 3px; height: 2.2em; border-bottom: 1px solid rgb(222, 222, 222);">' +
+                        '<div style="line-height: 2.2em; padding-left: 5px; float: left;">Formula: </div>' +
+                        '<div style="float: right;" class="kmath-fontsize"></div>' +
+                    '</div>' +
+                    '<div class="advance-view" style="visibility: visible; font-size: 110%;"></div>' +
+                    '</div>' +
                     // '<textarea id="basic-editarea"></textarea>'+
                     '<span class="basic-editarea"></span>' +
-                    '<div class="kmath-message"></div>' +
+                    // '<div class="kmath-message"></div>' +
                     '</div>');
 
                 $mathEditor.html($view);
-
             }
+
+            this._initFontsize = function ($ele) {
+                $ele.kmathselect({
+                    selectedIndex: 0,
+                    items: this.options.fsoptions,
+                    onchange: function (selection) {
+                        $advance_view.css('font-size', selection.value);
+                    }
+                });
+            }
+            
             this._typesetView = function (e) {
                 // $advance_view.html(checkBreaks($advance_editarea.val()));
+                self.$message && self.$message.hide();
                 if (e && e.type == 'paste') {
                     setTimeout(self._typesetView, 100);
                 }
+                if(e && e.type == 'keyup' && !checkKeycode(e.keyCode)){
+                    return;
+                }
+
                 if (!$advance_editarea.val().trim().length) {
                     $advance_view.html('');
                     return;
@@ -296,7 +349,31 @@
                     $advance_view.css('visibility', 'visible');
                 });
                 // MathJax.Hub.Typeset($advance_view[0]);
-                self.$message && self.$message.hide();
+            }
+
+            // 判断keycode是否为用户输入。若为功能键/控制键 return false.
+            var checkKeycode = function(keycode){
+                if(keycode > 111 && keycode < 124){
+                    // F1 - F12
+                    return false;
+                }
+                if(keycode > 15 && keycode < 21){
+                    // shift ctrl alt Capelock
+                    return false;
+                }
+                if(keycode > 32 && keycode < 41){
+                    // pageup pagedown end home arrows
+                    return false;
+                }
+                if(keycode >= 170 && keycode < 181) {
+                    // Media
+                    return false;
+                }
+                if(keycode == 144){
+                    // Number lock
+                    return false;
+                }
+                return true;
             }
         }
 
@@ -328,7 +405,10 @@
 
                 new Symbol('\\subscript', '_{sub}', 'group0', '_{sub}', 'font-size: 0.9em;'),
                 new Symbol('\\supscript', '\^{sup}', 'group0', '\^{sup}', 'font-size: 0.9em;'),
-                new Symbol('\\frac', '\\frac{n}{m}', 'group0', '\\frac{n}{m}', 'line-height: normal; '),
+                new Symbol('\\frac', '\\frac{n}{m}', 'group0', '\\frac{n}{m}', '', '', 'fi-kmath-frac-a'),
+                new AdvancedSymbol('\\tfrac{n}{m}', 'group0', 'fi-kmath-tiny-frac-a'),
+                new AdvancedSymbol('{n}/{m}', 'group0', 'fi-kmath-tilted-frac-a'),
+                new AdvancedSymbol('\\small{{n}/{m}}\\normalsize', 'group0', 'fi-kmath-tiny-tilted-frac-a'),
                 new Symbol('\\sqrt', '\\sqrt{x}', 'group0', '\\sqrt{x}', 'line-height: normal; padding-top: 5px;'),
                 new Symbol('\\nthroot', '\\sqrt[n]{x}', 'group0', '\\sqrt[n]{x}', 'line-height: normal; text-align: left'),
                 new Symbol('\\binomial', '\\binom{n}{m}', 'group0', '\\binom{n}{m}', 'line-height: normal; text-align: left; font-size: 1em; padding-left: 3px;'),
@@ -341,6 +421,8 @@
                 new Symbol('\\mp', '\\mp', 'group1', '\\mp', 'font-size: 1.5em'),
                 new Symbol('\\cdot', '\\cdot', 'group1', '\\cdot', 'font-size: 1.5em'),
                 new Symbol('=', '=', 'group1', '=', 'font-size: 1.5em'),
+                new Symbol('\\doteq', '\\doteq', 'group1', '\\doteq', 'font-size: 1.5em'),
+
                 new Symbol('\\times', '\\times', 'group1', '\\times', 'font-size: 1.5em'),
                 new Symbol('\\div', '\\div', 'group1', '\\div', 'font-size: 1.5em'),
                 new Symbol('\\ast', '\\ast', 'group1', '\\ast', 'font-size: 1.5em'),
@@ -352,57 +434,49 @@
                 new Symbol('\\prod', '\\prod{n}', 'group2', '\\prod', '', '', 'fi-kmath-prod-a'),
                 new Symbol('\\prod_{}{}', '\\prod_{a}{n}', 'group2', '\\prod_{a}{n}', '', 'true', 'fi-kmath-prod-sub-a'),
                 new Symbol('\\prod_{}^{}{}', '\\prod_{a}^{b}{n}', 'group2', '\\prod_{a}^{b}{n}', '', 'true', 'fi-kmath-prod-sub-sup-a'),
+                new AdvancedSymbol('\\prod\\nolimits_{a}{n}', 'group2', 'fi-kmath-prod-nolimits-sub-a'),
+                new AdvancedSymbol('\\prod\\nolimits_{a}^{b}{n}', 'group2', 'fi-kmath-prod-nolimits-sub-sup-a'),
+                
                 new Symbol('\\coprod', '\\coprod{n}', 'group2', '\\coprod', '', '', 'fi-kmath-co-prod-a'),
                 new Symbol('\\coprod_{}{}', '\\coprod_{a}{n}', 'group2', '\\coprod_{a}{n}', '', 'true', 'fi-kmath-coprod-sub-a'),
                 new Symbol('\\coprod_{}^{}{}', '\\coprod_{a}^{b}{n}', 'group2', '\\coprod_{a}^{b}{n}', '', 'true', 'fi-kmath-coprod-sub-sup-a'),
+                new AdvancedSymbol('\\coprod\\nolimits_{a}{n}', 'group2', 'fi-kmath-coprod-nolimits-sub-a'),
+                new AdvancedSymbol('\\coprod\\nolimits_{a}^{b}{n}', 'group2', 'fi-kmath-coprod-nolimits-sub-sup-a'),
+
                 new Symbol('\\int', '\\int{x}', 'group2', '\\int', '', '', 'fi-kmath-int-a'),
+                new AdvancedSymbol('\\int\\limits_{a}{x}', 'group2', 'fi-kmath-int-limits-sub-a'),
+                new AdvancedSymbol('\\int\\limits_{a}^{b}{x}', 'group2', 'fi-kmath-int-limits-sub-sup-a'),
+
                 new Symbol('\\int_{}{x}', '\\int_{a}{x}', 'group2', '\\int_{a}{x}', '', 'true', 'fi-kmath-int-sub-a'),
                 new Symbol('\\int_{}^{}{x}', '\\int_{a}^{b}{x}', 'group2', '\\int_{a}^{b}{x}', '', 'true', 'fi-kmath-int-sub-sup-a'),
 
+                new AdvancedSymbol('\\iint', 'group2', 'fi-kmath-iint-a'),
+                new AdvancedSymbol('\\iint_{a}', 'group2', 'fi-kmath-iint-sub-a'),
+                new AdvancedSymbol('\\iint\\limits_{a}', 'group2', 'fi-kmath-iint-limits-sub-a'),
+                new AdvancedSymbol('\\iiint', 'group2', 'fi-kmath-iiint-a'),
+                new AdvancedSymbol('\\iiint_{a}', 'group2', 'fi-kmath-iiint-sub-a'),
+                new AdvancedSymbol('\\iiint\\limits_{a}', 'group2', 'fi-kmath-iiint-limits-sub-a'),
+
+                new Symbol('\\oint', '\\oint{x}', 'group2', '\\oint', '', '', 'fi-kmath-oint-a'),
+                new AdvancedSymbol('\\oint\\limits_{a}{x}', 'group2', 'fi-kmath-oint-limits-sub-a'),
+                new Symbol('\\oint _{} {x}', '\\oint _{a} {x}', 'group2', '\\oint_{a}', '', 'true', 'fi-kmath-oint-sub-a'),
+
+                new AdvancedSymbol('\\dot{a}', 'group20', 'fi-kmath-dot-a'),
+                new AdvancedSymbol('\\ddot{a}', 'group20', 'fi-kmath-ddot-a'),
+                new AdvancedSymbol('\\dddot{a}', 'group20', 'fi-kmath-dddot-a'),
+                new AdvancedSymbol('\\widehat{a}', 'group20', 'fi-kmath-wide-hat-a'),
+                new AdvancedSymbol('\\tilde{a}', 'group20', 'fi-kmath-tilde-a'),
+                new AdvancedSymbol('\\widetilde{a}', 'group20', 'fi-kmath-wide-tilde-a'),
+                new AdvancedSymbol('\\breve{a}', 'group20', 'fi-kmath-breve-a'),
+                new AdvancedSymbol('\\grave{a}', 'group20', 'fi-kmath-grave-a'),
+                new AdvancedSymbol('\\vec{a}', 'group20', 'fi-kmath-vec-a'),      // Symbols 
+                new AdvancedSymbol('\\mathring{a}', 'group20', 'fi-kmath-mathring-a'),
+
+
+                // new AdvancedSymbol('\\bar{abc}', 'group20', '\\bar{abc}'),  // switch后，变成overline
+
                 // new Symbol('\\iint', '\\iint{x}', 'group2', '\\iint', 'font-size: 1.2em;'),      n a in basic
                 // new Symbol('\\iiint', '\\iiint{x}', 'group2', '\\iiint', 'font-size: 1.2em;'),   n a in basic
-
-                // new Symbol('∯', '∯', 'group5', '∯'),
-                // new Symbol('∰', '∰', 'group5', '∰'),
-                new Symbol('\\oint', '\\oint{x}', 'group2', '\\oint', '', '', 'fi-kmath-oint-a'),
-                new Symbol('\\oint _{} {x}', '\\oint _{a} {x}', 'group2', '\\oint_{a}', '', 'true', 'fi-kmath-oint-sub-a'),
-                new Symbol('\\bigcap', '\\bigcap{n}', 'group2', '\\bigcap', '', '', 'fi-kmath-bigcap-a'),
-                new Symbol('\\bigcap _{} {x}', '\\bigcap _{a} {x}', 'group2', '\\bigcap{a}', '', 'true', 'fi-kmath-bigcap-sub-a'),
-                new Symbol('\\bigcap _{}^{} {x}', '\\bigcap _{a}^{b} {x}', 'group2', '\\bigcap_{a}^{b}', '', 'true', 'fi-kmath-bigcap-sub-sup-a'),
-                new Symbol('\\bigcup', '\\bigcup{x}', 'group2', '\\bigcup', '', '', 'fi-kmath-bigcup-a'),
-                new Symbol('\\bigcup _{} {x}', '\\bigcup _{a} {x}', 'group2', '\\bigcup_{a}', '', 'true', 'fi-kmath-bigcup-sub-a'),
-                new Symbol('\\bigcup _{}^{} {x}', '\\bigcup _{a}^{b} {x}', 'group2', '\\bigcup_{a}^{b}', '', 'true', 'fi-kmath-bigcup-sub-sup-a'),
-
-                // new Symbol('\\overset{}{rightarrow}', '\\overset{}{\\rightarrow}', 'group16', '\\overset{\\rightarrow}'),
-
-                new Symbol('\\lim_{x\\to\\infty}{}', '\\lim_{x\\to\\infty}{}', 'group6', 'lim', '', 'true'),
-                new Symbol('\\log_{}\\left(\\right)', '\\log_{}\\left(\\right)', 'group6', 'log', '', 'true'),
-                
-                // new Symbol('\\overset{a}{\\rightarrow}', '\\overset{a}{\\rightarrow}', 'group5', '\\overset{a}{rightarrow}'),
-                // new Symbol('\\dot{o}', '\\dot{o}', 'group5', '\\dot{o}'),
-                // new Symbol('\\grave{o}', '\\grave{o}', 'group5', '\\grave{o}'),
-                new Symbol('\\overrightarrow', '\\overrightarrow{}', 'group6', '\\overrightarrow{abc}', '', '', 'fi-kmath-over-right-arrow-a'),
-                new Symbol('\\overleftarrow', '\\overleftarrow{}', 'group6', '\\overleftarrow{abc}', '', '', 'fi-kmath-over-left-arrow-a'),
-                new Symbol('\\overline', '\\overline{}', 'group6', '\\overline{abc}', '', '', 'fi-kmath-over-line-a'),
-                // new Symbol('\\bar', '\\bar{}', 'group10', '\\bar{abc}', 'font-size: 0.95em;'),
-                // new Symbol('\\widehat', '\\widehat{}', 'group10', '\\widehat', 'font-size: 0.95em;'),
-                // new Symbol('\\widetilde', '\\widetilde{}', 'group10', '\\widetilde', 'font-size: 0.95em;'),
-                // new Symbol('\\breve', '\\breve{}', 'group10', '\\breve{abc}'),
-
-                new Symbol('\\N', '\\mathbb{N}', 'group3', '\\N', 'font-size: 1.3em'),
-                new Symbol('\\P', '\\mathbb{P}', 'group3', '\\P', 'font-size: 1.3em'),
-                new Symbol('\\Q', '\\mathbb{Q}', 'group3', '\\Q', 'font-size: 1.3em'),
-                new Symbol('\\R', '\\mathbb{R}', 'group3', '\\R', 'font-size: 1.3em'),
-                new Symbol('\\C', '\\mathbb{C}', 'group3', '\\C', 'font-size: 1.3em'),
-                new Symbol('\\H', '\\mathbb{H}', 'group3', '\\H', 'font-size: 1.3em'),
-
-                new Matrix('matrix', 'fi-kmath-matrix-a', 'group4'),
-                new Matrix('bmatrix', 'fi-kmath-b-matrix-a', 'group4'),
-                new Matrix('pmatrix', 'fi-kmath-p-matrix-a', 'group4'),
-                new Matrix('Bmatrix', 'fi-kmath-bb-matrix-a', 'group4'),
-                new Matrix('smallmatrix', 'fi-kmath-small-matrix-a', 'group4'),
-                new Matrix('vmatrix', 'fi-kmath-v-matrix-a', 'group4'),
-                new Matrix('Vmatrix', 'fi-kmath-vv-matrix-a', 'group4'),
 
             ];
 
@@ -421,6 +495,7 @@
                 new Symbol('\\mu', '\\mu', 'group3', '\\mu'),
                 new Symbol('\\nu', '\\nu', 'group3', '\\nu'),
                 new Symbol('\\xi', '\\xi', 'group3', '\\xi'),
+                new Symbol('o', 'o', 'group3', 'o'),
                 new Symbol('\\pi', '\\pi', 'group3', '\\pi'),
                 new Symbol('\\rho', '\\rho', 'group3', '\\rho'),
                 new Symbol('\\sigma', '\\sigma', 'group3', '\\sigma'),
@@ -446,6 +521,7 @@
                 new Symbol('\\Delta', '\\Delta', 'group5', '\\Delta'),
                 new Symbol('E', 'E', 'group5', 'E'),
                 new Symbol('Z', 'Z', 'group5', 'Z'),
+                new Symbol('H', 'H', 'group5', 'H'),
                 new Symbol('\\Theta', '\\Theta', 'group5', '\\Theta'),
                 new Symbol('I', 'I', 'group5', 'I'),
                 new Symbol('K', 'K', 'group5', 'K'),
@@ -459,10 +535,13 @@
                 new Symbol('\\Sigma', '\\Sigma', 'group5', '\\Sigma'),
                 new Symbol('T', 'T', 'group5', 'T'),
                 new Symbol('\\Upsilon', '\\Upsilon', 'group5', '\\Upsilon'),
-                new Symbol('\\Phi', '\\Phi', 'group5', '\\Phi'),
+                new Symbol('\\Phi', '\\Phi', 'group5', '\\Phi'), 
                 new Symbol('X', 'X', 'group5', 'X'),
                 new Symbol('\\Psi', '\\Psi', 'group5', '\\Psi'),
-                new Symbol('\\Omega', '\\Omega', 'group5', '\\Omega')
+                new Symbol('\\Omega', '\\Omega', 'group5', '\\Omega'),
+                new Symbol('\\amalg', '\\amalg', 'group5', '\\amalg', 'font-size: 0.95em;'),
+                new AdvancedSymbol('\\smallint', 'group5', 'fi-kmath-small-int-a'),
+                
             ];
 
             this.Operators = [
@@ -486,7 +565,6 @@
                 new Symbol('\\dagger', '\\dagger', 'group1', '\\dagger'),
                 new Symbol('\\ddagger', '\\ddagger', 'group1', '\\ddagger'),
                 new Symbol('\\wr', '\\wr', 'group1', '\\wr'),
-                new Symbol('\\amalg', '\\amalg', 'group1', '\\amalg', 'font-size: 0.9em;')
             ];
 
             this.Relationships = [
@@ -533,7 +611,21 @@
                 new Symbol('\\vdash', '\\vdash', 'group1', '\\vdash'),
                 new Symbol('\\dashv', '\\dashv', 'group1', '\\dashv'),
                 new Symbol('\\exists', '\\exists', 'group1', '\\exists'),
-                new Symbol('\\varnothing', '\\varnothing', 'group1', '\\varnothing')
+                new Symbol('\\varnothing', '\\varnothing', 'group1', '\\varnothing'),
+
+                new Symbol('\\bigcap', '\\bigcap{n}', 'group2', '\\bigcap', '', '', 'fi-kmath-bigcap-a'),
+                new Symbol('\\bigcap _{} {x}', '\\bigcap _{a} {x}', 'group2', '\\bigcap{a}', '', 'true', 'fi-kmath-bigcap-sub-a'),
+                new Symbol('\\bigcap _{}^{} {x}', '\\bigcap _{a}^{b} {x}', 'group2', '\\bigcap_{a}^{b}', '', 'true', 'fi-kmath-bigcap-sub-sup-a'),
+                new AdvancedSymbol('\\bigcap\\nolimits_{a}{x}', 'group1', 'fi-kmath-bigcap-nolimits-sub-a'),
+                new AdvancedSymbol('\\bigcap\\nolimits_{a}^{b}{x}', 'group1', 'fi-kmath-bigcap-nolimits-sub-sup-a'),
+
+
+                new Symbol('\\bigcup', '\\bigcup{x}', 'group2', '\\bigcup', '', '', 'fi-kmath-bigcup-a'),
+                new Symbol('\\bigcup _{} {x}', '\\bigcup _{a} {x}', 'group2', '\\bigcup_{a}', '', 'true', 'fi-kmath-bigcup-sub-a'),
+                new Symbol('\\bigcup _{}^{} {x}', '\\bigcup _{a}^{b} {x}', 'group2', '\\bigcup_{a}^{b}', '', 'true', 'fi-kmath-bigcup-sub-sup-a'),
+                new AdvancedSymbol('\\bigcup\\nolimits_{a}{x}', 'group1', 'fi-kmath-bigcup-nolimits-sub-a'),
+                new AdvancedSymbol('\\bigcup\\nolimits_{a}^{b}{x}', 'group1', 'fi-kmath-bigcup-nolimits-sub-sup-a'),
+
             ];
 
             this.Arrows = [
@@ -565,7 +657,34 @@
                 new Symbol('\\leftarrow', '\\leftarrow', 'group1', '\\leftarrow'),
                 new Symbol('\\Leftarrow', '\\Leftarrow', 'group1', '\\Leftarrow'),
                 new Symbol('\\leftrightarrow', '\\leftrightarrow', 'group1', '\\leftrightarrow'),
-                new Symbol('\\Leftrightarrow', '\\Leftrightarrow', 'group1', '\\Leftrightarrow')
+                new Symbol('\\Leftrightarrow', '\\Leftrightarrow', 'group1', '\\Leftrightarrow'),
+                new AdvancedSymbol('\\leadsto', 'group1', 'fi-kmath-leadsto-a'),
+                new AdvancedSymbol('\\xleftarrow{}', 'group1', 'fi-kmath-xleft-arrow-overset-a'),
+                new AdvancedSymbol('\\xleftarrow[]{}', 'group1', 'fi-kmath-xleft-arrow-underset-a'),
+                new AdvancedSymbol('\\xrightarrow{}', 'group1', 'fi-kmath-xright-arrow-overset-a'),
+                new AdvancedSymbol('\\xrightarrow[]{}', 'group1', 'fi-kmath-xright-arrow-underset-a'),
+                // new AdvancedSymbol('\\underleftrightarrow{}', 'group1', 'fi-kmath-under-left-right-arrow-a'),
+                // new AdvancedSymbol('\\overleftrightarrow{}', 'group1', 'fi-kmath-over-left-right-arrow-a'),
+                new AdvancedSymbol('\\circlearrowleft', 'group1', 'fi-kmath-circle-arrow-left-a'),
+
+                new AdvancedSymbol('\\overset{}{}', 'group1', 'fi-kmath-overset-a'),
+                new AdvancedSymbol('\\underset{}{}', 'group1', 'fi-kmath-underset-a'),
+                new AdvancedSymbol('\\overset{a}{\\underset{a}{abc} } ', 'group1', 'fi-kmath-overset-underset-a'),
+
+                new Symbol('\\overrightarrow', '\\overrightarrow{}', 'group6', '\\overrightarrow{abc}', '', '', 'fi-kmath-over-right-arrow-a'),
+                new Symbol('\\overleftarrow', '\\overleftarrow{}', 'group6', '\\overleftarrow{abc}', '', '', 'fi-kmath-over-left-arrow-a'),
+                new Symbol('\\overline', '\\overline{}', 'group6', '\\overline{abc}', '', '', 'fi-kmath-over-line-a'),
+
+
+                new AdvancedSymbol('\\overset{abc}{\\rightarrow}', 'group20', 'fi-kmath-overset-right-arrow-a'),
+                new AdvancedSymbol('\\overset{abc}{\\leftarrow}', 'group20', 'fi-kmath-overset-left-arrow-a'),
+                new AdvancedSymbol('\\overset{abc}{\\leftrightarrow}', 'group20', 'fi-kmath-overset-left-right-arrow-a'),
+                new AdvancedSymbol('\\underset{abc}{\\rightarrow}', 'group20', 'fi-kmath-underset-right-arrow-a'),
+                new AdvancedSymbol('\\underset{abc}{\\leftarrow}', 'group20', 'fi-kmath-underset-left-arrow-a'),
+                new AdvancedSymbol('\\underset{abc}{\\leftrightarrow}', 'group20', 'fi-kmath-underset-left-right-arrow-a'),
+
+                new AdvancedSymbol('\\overset{\\leftrightarrow}{} ', 'group20', 'fi-kmath-overset-short-left-right-arrow-a'),
+
             ];
 
             this.Delimiters = [
@@ -578,7 +697,22 @@
                 new Symbol('\\rceil', '\\rceil', 'group1', '\\rceil'),
                 new Symbol('\\slash', '\/', 'group1', '\\slash'),
                 new Symbol('\\lbrace', '\\lbrace', 'group1', '\\lbrace'),
-                new Symbol('\\rbrace', '\\rbrace', 'group1', '\\rbrace')
+                new Symbol('\\rbrace', '\\rbrace', 'group1', '\\rbrace'),
+                new AdvancedSymbol('\\langle', 'group2', 'fi-kmath-langle-a'),
+                new AdvancedSymbol('\\rangle', 'group2', 'fi-kmath-rangle-a'),
+                new AdvancedSymbol('\\overbrace{}', 'group2', 'fi-kmath-over-brace-a'),
+                new AdvancedSymbol('\\underbrace{}', 'group2', 'fi-kmath-under-brace-a'),
+
+
+                new Matrix('matrix', 'fi-kmath-matrix-a', 'group4'),
+                new Matrix('bmatrix', 'fi-kmath-b-matrix-a', 'group4'),
+                new Matrix('pmatrix', 'fi-kmath-p-matrix-a', 'group4'),
+                new Matrix('Bmatrix', 'fi-kmath-bb-matrix-a', 'group4'),
+                new Matrix('smallmatrix', 'fi-kmath-small-matrix-a', 'group4'),
+                new Matrix('vmatrix', 'fi-kmath-v-matrix-a', 'group4'),
+                new Matrix('Vmatrix', 'fi-kmath-vv-matrix-a', 'group4'),
+                // new Matrix('eqnarray', 'fi-kmath-eqnarray-a', 'group4'),
+
             ];
 
             this.Misc = [
@@ -606,11 +740,13 @@
                 new Symbol('\\perp', '\\perp', 'group1', '\\perp'),
                 new Symbol('\\nabla', '\\nabla', 'group1', '\\nabla'),
                 new Symbol('\\hbar', '\\hbar', 'group1', '\\hbar'),
+                new AdvancedSymbol('\\hslash', 'group1', 'fi-kmath-hslash-a'),
                 // new Symbol('\\AA', '\\AA', 'group1', '\\AA'),
                 new Symbol('A\^{\\circ}', 'A\^{\\circ}', 'group1', 'A\^{\\circ}', '', 'true', 'fi-kmath-sub-circ-a'),
                 new Symbol('A\^{\\prime}', 'A\^{\\prime}', 'group1', 'A\^{\\prime}', '', 'true', 'fi-kmath-sup-prime-a'),
                 new Symbol('A\^{\\prime\\prime}', 'A\^{\\prime\\prime}', 'group1', 'A\^{\\prime\\prime}', '', 'true', 'fi-kmath-sup-double-prime-a'),
                 new Symbol('A\^{\\prime\\prime\\prime}', 'A\^{\\prime\\prime\\prime}', 'group1', 'A\^{\\prime\\prime\\prime}', '', 'true', 'fi-kmath-sup-triple-prime-a'),
+
                 new Symbol('\\circ', '\\circ', 'group1', '\\circ'),
                 new Symbol('\\bullet', '\\bullet', 'group1', '\\bullet'),
                 new Symbol('\\setminus', '\\setminus', 'group1', '\\setminus'),
@@ -620,10 +756,40 @@
                 new Symbol('\\Im', '\\Im', 'group1', '\\Im'),
                 new Symbol('\\partial', '\\partial', 'group1', '\\partial'),
                 new Symbol('\\infty', '\\infty', 'group1', '\\infty'),
+                new Symbol('\\&', '\\&', 'group1', '\\&', '', 'true'),
                 new Symbol('\\aleph', '\\aleph', 'group1', '\\aleph'),
                 new Symbol('\\deg', '\\deg', 'group1', '\\deg'),
+
+                new Symbol('\\lim_{x\\to\\infty}{}', '\\lim_{x\\to\\infty}{}', 'group6', 'lim', '', 'true'),
+                new Symbol('\\log_{}\\left(\\right)', '\\log_{}\\left(\\right)', 'group6', 'log', '', 'true'),
+
                 new Symbol('\\angle', '\\angle', 'group1', '\\angle'),
-                new Symbol('\\wp', '\\wp', 'group1', '\\wp')
+                new AdvancedSymbol('\\Join', 'group1', 'fi-kmath-join-a'),
+                new AdvancedSymbol('\\S', 'group1', 'fi-kmath-double-s-a'),
+                new AdvancedSymbol('^{\\backprime}A', 'group1', 'fi-kmath-sup-back-prime-a'),
+                new AdvancedSymbol('\\overset{\\smile}{A}', 'group1', 'fi-kmath-overset-smile-a'),
+                 
+                new AdvancedSymbol('\\overset{\\frown}{A} ', 'group1', 'fi-kmath-overset-frown-a'),
+                new AdvancedSymbol('\\maltese', 'group1', 'fi-kmath-maltese-a'),
+
+
+
+                new Symbol('\\N', '\\mathbb{N}', 'group3', '\\N', 'font-size: 1.3em'),
+                new Symbol('\\P', '\\mathbb{P}', 'group3', '\\P', 'font-size: 1.3em'),
+                new Symbol('\\Q', '\\mathbb{Q}', 'group3', '\\Q', 'font-size: 1.3em'),
+                new Symbol('\\R', '\\mathbb{R}', 'group3', '\\R', 'font-size: 1.3em'),
+                new Symbol('\\C', '\\mathbb{C}', 'group3', '\\C', 'font-size: 1.3em'),
+                new Symbol('\\H', '\\mathbb{H}', 'group3', '\\H', 'font-size: 1.3em'),
+
+                new AdvancedSymbol('\\,', 'group2', 'fi-kmath-spacing3-a'),
+                new AdvancedSymbol('\\:', 'group2', 'fi-kmath-spacing4-a'),
+                new AdvancedSymbol('\\;', 'group2', 'fi-kmath-spacing5-a'),
+                new AdvancedSymbol('\\!', 'group2', 'fi-kmath-spacing-minus3-a'),
+                new AdvancedSymbol('\\ ', 'group2', 'fi-kmath-spacing-normal-a'),
+                new AdvancedSymbol('\\quad', 'group2', 'fi-kmath-spacing-quad-a'),
+                new AdvancedSymbol('\\qquad', 'group2', 'fi-kmath-spacing-qquad-a'),
+                // new Symbol('\\quad', '\\quad', 'group2', '\\quad', '', '', 'fi-kmath-spacing-quad-a'),
+                // new Symbol('\\qquad', '\\qquad', 'group2', '\\qquad', '', '', 'fi-kmath-spacing-qquad-a'),
             ];
             /**
              * render category
@@ -803,14 +969,25 @@
                         begintxt = "\\begin{Vmatrix}\n";
                         endtxt = "\n\\end{Vmatrix}";
                         break;
+                    case 'eqnarray':
+                        begintxt = "\\begin{eqnarray*}\n";
+                        endtxt = "\n\\end{eqnarray*}";
+                        break;
                     default:
                         console.log('no match.');
                         return '';
                 }
 
                 for (var c = 0; c < datas.y; c++) {
+                    if(datas.title == 'eqnarray'){
+                        result += " & = & "
+                    }
                     for (var a = 0; a < datas.x - 1; a++) {
-                        result += " & "
+                        if(datas.title == 'eqnarray'){
+                            result += " & = & "
+                        }else{
+                            result += " & "
+                        }
                     }
                     if (c < datas.y - 1) {
                         result += "\\\\\n"
@@ -842,7 +1019,7 @@
             this.iconClass = iconClass;
             this.createTemplate = function (isBasic) {
                 var tit = isBasic ? this.latex : this.advance;
-                var text, clazz = '';
+                var text, clazz, style = '';
                 if (this.iconClass) {
                     text = '<span class="' + this.iconClass + '"></span>';
                     clazz = 'directDisplay ' + this.group;
@@ -850,11 +1027,25 @@
                     text = this.text;
                     clazz = this.group;
                 }
-                var result = this.style ?
-                    '<li class="' + clazz + '" title="' + tit + '" style="' + this.style + '" data-mq="' + this.needUseWrite + '">' + text + '</li>' :
-                    '<li class="' + clazz + '" title="' + tit + '" data-mq="' + this.needUseWrite + '">' + text + '</li>';
+                style = this.style ? this.style : ''
+
+                // var result = this.style ?
+                //     '<li class="' + clazz + '" title="' + tit + '" style="' + this.style + '" data-mq="' + this.needUseWrite + '">' + text + '</li>' :
+                //     '<li class="' + clazz + '" title="' + tit + '" data-mq="' + this.needUseWrite + '">' + text + '</li>';
                 // var result = '<li class="'+ this.group +'" title="'+ tit +'">' + this.advance + '</li>';
+
+                var result = '<li class="' + clazz + '" title="' + tit + '" style="' + style + '" data-mq="' + this.needUseWrite + '">' + text + '</li>';
                 return result;
+            }
+        }
+
+        function AdvancedSymbol(advance, group, iconClass) {
+            this.advance = advance;
+            this.group = group;
+            this.iconClass = iconClass;
+            this.createTemplate = function (isBasic) {
+                var result = '<li class="directDisplay ' + this.group + '" title="' + advance + '"><span class="' + this.iconClass + '"></span></li>';
+                return isBasic ? "" : result;
             }
         }
 
@@ -885,26 +1076,26 @@
             }
             doc.getElementsByTagName("head")[0].appendChild(styleNode);
         }
-        var kmathcss = '.customMatrix{position:absolute;display:inline-block;padding:5px;background:#fff;border:1px solid #9c9a9a;border-radius:6px;z-index:99999;font-family:Segoe UI}.customMatrix .title{float:left;padding-bottom:2px}.closeCustomMatrix{float:right;cursor:pointer}.customMatrixTable{clear:both;border-right:1px solid #eee;border-bottom:1px solid #eee;border-spacing:0}.customMatrixTable td{height:20px;width:20px;border-top:1px solid #eee;border-left:1px solid #eee;cursor:pointer}.customMatrixTable td.on{background:darkgray}.math-insert.button,.math-cancel.button{float:right;margin-top:20px;margin-left:15px;box-sizing:border-box}#kmath,[data-role="kmath"]{padding:0 5px 6px;max-width:900px;min-width:720px;font-family:"Times New Roman",serif;border:1px solid #ccc}.math-category{padding:0;margin:0}.math-category>li{display:inline-block;padding:0 15px;line-height:44px;cursor:pointer;box-sizing:border-box}.math-category>li>span{padding-left:6px}.math-category>li.selected-category{border-bottom:2px solid #5FB554}.math-symbol{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;height:142px;padding:5px 5px 0;margin:0;border:1px solid #dbdbdb;border-top-color:#5FB554;box-sizing:border-box}.math-symbol>li{list-style:none;padding:0;overflow:hidden;margin-left:-1px;margin-bottom:5px;height:40px;width:40px;line-height:35px;text-align:center;color:#000;border:1px solid #dbdbdb;cursor:pointer;box-sizing:border-box}.math-symbol>li.directDisplay{font-size:2em;padding-top:4px}.advance-editarea{display:block;overflow:auto;width:98%;margin:0 auto;height:120px}.advance-view{overflow:auto;margin:0 auto;height:143px}.advance-editarea::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}.advance-editarea::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}.advance-view::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}.advance-view::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}.basic-editarea,.basic-editarea .mq-root-block,.basic-editarea .mq-math-mode .mq-root-block{overflow:auto;width:auto}.basic-editarea{clear:both;display:block;width:99%;margin:0 auto;height:267px}.basic-editarea::-webkit-scrollbar,.basic-editarea .mq-root-block::-webkit-scrollbar,.basic-editarea .mq-math-mode .mq-root-block::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}.basic-editarea::-webkit-scrollbar-thumb,.basic-editarea .mq-root-block::-webkit-scrollbar-thumb,.basic-editarea .mq-math-mode .mq-root-block::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}.kmath-message{position:absolute;bottom:0.1em;left:0.5em;font-size:0.9em;font-family:Verdana}.blue-link{margin:10px 0;float:right;border:none;background:none;color:#3a9be5;cursor:pointer}.blue-link:hover{text-decoration:underline}.math-symbol .mq-empty{display:none!important}.math-symbol big{font-size:1.3em!important}';
-        var mathjaxcss = ".mjx-chtml{display:inline-block;line-height:0;text-indent:0;text-align:left;text-transform:none;font-style:normal;font-weight:normal;font-size:100%;font-size-adjust:none;letter-spacing:normal;word-wrap:normal;word-spacing:normal;white-space:nowrap;float:none;direction:ltr;max-width:none;max-height:none;min-width:0;min-height:0;border:0;margin:0;padding:1px 0}.MJXc-display{display:block;text-align:center;margin:1em 0;padding:0}.mjx-chtml[tabindex]:focus,body :focus .mjx-chtml[tabindex]{display:inline-table}.mjx-full-width{text-align:center;display:table-cell!important;width:10000em}.mjx-math{display:inline-block;border-collapse:separate;border-spacing:0}.mjx-math *{display:inline-block;-webkit-box-sizing:content-box!important;-moz-box-sizing:content-box!important;box-sizing:content-box!important;text-align:left}.mjx-numerator{display:block;text-align:center}.mjx-denominator{display:block;text-align:center}.MJXc-stacked{height:0;position:relative}.MJXc-stacked>*{position:absolute}.MJXc-bevelled>*{display:inline-block}" +
-            ".mjx-stack{display:inline-block}.mjx-op{display:block}.mjx-under{display:table-cell}.mjx-over{display:block}.mjx-over>*{padding-left:0!important;padding-right:0!important}.mjx-under>*{padding-left:0!important;padding-right:0!important}.mjx-stack>.mjx-sup{display:block}.mjx-stack>.mjx-sub{display:block}.mjx-prestack>.mjx-presup{display:block}.mjx-prestack>.mjx-presub{display:block}.mjx-delim-h>.mjx-char{display:inline-block}.mjx-surd{vertical-align:top}.mjx-mphantom *{visibility:hidden}.mjx-merror{background-color:#ff8;color:#c00;border:1px solid #c00;padding:2px 3px;font-style:normal;font-size:90%}.mjx-annotation-xml{line-height:normal}.mjx-menclose>svg{fill:none;stroke:currentColor}.mjx-mtr{display:table-row}.mjx-mlabeledtr{display:table-row}.mjx-mtd{display:table-cell;text-align:center}.mjx-label{display:table-row}.mjx-box{display:inline-block}.mjx-block{display:block}.mjx-span{display:inline}.mjx-char{display:block;white-space:pre}.mjx-itable{display:inline-table;width:auto}.mjx-row{display:table-row}" +
-            ".mjx-cell{display:table-cell}.mjx-table{display:table;width:100%}.mjx-line{display:block;height:0}.mjx-strut{width:0;padding-top:1em}.mjx-vsize{width:0}.MJXc-space1{margin-left:.167em}.MJXc-space2{margin-left:.222em}.MJXc-space3{margin-left:.278em}.mjx-chartest{display:block;visibility:hidden;position:absolute;top:0;line-height:normal;font-size:500%}.mjx-chartest .mjx-char{display:inline}.mjx-chartest .mjx-box{padding-top:1000px}.MJXc-processing{visibility:hidden;position:fixed;width:0;height:0;overflow:hidden}.MJXc-processed{display:none}.mjx-test{display:block;font-style:normal;font-weight:normal;font-size:100%;font-size-adjust:none;text-indent:0;text-transform:none;letter-spacing:normal;word-spacing:normal;overflow:hidden;height:1px}.mjx-ex-box-test{position:absolute;width:1px;height:60ex}.mjx-line-box-test{display:table!important}.mjx-line-box-test span{display:table-cell!important;width:10000em!important;min-width:0;max-width:none;padding:0;border:0;margin:0}#MathJax_CHTML_Tooltip{background-color:InfoBackground;color:InfoText;border:1px solid black;box-shadow:2px 2px 5px #aaa;-webkit-box-shadow:2px 2px 5px #aaa;-moz-box-shadow:2px 2px 5px #aaa;-khtml-box-shadow:2px 2px 5px #aaa;padding:3px 4px;z-index:401;position:absolute;left:0;top:0;width:auto;height:auto;display:none}" +
-            ".mjx-chtml .mjx-noError{line-height:1.2;vertical-align:;font-size:90%;text-align:left;color:black;padding:1px 3px;border:1px solid}.MJXc-TeX-unknown-R{font-family:STIXGeneral,'Cambria Math','Arial Unicode MS',serif;font-style:normal;font-weight:normal}.MJXc-TeX-unknown-I{font-family:STIXGeneral,'Cambria Math','Arial Unicode MS',serif;font-style:italic;font-weight:normal}.MJXc-TeX-unknown-B{font-family:STIXGeneral,'Cambria Math','Arial Unicode MS',serif;font-style:normal;font-weight:bold}.MJXc-TeX-unknown-BI{font-family:STIXGeneral,'Cambria Math','Arial Unicode MS',serif;font-style:italic;font-weight:bold}.MJXc-TeX-ams-R{font-family:MJXc-TeX-ams-R,MJXc-TeX-ams-Rw}.MJXc-TeX-cal-B{font-family:MJXc-TeX-cal-B,MJXc-TeX-cal-Bx,MJXc-TeX-cal-Bw}.MJXc-TeX-frak-R{font-family:MJXc-TeX-frak-R,MJXc-TeX-frak-Rw}.MJXc-TeX-frak-B{font-family:MJXc-TeX-frak-B,MJXc-TeX-frak-Bx,MJXc-TeX-frak-Bw}" +
-            ".MJXc-TeX-math-BI{font-family:MJXc-TeX-math-BI,MJXc-TeX-math-BIx,MJXc-TeX-math-BIw}.MJXc-TeX-sans-R{font-family:MJXc-TeX-sans-R,MJXc-TeX-sans-Rw}.MJXc-TeX-sans-B{font-family:MJXc-TeX-sans-B,MJXc-TeX-sans-Bx,MJXc-TeX-sans-Bw}.MJXc-TeX-sans-I{font-family:MJXc-TeX-sans-I,MJXc-TeX-sans-Ix,MJXc-TeX-sans-Iw}.MJXc-TeX-script-R{font-family:MJXc-TeX-script-R,MJXc-TeX-script-Rw}.MJXc-TeX-type-R{font-family:MJXc-TeX-type-R,MJXc-TeX-type-Rw}.MJXc-TeX-cal-R{font-family:MJXc-TeX-cal-R,MJXc-TeX-cal-Rw}.MJXc-TeX-main-B{font-family:MJXc-TeX-main-B,MJXc-TeX-main-Bx,MJXc-TeX-main-Bw}.MJXc-TeX-main-I{font-family:MJXc-TeX-main-I,MJXc-TeX-main-Ix,MJXc-TeX-main-Iw}.MJXc-TeX-main-R{font-family:MJXc-TeX-main-R,MJXc-TeX-main-Rw}.MJXc-TeX-math-I{font-family:MJXc-TeX-math-I,MJXc-TeX-math-Ix,MJXc-TeX-math-Iw}.MJXc-TeX-size1-R{font-family:MJXc-TeX-size1-R,MJXc-TeX-size1-Rw}.MJXc-TeX-size2-R{font-family:MJXc-TeX-size2-R,MJXc-TeX-size2-Rw}.MJXc-TeX-size3-R{font-family:MJXc-TeX-size3-R,MJXc-TeX-size3-Rw}.MJXc-TeX-size4-R{font-family:MJXc-TeX-size4-R,MJXc-TeX-size4-Rw}" +
-            "@font-face{font-family:MJXc-TeX-ams-R;src:local('MathJax_AMS'),local('MathJax_AMS-Regular')}@font-face{font-family:MJXc-TeX-ams-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_AMS-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_AMS-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_AMS-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-cal-B;src:local('MathJax_Caligraphic Bold'),local('MathJax_Caligraphic-Bold')}@font-face{font-family:MJXc-TeX-cal-Bx;src:local('MathJax_Caligraphic');font-weight:bold}@font-face{font-family:MJXc-TeX-cal-Bw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Caligraphic-Bold.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Caligraphic-Bold.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Caligraphic-Bold.otf') format('opentype')}@font-face{font-family:MJXc-TeX-frak-R;src:local('MathJax_Fraktur'),local('MathJax_Fraktur-Regular')}" +
-            "@font-face{font-family:MJXc-TeX-frak-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Fraktur-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Fraktur-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Fraktur-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-frak-B;src:local('MathJax_Fraktur Bold'),local('MathJax_Fraktur-Bold')}@font-face{font-family:MJXc-TeX-frak-Bx;src:local('MathJax_Fraktur');font-weight:bold}@font-face{font-family:MJXc-TeX-frak-Bw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Fraktur-Bold.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Fraktur-Bold.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Fraktur-Bold.otf') format('opentype')}@font-face{font-family:MJXc-TeX-math-BI;src:local('MathJax_Math BoldItalic'),local('MathJax_Math-BoldItalic')}@font-face{font-family:MJXc-TeX-math-BIx;src:local('MathJax_Math');font-weight:bold;font-style:italic}" +
-            "@font-face{font-family:MJXc-TeX-math-BIw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Math-BoldItalic.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Math-BoldItalic.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Math-BoldItalic.otf') format('opentype')}@font-face{font-family:MJXc-TeX-sans-R;src:local('MathJax_SansSerif'),local('MathJax_SansSerif-Regular')}@font-face{font-family:MJXc-TeX-sans-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_SansSerif-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_SansSerif-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_SansSerif-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-sans-B;src:local('MathJax_SansSerif Bold'),local('MathJax_SansSerif-Bold')}@font-face{font-family:MJXc-TeX-sans-Bx;src:local('MathJax_SansSerif');font-weight:bold}@font-face{font-family:MJXc-TeX-sans-Bw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_SansSerif-Bold.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_SansSerif-Bold.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_SansSerif-Bold.otf') format('opentype')}" +
-            "@font-face{font-family:MJXc-TeX-sans-I;src:local('MathJax_SansSerif Italic'),local('MathJax_SansSerif-Italic')}@font-face{font-family:MJXc-TeX-sans-Ix;src:local('MathJax_SansSerif');font-style:italic}@font-face{font-family:MJXc-TeX-sans-Iw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_SansSerif-Italic.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_SansSerif-Italic.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_SansSerif-Italic.otf') format('opentype')}@font-face{font-family:MJXc-TeX-script-R;src:local('MathJax_Script'),local('MathJax_Script-Regular')}@font-face{font-family:MJXc-TeX-script-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Script-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Script-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Script-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-type-R;src:local('MathJax_Typewriter'),local('MathJax_Typewriter-Regular')}" +
-            "@font-face{font-family:MJXc-TeX-type-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Typewriter-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Typewriter-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Typewriter-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-cal-R;src:local('MathJax_Caligraphic'),local('MathJax_Caligraphic-Regular')}@font-face{font-family:MJXc-TeX-cal-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Caligraphic-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Caligraphic-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Caligraphic-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-main-B;src:local('MathJax_Main Bold'),local('MathJax_Main-Bold')}@font-face{font-family:MJXc-TeX-main-Bx;src:local('MathJax_Main');font-weight:bold}@font-face{font-family:MJXc-TeX-main-Bw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Main-Bold.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Bold.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Bold.otf') format('opentype')}" +
-            "@font-face{font-family:MJXc-TeX-main-I;src:local('MathJax_Main Italic'),local('MathJax_Main-Italic')}@font-face{font-family:MJXc-TeX-main-Ix;src:local('MathJax_Main');font-style:italic}@font-face{font-family:MJXc-TeX-main-Iw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Main-Italic.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Italic.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Italic.otf') format('opentype')}@font-face{font-family:MJXc-TeX-main-R;src:local('MathJax_Main'),local('MathJax_Main-Regular')}@font-face{font-family:MJXc-TeX-main-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Main-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-math-I;src:local('MathJax_Math Italic'),local('MathJax_Math-Italic')}" +
-            "@font-face{font-family:MJXc-TeX-math-Ix;src:local('MathJax_Math');font-style:italic}@font-face{font-family:MJXc-TeX-math-Iw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Math-Italic.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Math-Italic.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Math-Italic.otf') format('opentype')}@font-face{font-family:MJXc-TeX-size1-R;src:local('MathJax_Size1'),local('MathJax_Size1-Regular')}@font-face{font-family:MJXc-TeX-size1-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size1-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size1-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size1-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-size2-R;src:local('MathJax_Size2'),local('MathJax_Size2-Regular')}@font-face{font-family:MJXc-TeX-size2-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size2-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size2-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size2-Regular.otf') format('opentype')}" +
-            "@font-face{font-family:MJXc-TeX-size3-R;src:local('MathJax_Size3'),local('MathJax_Size3-Regular')}@font-face{font-family:MJXc-TeX-size3-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size3-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size3-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size3-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-size4-R;src:local('MathJax_Size4'),local('MathJax_Size4-Regular')}@font-face{font-family:MJXc-TeX-size4-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size4-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size4-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size4-Regular.otf') format('opentype')}" +
-            ".kmath-contextmenu{font-family:Verdana;font-size:13px;position:absolute;margin:0;padding:0;list-style:none;background:#fff;border:1px solid #ccc;z-index:999999}.kmath-contextmenu li{padding:0 13px;line-height:40px;cursor:pointer}.kmath-contextmenu li:hover{background:#eefbee}";
+        // var kmathcss = '.kmath-select{position:relative;z-index:999;margin:4px 0 0 5px;max-width:160px}.kmath-select-menu{display:none;padding:0px;margin:0px;min-width:155px;position:absolute;top:100%;width:100%;left:0;background:#fff;border:1px solid #ccc;max-height:150px;overflow:auto}.open .kmath-select-menu{display:inline-block}.kmath-select-menuitem{list-style:none;border:0;padding:0 6px;margin-top:1px;margin-bottom:2px;line-height:2}.kmath-select-menuitem:hover{background-color:#eefbee}.kmath-select-menuitem.select{background-color:#eefbee}.kmath-select-input{border:1px solid #a9a9a9;background-color:transparent;width:100%;line-height:2;padding:0 6px;cursor:default;box-sizing:border-box}.kmath-select-div:after{content:"";border-top-width:5px;border-bottom-width:0px;border-color:transparent;border-top-color:#232323;border-style:solid;position:absolute;top:13px;right:10px;z-index:-1}.none{display:none}.customMatrix{position:absolute;display:inline-block;min-width:230px;padding:5px;background:#fff;border:1px solid #9c9a9a;border-radius:6px;z-index:99999;font-family:Segoe UI}.customMatrix .title{float:left;padding-bottom:2px}.closeCustomMatrix{float:right;cursor:pointer}.customMatrixTable{clear:both;border-right:1px solid #eee;border-bottom:1px solid #eee;border-spacing:0}.customMatrixTable td{height:20px;width:20px;border-top:1px solid #eee;border-left:1px solid #eee;cursor:pointer}.customMatrixTable td.on{background:darkgray}.math-insert.button,.math-cancel.button{float:right;margin-top:20px;margin-left:15px;box-sizing:border-box}#kmath,[data-role="kmath"]{padding:0 5px 6px;max-width:900px;min-width:720px;font-family:"Times New Roman",serif;border:1px solid #ccc}.math-category{padding:0;margin:0}.math-category>li{display:inline-block;padding:0 15px;line-height:44px;cursor:pointer;box-sizing:border-box}.math-category>li>span{padding-left:6px}.math-category>li.selected-category{border-bottom:2px solid #5FB554}.math-symbol{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;height:142px;padding:5px 5px 0;margin:0;border:1px solid #dbdbdb;border-top-color:#5FB554;box-sizing:border-box}.math-symbol>li{list-style:none;padding:0;overflow:hidden;margin-left:-1px;margin-bottom:5px;height:40px;width:40px;line-height:35px;text-align:center;color:#000;border:1px solid #dbdbdb;cursor:pointer;box-sizing:border-box}.math-symbol>li.directDisplay{font-size:2em;padding-top:4px}.advance-editarea{display:block;overflow:auto;width:98%;margin:0 auto;height:120px}.advance-view{overflow:auto;margin:0 auto;height:144px}.advance-editarea::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}.advance-editarea::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}.advance-view::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}.advance-view::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}.basic-editarea,.basic-editarea .mq-root-block,.basic-editarea .mq-math-mode .mq-root-block{overflow:auto;width:auto}.basic-editarea{clear:both;display:block;width:99%;margin:0 auto;height:300px}.basic-editarea::-webkit-scrollbar,.basic-editarea .mq-root-block::-webkit-scrollbar,.basic-editarea .mq-math-mode .mq-root-block::-webkit-scrollbar{-webkit-appearance:none;width:10px;height:10px}.basic-editarea::-webkit-scrollbar-thumb,.basic-editarea .mq-root-block::-webkit-scrollbar-thumb,.basic-editarea .mq-math-mode .mq-root-block::-webkit-scrollbar-thumb{border-radius:8px;border:2px solid #fff;background-color:rgba(0,0,0,.3)}.kmath-message{position:absolute;bottom:0.1em;left:0.5em;font-size:0.9em;font-family:Verdana}.blue-link{margin:10px 0;float:right;border:none;background:none;color:#3a9be5;cursor:pointer}.blue-link:hover{text-decoration:underline}.math-symbol .mq-empty{display:none!important}.math-symbol big{font-size:1.3em!important}';
+        // var mathjaxcss = ".mjx-chtml{display:inline-block;line-height:0;text-indent:0;text-align:left;text-transform:none;font-style:normal;font-weight:normal;font-size:100%;font-size-adjust:none;letter-spacing:normal;word-wrap:normal;word-spacing:normal;white-space:nowrap;float:none;direction:ltr;max-width:none;max-height:none;min-width:0;min-height:0;border:0;margin:0;padding:1px 0}.MJXc-display{display:block;text-align:center;margin:1em 0;padding:0}.mjx-chtml[tabindex]:focus,body :focus .mjx-chtml[tabindex]{display:inline-table}.mjx-full-width{text-align:center;display:table-cell!important;width:10000em}.mjx-math{display:inline-block;border-collapse:separate;border-spacing:0}.mjx-math *{display:inline-block;-webkit-box-sizing:content-box!important;-moz-box-sizing:content-box!important;box-sizing:content-box!important;text-align:left}.mjx-numerator{display:block;text-align:center}.mjx-denominator{display:block;text-align:center}.MJXc-stacked{height:0;position:relative}.MJXc-stacked>*{position:absolute}.MJXc-bevelled>*{display:inline-block}" +
+        //     ".mjx-stack{display:inline-block}.mjx-op{display:block}.mjx-under{display:table-cell}.mjx-over{display:block}.mjx-over>*{padding-left:0!important;padding-right:0!important}.mjx-under>*{padding-left:0!important;padding-right:0!important}.mjx-stack>.mjx-sup{display:block}.mjx-stack>.mjx-sub{display:block}.mjx-prestack>.mjx-presup{display:block}.mjx-prestack>.mjx-presub{display:block}.mjx-delim-h>.mjx-char{display:inline-block}.mjx-surd{vertical-align:top}.mjx-mphantom *{visibility:hidden}.mjx-merror{background-color:#ff8;color:#c00;border:1px solid #c00;padding:2px 3px;font-style:normal;font-size:90%}.mjx-annotation-xml{line-height:normal}.mjx-menclose>svg{fill:none;stroke:currentColor}.mjx-mtr{display:table-row}.mjx-mlabeledtr{display:table-row}.mjx-mtd{display:table-cell;text-align:center}.mjx-label{display:table-row}.mjx-box{display:inline-block}.mjx-block{display:block}.mjx-span{display:inline}.mjx-char{display:block;white-space:pre}.mjx-itable{display:inline-table;width:auto}.mjx-row{display:table-row}" +
+        //     ".mjx-cell{display:table-cell}.mjx-table{display:table;width:100%}.mjx-line{display:block;height:0}.mjx-strut{width:0;padding-top:1em}.mjx-vsize{width:0}.MJXc-space1{margin-left:.167em}.MJXc-space2{margin-left:.222em}.MJXc-space3{margin-left:.278em}.mjx-chartest{display:block;visibility:hidden;position:absolute;top:0;line-height:normal;font-size:500%}.mjx-chartest .mjx-char{display:inline}.mjx-chartest .mjx-box{padding-top:1000px}.MJXc-processing{visibility:hidden;position:fixed;width:0;height:0;overflow:hidden}.MJXc-processed{display:none}.mjx-test{display:block;font-style:normal;font-weight:normal;font-size:100%;font-size-adjust:none;text-indent:0;text-transform:none;letter-spacing:normal;word-spacing:normal;overflow:hidden;height:1px}.mjx-ex-box-test{position:absolute;width:1px;height:60ex}.mjx-line-box-test{display:table!important}.mjx-line-box-test span{display:table-cell!important;width:10000em!important;min-width:0;max-width:none;padding:0;border:0;margin:0}#MathJax_CHTML_Tooltip{background-color:InfoBackground;color:InfoText;border:1px solid black;box-shadow:2px 2px 5px #aaa;-webkit-box-shadow:2px 2px 5px #aaa;-moz-box-shadow:2px 2px 5px #aaa;-khtml-box-shadow:2px 2px 5px #aaa;padding:3px 4px;z-index:401;position:absolute;left:0;top:0;width:auto;height:auto;display:none}" +
+        //     ".mjx-chtml .mjx-noError{line-height:1.2;vertical-align:;font-size:90%;text-align:left;color:black;padding:1px 3px;border:1px solid}.MJXc-TeX-unknown-R{font-family:STIXGeneral,'Cambria Math','Arial Unicode MS',serif;font-style:normal;font-weight:normal}.MJXc-TeX-unknown-I{font-family:STIXGeneral,'Cambria Math','Arial Unicode MS',serif;font-style:italic;font-weight:normal}.MJXc-TeX-unknown-B{font-family:STIXGeneral,'Cambria Math','Arial Unicode MS',serif;font-style:normal;font-weight:bold}.MJXc-TeX-unknown-BI{font-family:STIXGeneral,'Cambria Math','Arial Unicode MS',serif;font-style:italic;font-weight:bold}.MJXc-TeX-ams-R{font-family:MJXc-TeX-ams-R,MJXc-TeX-ams-Rw}.MJXc-TeX-cal-B{font-family:MJXc-TeX-cal-B,MJXc-TeX-cal-Bx,MJXc-TeX-cal-Bw}.MJXc-TeX-frak-R{font-family:MJXc-TeX-frak-R,MJXc-TeX-frak-Rw}.MJXc-TeX-frak-B{font-family:MJXc-TeX-frak-B,MJXc-TeX-frak-Bx,MJXc-TeX-frak-Bw}" +
+        //     ".MJXc-TeX-math-BI{font-family:MJXc-TeX-math-BI,MJXc-TeX-math-BIx,MJXc-TeX-math-BIw}.MJXc-TeX-sans-R{font-family:MJXc-TeX-sans-R,MJXc-TeX-sans-Rw}.MJXc-TeX-sans-B{font-family:MJXc-TeX-sans-B,MJXc-TeX-sans-Bx,MJXc-TeX-sans-Bw}.MJXc-TeX-sans-I{font-family:MJXc-TeX-sans-I,MJXc-TeX-sans-Ix,MJXc-TeX-sans-Iw}.MJXc-TeX-script-R{font-family:MJXc-TeX-script-R,MJXc-TeX-script-Rw}.MJXc-TeX-type-R{font-family:MJXc-TeX-type-R,MJXc-TeX-type-Rw}.MJXc-TeX-cal-R{font-family:MJXc-TeX-cal-R,MJXc-TeX-cal-Rw}.MJXc-TeX-main-B{font-family:MJXc-TeX-main-B,MJXc-TeX-main-Bx,MJXc-TeX-main-Bw}.MJXc-TeX-main-I{font-family:MJXc-TeX-main-I,MJXc-TeX-main-Ix,MJXc-TeX-main-Iw}.MJXc-TeX-main-R{font-family:MJXc-TeX-main-R,MJXc-TeX-main-Rw}.MJXc-TeX-math-I{font-family:MJXc-TeX-math-I,MJXc-TeX-math-Ix,MJXc-TeX-math-Iw}.MJXc-TeX-size1-R{font-family:MJXc-TeX-size1-R,MJXc-TeX-size1-Rw}.MJXc-TeX-size2-R{font-family:MJXc-TeX-size2-R,MJXc-TeX-size2-Rw}.MJXc-TeX-size3-R{font-family:MJXc-TeX-size3-R,MJXc-TeX-size3-Rw}.MJXc-TeX-size4-R{font-family:MJXc-TeX-size4-R,MJXc-TeX-size4-Rw}" +
+        //     "@font-face{font-family:MJXc-TeX-ams-R;src:local('MathJax_AMS'),local('MathJax_AMS-Regular')}@font-face{font-family:MJXc-TeX-ams-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_AMS-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_AMS-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_AMS-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-cal-B;src:local('MathJax_Caligraphic Bold'),local('MathJax_Caligraphic-Bold')}@font-face{font-family:MJXc-TeX-cal-Bx;src:local('MathJax_Caligraphic');font-weight:bold}@font-face{font-family:MJXc-TeX-cal-Bw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Caligraphic-Bold.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Caligraphic-Bold.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Caligraphic-Bold.otf') format('opentype')}@font-face{font-family:MJXc-TeX-frak-R;src:local('MathJax_Fraktur'),local('MathJax_Fraktur-Regular')}" +
+        //     "@font-face{font-family:MJXc-TeX-frak-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Fraktur-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Fraktur-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Fraktur-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-frak-B;src:local('MathJax_Fraktur Bold'),local('MathJax_Fraktur-Bold')}@font-face{font-family:MJXc-TeX-frak-Bx;src:local('MathJax_Fraktur');font-weight:bold}@font-face{font-family:MJXc-TeX-frak-Bw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Fraktur-Bold.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Fraktur-Bold.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Fraktur-Bold.otf') format('opentype')}@font-face{font-family:MJXc-TeX-math-BI;src:local('MathJax_Math BoldItalic'),local('MathJax_Math-BoldItalic')}@font-face{font-family:MJXc-TeX-math-BIx;src:local('MathJax_Math');font-weight:bold;font-style:italic}" +
+        //     "@font-face{font-family:MJXc-TeX-math-BIw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Math-BoldItalic.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Math-BoldItalic.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Math-BoldItalic.otf') format('opentype')}@font-face{font-family:MJXc-TeX-sans-R;src:local('MathJax_SansSerif'),local('MathJax_SansSerif-Regular')}@font-face{font-family:MJXc-TeX-sans-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_SansSerif-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_SansSerif-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_SansSerif-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-sans-B;src:local('MathJax_SansSerif Bold'),local('MathJax_SansSerif-Bold')}@font-face{font-family:MJXc-TeX-sans-Bx;src:local('MathJax_SansSerif');font-weight:bold}@font-face{font-family:MJXc-TeX-sans-Bw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_SansSerif-Bold.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_SansSerif-Bold.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_SansSerif-Bold.otf') format('opentype')}" +
+        //     "@font-face{font-family:MJXc-TeX-sans-I;src:local('MathJax_SansSerif Italic'),local('MathJax_SansSerif-Italic')}@font-face{font-family:MJXc-TeX-sans-Ix;src:local('MathJax_SansSerif');font-style:italic}@font-face{font-family:MJXc-TeX-sans-Iw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_SansSerif-Italic.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_SansSerif-Italic.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_SansSerif-Italic.otf') format('opentype')}@font-face{font-family:MJXc-TeX-script-R;src:local('MathJax_Script'),local('MathJax_Script-Regular')}@font-face{font-family:MJXc-TeX-script-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Script-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Script-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Script-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-type-R;src:local('MathJax_Typewriter'),local('MathJax_Typewriter-Regular')}" +
+        //     "@font-face{font-family:MJXc-TeX-type-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Typewriter-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Typewriter-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Typewriter-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-cal-R;src:local('MathJax_Caligraphic'),local('MathJax_Caligraphic-Regular')}@font-face{font-family:MJXc-TeX-cal-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Caligraphic-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Caligraphic-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Caligraphic-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-main-B;src:local('MathJax_Main Bold'),local('MathJax_Main-Bold')}@font-face{font-family:MJXc-TeX-main-Bx;src:local('MathJax_Main');font-weight:bold}@font-face{font-family:MJXc-TeX-main-Bw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Main-Bold.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Bold.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Bold.otf') format('opentype')}" +
+        //     "@font-face{font-family:MJXc-TeX-main-I;src:local('MathJax_Main Italic'),local('MathJax_Main-Italic')}@font-face{font-family:MJXc-TeX-main-Ix;src:local('MathJax_Main');font-style:italic}@font-face{font-family:MJXc-TeX-main-Iw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Main-Italic.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Italic.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Italic.otf') format('opentype')}@font-face{font-family:MJXc-TeX-main-R;src:local('MathJax_Main'),local('MathJax_Main-Regular')}@font-face{font-family:MJXc-TeX-main-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Main-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Main-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Main-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-math-I;src:local('MathJax_Math Italic'),local('MathJax_Math-Italic')}" +
+        //     "@font-face{font-family:MJXc-TeX-math-Ix;src:local('MathJax_Math');font-style:italic}@font-face{font-family:MJXc-TeX-math-Iw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Math-Italic.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Math-Italic.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Math-Italic.otf') format('opentype')}@font-face{font-family:MJXc-TeX-size1-R;src:local('MathJax_Size1'),local('MathJax_Size1-Regular')}@font-face{font-family:MJXc-TeX-size1-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size1-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size1-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size1-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-size2-R;src:local('MathJax_Size2'),local('MathJax_Size2-Regular')}@font-face{font-family:MJXc-TeX-size2-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size2-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size2-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size2-Regular.otf') format('opentype')}" +
+        //     "@font-face{font-family:MJXc-TeX-size3-R;src:local('MathJax_Size3'),local('MathJax_Size3-Regular')}@font-face{font-family:MJXc-TeX-size3-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size3-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size3-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size3-Regular.otf') format('opentype')}@font-face{font-family:MJXc-TeX-size4-R;src:local('MathJax_Size4'),local('MathJax_Size4-Regular')}@font-face{font-family:MJXc-TeX-size4-Rw;src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/eot/MathJax_Size4-Regular.eot');src:url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/woff/MathJax_Size4-Regular.woff') format('woff'),url('https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/fonts/HTML-CSS/TeX/otf/MathJax_Size4-Regular.otf') format('opentype')}" +
+        //     ".mjx-chtml{border:1px solid rgba(255,255,255,0)}.mjx-chtml:focus{outline:0}.MathJax_CHTML_focused{border:1px solid rgba(77,144,254,0.9);border-radius:2px}.kmath-contextmenu{font-family:Verdana;font-size:13px;position:absolute;margin:0;padding:0;list-style:none;background:#fff;border:1px solid #ccc;z-index:999999}.kmath-contextmenu li{padding:0 13px;line-height:40px;cursor:pointer}.kmath-contextmenu li:hover{background:#eefbee}";
 
         //export KMath
         window.KMath = KMath;
-        KMath.addStyleNode = addStyleNode;
-        KMath.mathjaxcss = mathjaxcss;
+        // KMath.addStyleNode = addStyleNode;
+        // KMath.mathjaxcss = mathjaxcss;
     })(window);
 
 window.$$ = {
@@ -923,7 +1114,9 @@ window.$$ = {
             Delimiters: "Delimiters",
             Misc: "Miscellaneous",
             CannotRenderinMQ: "This equation is not available in the Basic View.",
-            TypesetFailed: "Failed to typeset the entered equations. Try again later."
+            TypesetFailed: "Failed to typeset the entered equations. Try again later.",
+            CopyLaTeX: "Copy LaTeX",
+            InvalidFormula: "The formula you insert is invalid"
         }
     }
 };
