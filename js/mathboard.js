@@ -688,6 +688,8 @@
 
                 new AdvancedSymbol('\\overset{\\leftrightarrow}{} ', 'group20', 'fi-kmath-overset-short-left-right-arrow-a'),
 
+                new AdvancedSymbol('\\overset{\\rightharpoonup}{} ', 'group20', 'fi-kmath-overset-right-harpoonup-a'),
+                new AdvancedSymbol('\\overset{\\leftharpoonup}{} ', 'group20', 'fi-kmath-overset-left-harpoonup-a'),
             ];
 
             this.Delimiters = [
@@ -714,7 +716,7 @@
                 new Matrix('smallmatrix', 'fi-kmath-small-matrix-a', 'group4'),
                 new Matrix('vmatrix', 'fi-kmath-v-matrix-a', 'group4'),
                 new Matrix('Vmatrix', 'fi-kmath-vv-matrix-a', 'group4'),
-                // new Matrix('eqnarray', 'fi-kmath-eqnarray-a', 'group4'),
+                new Matrix('eqnarray', 'fi-kmath-eqnarray-a', 'group4'),
 
             ];
 
@@ -746,9 +748,9 @@
                 new AdvancedSymbol('\\hslash', 'group1', 'fi-kmath-hslash-a'),
                 // new Symbol('\\AA', '\\AA', 'group1', '\\AA'),
                 new Symbol('A\^{\\circ}', 'A\^{\\circ}', 'group1', 'A\^{\\circ}', '', 'true', 'fi-kmath-sub-circ-a'),
-                new Symbol('A\^{\\prime}', 'A\^{\\prime}', 'group1', 'A\^{\\prime}', '', 'true', 'fi-kmath-sup-prime-a'),
-                new Symbol('A\^{\\prime\\prime}', 'A\^{\\prime\\prime}', 'group1', 'A\^{\\prime\\prime}', '', 'true', 'fi-kmath-sup-double-prime-a'),
-                new Symbol('A\^{\\prime\\prime\\prime}', 'A\^{\\prime\\prime\\prime}', 'group1', 'A\^{\\prime\\prime\\prime}', '', 'true', 'fi-kmath-sup-triple-prime-a'),
+                new Symbol('A\^{\'}', 'A\^{\'}', 'group1', 'A\^{\\prime}', '', 'true', 'fi-kmath-sup-prime-a'),
+                new Symbol('A\^{\'\'}', 'A\^{\'\'}', 'group1', 'A\^{\\prime\\prime}', '', 'true', 'fi-kmath-sup-double-prime-a'),
+                new Symbol('A\^{\'\'\'}', 'A\^{\'\'\'}', 'group1', 'A\^{\\prime\\prime\\prime}', '', 'true', 'fi-kmath-sup-triple-prime-a'),
 
                 new Symbol('\\circ', '\\circ', 'group1', '\\circ'),
                 new Symbol('\\bullet', '\\bullet', 'group1', '\\bullet'),
