@@ -125,34 +125,34 @@
             $kmath_window.find('.math-cancel').click(function () {
                 $kmath_window.data("kendoWindow").close();
             });
+            
+            // Disabled insert btn --> set formula to advance view --> check equation --> remove old one from editor --> insert --> set cursor position
             $kmath_window.find('.math-insert').click(function () {
+                $(this).attr('disabled', true);
+                if (mathEditor.isBasic && mathEditor.mathField) {
+                    mathEditor.setFormula('$$' + mathEditor.mathField.latex() + '$$', true);
+                }
                 // IE：此时editor已经失去焦点，所以不能得到range。
                 // var range = editor.getRange();
                 // range.deleteContents();
-
-                // 取出focus的数学表达式。使用后remove
-                if (document.body.kmath_equation) {
-                    range.setStartBefore(document.body.kmath_equation);
-                    range.setEndAfter(document.body.kmath_equation);
-                    document.body.kmath_equation = undefined;
-                }
-                var ele = range.extractContents();
-                var needSpace = true;
-                if (ele.childElementCount) {
-                    needSpace = !$(ele.firstElementChild).hasClass('MathJax_CHTML')
-                }
                 // range.insertNode(mathEditor.getFormula());
                 // editor.paste(mathEditor.getFormula().outerHTML);
-                $(this).attr('disabled', true);
-                MathJax.Hub.Queue(function () {
-                    if (mathEditor.isBasic && mathEditor.mathField) {
-                        mathEditor.setFormula('$$' + mathEditor.mathField.latex() + '$$', true);
-                    }
-                });
+                
                 MathJax.Hub.Queue(function () {
                     if(mathEditor.checkEquation()){
                         $kmath_window.find('.math-insert').attr('disabled', false);
                         return;
+                    }
+                    // 取出focus的数学表达式。使用后remove
+                    if (document.body.kmath_equation) {
+                        range.setStartBefore(document.body.kmath_equation);
+                        range.setEndAfter(document.body.kmath_equation);
+                        document.body.kmath_equation = undefined;
+                    }
+                    var ele = range.extractContents();
+                    var needSpace = true;
+                    if (ele.childElementCount) {
+                        needSpace = !$(ele.firstElementChild).hasClass('MathJax_CHTML')
                     }
                     var fragement = editor.document.createDocumentFragment(),
                         result = mathEditor.getFormula(),
