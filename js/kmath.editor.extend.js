@@ -63,6 +63,7 @@
                 $(editor.body).on('dblclick', '.MathJax_CHTML', { currentEditor: editor }, function (e) {
                     mathEditor.toggleView(false);
                     mathEditor.setFormula($(this).attr("data-latex"));
+                    mathEditor.setFormulaFontSize(this.style.fontSize);     // 设置font size为当前公式的大小
                     editor = e.data.currentEditor;
                     // 设置range
                     range.setStartBefore(this);
@@ -87,8 +88,10 @@
             if (equation_dom.length) {
                 mathEditor.setFormula(equation_dom.attr("data-latex"));
                 document.body.kmath_equation = equation_dom[0];         // 若带有focus标记，将equation缓存在body元素上。
+                mathEditor.setFormulaFontSize(equation_dom[0].style.fontSize);  // 设置font size为当前公式的大小
             } else {
                 mathEditor.setFormula('');
+                mathEditor.setFormulaFontSize();        // 非edit情况，则设置font size为默认值
             }
             mathEditor.$message && mathEditor.$message.hide();
             mathEditor.toggleView(false);

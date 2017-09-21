@@ -189,6 +189,19 @@
                 $toadvance_btn.trigger("click");
 
             };
+            this.setFormulaFontSize = function(size){
+                var index = 0;
+                if(size){
+                    for(var i = this.options.fsoptions.length; i--;){
+                        if(this.options.fsoptions[i].value == size){
+                            index = i;
+                            break;
+                        }
+                    }
+                }
+                $fontsize.kmathselect('option', 'selectedIndex', index);
+                $advance_view.css('font-size', this.options.fsoptions[index].value);
+            }
             /**
              * 给mathEditor赋值
              * @param {String}latex 数据源
@@ -228,8 +241,7 @@
                 dom = dom.find(".MathJax_CHTML");
                 // temporary enlarge the font size;
                 // dom.css('font-size', '125%');
-                var fs = $advance_view[0].style.fontSize;
-                dom.css('font-size', fs == '110%' ? '130%' : fs);
+                dom.css('font-size', $advance_view[0].style.fontSize);
                 styles = dom.attr('style');
                 // 阻止选中
                 dom.attr('style', styles + '-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; ');
@@ -311,7 +323,7 @@
                         '<div style="line-height: 2.2em; padding-left: 5px; float: left;">Formula: </div>' +
                         '<div style="float: right;" class="kmath-fontsize"></div>' +
                     '</div>' +
-                    '<div class="advance-view" style="visibility: visible; font-size: 110%;"></div>' +
+                    '<div class="advance-view" style="visibility: visible; font-size: '+ this.options.fsoptions[0].value +'"></div>' +
                     '</div>' +
                     // '<textarea id="basic-editarea"></textarea>'+
                     '<span class="basic-editarea"></span>' +
