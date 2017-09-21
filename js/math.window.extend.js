@@ -95,12 +95,15 @@
                         $(this.contentDocument.body).on('contextmenu', hideContextmenu);
                         // 在页面加载完成之后，将iframe存放在editor.body中。将在contextmenu中使用。
                         this.contentDocument.body.parentFrame = $(this);
+                        // this.contentDocument.body.onmousewheel = hideContextmenu;    鼠标滑轮滑动，就会触发。当没有滚动条时，不符合预期。
+                        $(this.contentWindow).scroll(hideContextmenu);
                     });
                     document.body.parentFrame = {
                         offset: function () {
                             return { left: 0, top: 0 };
                         }
                     }
+                    $(window).scroll(hideContextmenu);
                     $('.k-editor-toolbar').on('click', '.k-tool-group *', hideContextmenu);
                 }, 500);
             }
