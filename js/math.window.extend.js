@@ -19,7 +19,7 @@
                 '</div>');
             $kmath_window = $("#kmath-wrapper-" + this.uuid);
             $kmath_window.kendoWindow({
-                width: 875,
+                width: 885,
                 height: 635,
                 visible: false,
                 actions: ['close'],

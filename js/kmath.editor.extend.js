@@ -85,6 +85,7 @@
 
             // kendoWindow 打开前 检查 .MathJax_CHTML_focused
             equation_dom = $('.MathJax_CHTML_focused', editor.body);
+            mathEditor.toggleView(false);
             if (equation_dom.length) {
                 mathEditor.setFormula(equation_dom.attr("data-latex"));
                 document.body.kmath_equation = equation_dom[0];         // 若带有focus标记，将equation缓存在body元素上。
@@ -94,7 +95,6 @@
                 mathEditor.setFormulaFontSize();        // 非edit情况，则设置font size为默认值
             }
             mathEditor.$message && mathEditor.$message.hide();
-            mathEditor.toggleView(false);
             $kmath_window.data("kendoWindow").center().open();
         }
 
@@ -112,7 +112,7 @@
                 '</div>');
             $kmath_window = $("#kmath-wrapper-" + mathEditor.uuid);
             $kmath_window.kendoWindow({
-                width: 875,
+                width: 885,
                 height: 635,
                 visible: false,
                 actions: ['close'],

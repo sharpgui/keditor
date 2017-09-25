@@ -422,8 +422,10 @@
                 new Symbol('\\supscript', '\^{sup}', 'group0', '\^{sup}', 'font-size: 0.9em;'),
                 new Symbol('\\frac', '\\frac{n}{m}', 'group0', '\\frac{n}{m}', '', '', 'fi-kmath-frac-a'),
                 new AdvancedSymbol('\\tfrac{n}{m}', 'group0', 'fi-kmath-tiny-frac-a'),
-                new AdvancedSymbol('{n}/{m}', 'group0', 'fi-kmath-tilted-frac-a'),
-                new AdvancedSymbol('\\small{{n}/{m}}\\normalsize', 'group0', 'fi-kmath-tiny-tilted-frac-a'),
+                // new AdvancedSymbol('{n}/{m}', 'group0', 'fi-kmath-tilted-frac-a'),  
+                new Symbol('{n}/{m}', '{n}/{m}', 'group0', '{n}/{m}', '', 'true', 'fi-kmath-tilted-frac-a'),
+                new Symbol('\\ ^{n}/_{m}', '\\ ^{n}/_{m}', 'group0', '\\ ^{n}/_{m}', '', 'true', 'fi-kmath-slant-frac-a'),
+                new AdvancedSymbol('\\scriptsize{^{n}/_{m}}\\normalsize', 'group0', 'fi-kmath-tiny-slant-frac-a'),  //fi-kmath-tiny-tilted-frac-a removed
                 new Symbol('\\sqrt', '\\sqrt{x}', 'group0', '\\sqrt{x}', 'line-height: normal; padding-top: 5px;'),
                 new Symbol('\\nthroot', '\\sqrt[n]{x}', 'group0', '\\sqrt[n]{x}', 'line-height: normal; text-align: left'),
                 new Symbol('\\binomial', '\\binom{n}{m}', 'group0', '\\binom{n}{m}', 'line-height: normal; text-align: left; font-size: 1em; padding-left: 3px;'),
@@ -555,7 +557,7 @@
                 new Symbol('\\Psi', '\\Psi', 'group5', '\\Psi'),
                 new Symbol('\\Omega', '\\Omega', 'group5', '\\Omega'),
                 new Symbol('\\amalg', '\\amalg', 'group5', '\\amalg', 'font-size: 0.95em;'),
-                new AdvancedSymbol('\\smallint', 'group5', 'fi-kmath-small-int-a'),
+                // new AdvancedSymbol('\\smallint', 'group5', 'fi-kmath-small-int-a'),
 
             ];
 
@@ -734,7 +736,7 @@
 
             this.Misc = [
                 new Symbol('\\forall', '\\forall', 'group1', '\\forall'),
-                new Symbol('\\ldots', '\\ldots', 'group1', '\\ldots'),
+                new Symbol('\\dots', '\\dots', 'group1', '\\dots'),
                 new Symbol('\\cdots', '\\cdots', 'group1', '\\cdots'),
                 new Symbol('\\ddots', '\\ddots', 'group1', '\\ddots'),
                 new Symbol('\\vdots', '\\vdots', 'group1', '\\vdots'),
@@ -768,7 +770,7 @@
                 new Symbol('\\bullet', '\\bullet', 'group1', '\\bullet'),
                 new Symbol('\\setminus', '\\setminus', 'group1', '\\setminus'),
                 new Symbol('\\neg', '\\neg', 'group1', '\\neg'),
-                new Symbol('\\dots', '\\dots', 'group1', '\\dots'),
+                // new Symbol('\\dots', '\\dots', 'group1', '\\dots'),
                 new Symbol('\\Re', '\\Re', 'group1', '\\Re'),
                 new Symbol('\\Im', '\\Im', 'group1', '\\Im'),
                 new Symbol('\\partial', '\\partial', 'group1', '\\partial'),
@@ -798,8 +800,8 @@
                 new Symbol('\\C', '\\mathbb{C}', 'group3', '\\C', 'font-size: 1.3em'),
                 new Symbol('\\H', '\\mathbb{H}', 'group3', '\\H', 'font-size: 1.3em'),
 
-                new AdvancedSymbol('\\,', 'group2', 'fi-kmath-spacing3-a'),
-                new AdvancedSymbol('\\:', 'group2', 'fi-kmath-spacing4-a'),
+                // new AdvancedSymbol('\\,', 'group2', 'fi-kmath-spacing3-a'),
+                // new AdvancedSymbol('\\:', 'group2', 'fi-kmath-spacing4-a'),
                 new AdvancedSymbol('\\;', 'group2', 'fi-kmath-spacing5-a'),
                 new AdvancedSymbol('\\!', 'group2', 'fi-kmath-spacing-minus3-a'),
                 new AdvancedSymbol('\\ ', 'group2', 'fi-kmath-spacing-normal-a'),
@@ -807,6 +809,11 @@
                 new AdvancedSymbol('\\qquad', 'group2', 'fi-kmath-spacing-qquad-a'),
                 // new Symbol('\\quad', '\\quad', 'group2', '\\quad', '', '', 'fi-kmath-spacing-quad-a'),
                 // new Symbol('\\qquad', '\\qquad', 'group2', '\\qquad', '', '', 'fi-kmath-spacing-qquad-a'),
+
+                new AdvancedSymbol('\\scriptsize{\\sum}\\normalsize', 'group0', 'fi-kmath-sum-a', 'font-size: 1.6em'),  
+                new AdvancedSymbol('\\scriptsize{\\prod}\\normalsize', 'group0', 'fi-kmath-prod-a', 'font-size: 1.6em'),  
+                new AdvancedSymbol('\\scriptsize{\\coprod}\\normalsize', 'group0', 'fi-kmath-co-prod-a', 'font-size: 1.6em'),  
+                new AdvancedSymbol('\\smallint', 'group0', 'fi-kmath-small-int-a'),  
             ];
             /**
              * render category
@@ -1056,12 +1063,13 @@
             }
         }
 
-        function AdvancedSymbol(advance, group, iconClass) {
+        function AdvancedSymbol(advance, group, iconClass, style) {
             this.advance = advance;
             this.group = group;
             this.iconClass = iconClass;
+            this.style = style;
             this.createTemplate = function (isBasic) {
-                var result = '<li class="directDisplay ' + this.group + '" title="' + advance + '"><span class="' + this.iconClass + '"></span></li>';
+                var result = '<li class="directDisplay ' + this.group + '" title="' + advance + '" style="'+ ( this.style ? this.style : '') +'"><span class="' + this.iconClass + '"></span></li>';
                 return isBasic ? "" : result;
             }
         }
