@@ -183,6 +183,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.fi-kmath-slant-frac-a:before {
+  content: "\e967";
+}
+.fi-kmath-tiny-slant-frac-a:before {
+  content: "\e968";
+}
 .fi-kmath-eqn-array-a:before {
   content: "\e965";
 }

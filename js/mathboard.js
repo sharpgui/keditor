@@ -61,6 +61,10 @@
                 if ($(this.options.element).attr("data-role") == 'kmath') {
                     return;
                 }
+                MathJax.Hub.Config({
+                    menuSettings: { context: "Browser" },    // hide right-clicking menu
+                    displayAlign: "left"
+                });
                 // _init方法createWindow 之后才会创建所以this.element需要在这赋值
                 this.element = $(this.options.element).attr("data-role", "kmath");
                 this.element.html('<ul class="math-category"></ul>' +

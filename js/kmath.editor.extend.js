@@ -53,10 +53,6 @@
                 $(editor.body).off('focus', '.MathJax_CHTML');
                 $(editor.body).off('blur', '.MathJax_CHTML');
 
-// MathJax.Hub.Config({
-//     displayAlign: "left"
-// });
-
                 // 双击 .MathJax_CHTML 进入公式编辑
                 // 通过 .MathJax_CHTML_focused 标记选中的公式
                 // e.data.currentEditor 为双击事件中更新全局变量 editor
@@ -77,9 +73,6 @@
                 });
                 $(editor.body).on('blur', '.MathJax_CHTML', function (e) {
                     $(this).removeClass('MathJax_CHTML_focused');
-                });
-                MathJax.Hub.Config({
-                    menuSettings: { context: "Browser" }    // hide right-clicking menu
                 });
             }
 
