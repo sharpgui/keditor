@@ -100,7 +100,7 @@
                     });
                     document.body.parentFrame = {
                         offset: function () {
-                            return { left: 0, top: 0 };
+                            return { left: 0, top: 0, isNotFrame: true };
                         }
                     }
                     $(window).scroll(hideContextmenu);
@@ -146,7 +146,13 @@
         // 当前元素所在的iframe的offset
         // var parentFrameOffset = e.target.closest('body').parentFrame.offset();       // IE不能支持element.closest。改为JQueryElement.closest方式    
         var parentFrameOffset = $(e.target).closest('body').get(0).parentFrame.offset();
-        // e.pageX pageY 是鼠标位置。
-        $menu.css({ 'left': e.clientX + parentFrameOffset.left, 'top': e.clientY + parentFrameOffset.top });
+
+        // $menu 在document.body中，相对于body绝对定位。
+        // pageX pageY 是相对于文档的位置，clientX clientY 是相对于当前窗口的位置。
+        if(parentFrameOffset.isNotFrame){
+            $menu.css({ 'left': e.pageX, 'top': e.pageY});
+        }else{
+            $menu.css({ 'left': e.clientX + parentFrameOffset.left, 'top': e.clientY + parentFrameOffset.top });
+        }
         $menu.show();
     }
