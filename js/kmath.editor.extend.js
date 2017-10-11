@@ -62,8 +62,9 @@
                     mathEditor.setFormulaFontSize(this.style.fontSize);     // 设置font size为当前公式的大小
                     editor = e.data.currentEditor;
                     // 设置range
-                    range.setStartBefore(this);
-                    range.setEndAfter(this);
+                    // range.setStartBefore(this);
+                    // range.setEndAfter(this);
+                    document.body.kmath_equation = this;
                     // range.selectNode(n);
                     $kmath_window.data("kendoWindow").center().open();
                 });
@@ -119,10 +120,10 @@
                 $kmath_window.data("kendoWindow").close();
             });
             
-            // Disabled insert btn --> set formula to advance view --> check equation --> remove old one from editor --> insert --> set cursor position
+            // Disabled insert btn --> set formula to advance view --> check equation --> set old one from editor as selection --> insert --> set cursor position
             $kmath_window.find('.math-insert').click(function () {
                 $(this).attr('disabled', true);
-                if (mathEditor.isBasic && mathEditor.mathField) {
+                if (mathEditor.isBasic && mathEditor.mathField) {   // 如果处在Basic view，则将公式添加到advance view 
                     mathEditor.setFormula('$$' + mathEditor.mathField.latex() + '$$', true);
                 }
                 // IE：此时editor已经失去焦点，所以不能得到range。
@@ -131,41 +132,45 @@
                 // range.insertNode(mathEditor.getFormula());
                 // editor.paste(mathEditor.getFormula().outerHTML);
                 
-                MathJax.Hub.Queue(function () {
-                    if(mathEditor.checkEquation()){
+                MathJax.Hub.Queue(function () {    // 使用MathJax.Hub.Queue，目的是等待公式在advance view中渲染完成
+                    if(mathEditor.checkEquation()){     // 检查公式是否正确
                         $kmath_window.find('.math-insert').attr('disabled', false);
                         return;
                     }
-                    // 取出focus的数学表达式。使用后remove
-                    if (document.body.kmath_equation) {
-                        range.setStartBefore(document.body.kmath_equation);
+
+                    if (document.body.kmath_equation) {    // 检测是否有缓存公式
+                        range.setStartBefore(document.body.kmath_equation);     // 设置range，并设置selection。
                         range.setEndAfter(document.body.kmath_equation);
-                        document.body.kmath_equation = undefined;
+                        editor.selectRange(range);
+                        // needSpace = !$(document.body.kmath_equation).hasClass('MathJax_CHTML')   needspace = !document.body.kmath_equation
+                        // needSpace = false;
+                        setTimeout(function(){         // 之后该缓存用于判断是否需要添加空格，故使用settimeout方式remove该缓存
+                            document.body.kmath_equation = undefined;
+                        });
                     }
-                    var ele = range.extractContents();
-                    var needSpace = true;
-                    if (ele.childElementCount) {
-                        needSpace = !$(ele.firstElementChild).hasClass('MathJax_CHTML')
-                    }
-                    var fragement = editor.document.createDocumentFragment(),
-                        result = mathEditor.getFormula(),
+                    // var ele = range.extractContents();
+                    // var fragement = editor.document.createDocumentFragment(),
+                    var result = mathEditor.getFormula(),
                         id,
                         node;
-                    if (mathEditor.$message && !result) {
+                    if (mathEditor.$message && !result) {       // getFormula得到result为空时
                         mathEditor.$message.text($$.GCI18N.kMath.TypesetFailed);
                         mathEditor.$message.show(100);
                         $kmath_window.find('.math-insert').attr('disabled', false);
                         return;
                     }
+                    // result id属性值不为空，则说明包含公式。否则为空span标签。
                     id = result.id;
                     if (id) {
                         // span contentEditable="false" 去掉IE浏览器中显示在公式周围的虚线框。
                         // 添加一个空格，在公式之前。则能将光标放置在公式之前。
-                        needSpace ? result = $('<span></span>').append('<span>&nbsp;</span>').append($('<span contentEditable="false"></span>').append(result)).append('<span>&nbsp;</span>')[0] : '';
-                        fragement.appendChild(result);
-                        range.insertNode(fragement);
-                        node = needSpace ? $('#' + id, editor.body).parent().parent()[0] : $('#' + id, editor.body)[0];
-                        try {
+                        !document.body.kmath_equation ? result = $('<span></span>').append('<span>&nbsp;</span>').append($('<span contentEditable="false"></span>').append(result)).append('<span>&nbsp;</span>')[0] : '';
+                        // fragement.appendChild(result);
+                        // range.insertNode(fragement);
+                        editor.exec('insertHtml', {value: result.outerHTML});   // insertHTML的同时，会删掉其中selection
+                        node = !document.body.kmath_equation ? $('#' + id, editor.body).parent().parent()[0] : $('#' + id, editor.body)[0];     // 获取到node节点，用于设置光标位置。
+                        try {       
+                            // 设置光标位置
                             range.setStartAfter(node);
                             range.collapse(true);
                             editor.selectRange(range);
@@ -176,7 +181,7 @@
                     $kmath_window.find('.math-insert').attr('disabled', false);
                     $kmath_window.data("kendoWindow").close();
                     editor.focus();
-                    if (editor.options.onInsertMath) {
+                    if (editor.options.onInsertMath) {     // callback
                         editor.options.onInsertMath();
                     }
                 });
