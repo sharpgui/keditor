@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="1">a</div>
+    <div id="2">b</div>
+    <div id="3">c</div>
+    <div id="4">d</div>
+<script>
+    var r01 = document.createRange();
+    var div01 = document.getElementById('1');
+    
+    // 设置range
+    r01.setStartBefore(div01);
+    r01.setEndAfter(div01);
+
+
+    var r02 = document.createRange();
+    var div02 = document.getElementById('2');
+    
+    r02.setStartBefore(div02);
+    r02.setEndAfter(div02);
+    
+
+    var r04 = document.createRange();
+    var div04 = document.getElementById('4');
+    
+    r04.setStartBefore(div04);
+    r04.setEndAfter(div04);
+
+    // Selection在Chrome中，只能add range一次，并且只有第一次有效
+    // 在Firefox中，可以多次addRange，并且可以是非连续区域
+    var s =  window.getSelection()
+    s.addRange(r04);
+    s.addRange(r01);
+
+</script>
+</body>
+</html>

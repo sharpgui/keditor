@@ -39,8 +39,7 @@
       var mathWindow =  mathEditor.init();
     //   mathWindow.center().open();
 
-      var  mathEditor02 = new KMath();
-      //mathWindow.formula 即为返回DOM 对象
+      var mathEditor02 = new KMath({hideFontSize: true});
       var mathWindow02 =  mathEditor02.init();
 
       $("#editor").kendoEditor({

@@ -87,10 +87,12 @@
                 $basic_editarea = $(".basic-editarea", this.element);
                 $tobasic_btn = $(".tobasic", this.element);
                 $toadvance_btn = $(".toadvance", this.element);
-                $fontsize = $(".kmath-fontsize", this.element);
                 this.$message = $('.kmath-message', $(this.element).parent());
 
-                this._initFontsize($fontsize);
+                if(!this.options.hideFontSize){
+                    $fontsize = $(".kmath-fontsize", this.element);
+                    this._initFontsize($fontsize);
+                }
 
                 // Switch basic \ advance view 
                 this.element.on("click", '.tobasic', function () {
@@ -237,7 +239,7 @@
                 var latex, dom, styles;
                 dom = $advance_view;
                 if (!dom.html().trim()) {
-                    return $('<span>$nbsp;</span>')[0];
+                    return $('<span>&nbsp;</span>')[0];
                 }
                 latex = dom.find("script").text();
                 dom = dom.clone();
@@ -322,10 +324,10 @@
                     '<button class="blue-link tobasic">' + $$.GCI18N.kMath.SwitchtoBasic + '</button>' +
                     '<button class="blue-link toadvance">' + $$.GCI18N.kMath.SwitchtoAdvance + '</button>' +
                     '<textarea class="advance-editarea"></textarea>' +          // S_N = \\displaystyle\\sqrt{ \\frac{1}{N} \\sum\^N_{i=1}{(x_i - \\bar{x})\^2} }
-                    '<div style="background: #f3f3f3; padding-right: 5px; margin: 6px 2px 0; box-sizing: border-box; border: 1px solid rgb(222, 222, 222); ">' +
-                    '<div style="padding-bottom: 3px; height: 2.2em; border-bottom: 1px solid rgb(222, 222, 222);">' +
-                        '<div style="line-height: 2.2em; padding-left: 5px; float: left;">Formula: </div>' +
-                        '<div style="float: right;" class="kmath-fontsize"></div>' +
+                    '<div style="background: #f3f3f3; font-size: 13px; padding-right: 5px; margin: 6px 2px 0; box-sizing: border-box; border: 1px solid rgb(222, 222, 222); ">' +
+                    '<div style="padding-bottom: 3px; height: 35px; border-bottom: 1px solid rgb(222, 222, 222);">' +
+                        '<div style="line-height: 35px; font-size: 16px; padding-left: 5px; float: left;">Formula: </div>' +
+                        '<div style="float: right; font-size: 16px;" class="kmath-fontsize"></div>' +
                     '</div>' +
                     '<div class="advance-view" style="visibility: visible; font-size: '+ this.options.fsoptions[0].value +'"></div>' +
                     '</div>' +
